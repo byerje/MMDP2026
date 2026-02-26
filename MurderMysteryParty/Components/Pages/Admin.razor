@@ -11,7 +11,11 @@
     <div class="admin-header">
         <h1 class="admin-title">Game Administration</h1>
         <h2 class="admin-subtitle">Round Control Center</h2>
-        <a href="/" class="back-home-btn">← Back to Home</a>
+        <div class="admin-navigation">
+            <a href="/" class="back-home-btn">🏠 Back to Home</a>
+            <a href="/floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
+            <a href="/characters" class="characters-btn">👥 All Characters</a>
+        </div>
     </div>
 
     <div class="game-status">
@@ -109,7 +113,15 @@
         font-style: italic;
     }
 
-    .back-home-btn {
+    .admin-navigation {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    }
+
+    .back-home-btn, .floor-plan-btn, .characters-btn {
         display: inline-block;
         background: transparent;
         color: #d4af37;
@@ -119,12 +131,31 @@
         border-radius: 5px;
         font-weight: bold;
         transition: all 0.3s ease;
-        margin-top: 15px;
     }
 
-    .back-home-btn:hover {
+    .back-home-btn:hover, .floor-plan-btn:hover, .characters-btn:hover {
         background: #d4af37;
         color: #1a1a1a;
+    }
+
+    .floor-plan-btn {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .floor-plan-btn:hover {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .characters-btn {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+
+    .characters-btn:hover {
+        background: #17a2b8;
+        color: #fff;
     }
 
     .game-status {

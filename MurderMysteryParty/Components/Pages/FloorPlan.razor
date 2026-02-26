@@ -1,0 +1,228 @@
+@page "/floorplan"
+@rendermode InteractiveServer
+
+<PageTitle>Floor Plan - Silver Serpent Speakeasy</PageTitle>
+
+<div class="floor-plan-container">
+    <div class="floor-plan-header">
+        <h1 class="floor-plan-title">The Silver Serpent Speakeasy</h1>
+        <h2 class="floor-plan-subtitle">Floor Plan & Layout</h2>
+        <div class="navigation-buttons">
+            <a href="/" class="nav-btn home-btn">🏠 Back to Home</a>
+            <a href="/mycharacter" class="nav-btn character-btn">🎭 My Character</a>
+            <a href="/characters" class="nav-btn characters-btn">👥 All Characters</a>
+        </div>
+    </div>
+
+    <div class="floor-plan-content">
+        <div class="floor-plan-description">
+            <p class="description-text">
+                Study this layout of our speakeasy to understand where each scene unfolds. 
+                Pay attention to the locations mentioned in your character's interactions and alibis.
+            </p>
+        </div>
+
+        <div class="floor-plan-image-container">
+            <img src="/images/Silver_Serpent_floor_plan.png" 
+                 alt="Silver Serpent Speakeasy Floor Plan" 
+                 class="floor-plan-image" 
+                 onclick="toggleFullscreen(this)" />
+            <p class="image-note">💡 Click the floor plan to view full-screen</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .floor-plan-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .floor-plan-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-bottom: 2px solid #d4af37;
+    }
+
+    .floor-plan-title {
+        color: #d4af37;
+        font-size: 2.5rem;
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        font-weight: bold;
+    }
+
+    .floor-plan-subtitle {
+        color: #f5f5dc;
+        font-size: 1.4rem;
+        margin: 0 0 20px 0;
+        font-style: italic;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .nav-btn {
+        padding: 10px 20px;
+        border: 2px solid #d4af37;
+        background: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+        color: #f5f5dc;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-btn:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #daa520 100%);
+        color: #1a1a1a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .floor-plan-content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .floor-plan-description {
+        background: rgba(139, 69, 19, 0.2);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d4af37;
+        text-align: center;
+    }
+
+    .description-text {
+        font-size: 1.2rem;
+        color: #f5f5dc;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .floor-plan-image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .floor-plan-image {
+        max-width: 100%;
+        height: auto;
+        border: 3px solid #d4af37;
+        border-radius: 10px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .floor-plan-image:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 35px rgba(212, 175, 55, 0.3);
+    }
+
+    .image-note {
+        color: #d4af37;
+        font-style: italic;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    /* Fullscreen styles */
+    .fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.95);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .fullscreen img {
+        max-width: 95vw;
+        max-height: 95vh;
+        border: none;
+        border-radius: 0;
+    }
+
+    /* Mobile responsiveness */
+    @@media (max-width: 768px) {
+        .floor-plan-container {
+            padding: 10px;
+        }
+
+        .floor-plan-title {
+            font-size: 2rem;
+        }
+
+        .floor-plan-subtitle {
+            font-size: 1.2rem;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 200px;
+        }
+
+        .description-text {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<script>
+    function toggleFullscreen(img) {
+        // Remove existing fullscreen if any
+        const existingFullscreen = document.querySelector('.fullscreen');
+        if (existingFullscreen) {
+            existingFullscreen.remove();
+            return;
+        }
+
+        // Create fullscreen overlay
+        const fullscreenDiv = document.createElement('div');
+        fullscreenDiv.className = 'fullscreen';
+        fullscreenDiv.onclick = function() {
+            this.remove();
+        };
+
+        // Clone and add image
+        const fullscreenImg = img.cloneNode();
+        fullscreenDiv.appendChild(fullscreenImg);
+
+        // Add to body
+        document.body.appendChild(fullscreenDiv);
+
+        // Close on escape key
+        const escapeHandler = function(e) {
+            if (e.key === 'Escape') {
+                fullscreenDiv.remove();
+                document.removeEventListener('keydown', escapeHandler);
+            }
+        };
+        document.addEventListener('keydown', escapeHandler);
+    }
+</script>

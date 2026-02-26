@@ -1,0 +1,327 @@
+@page "/forensic-report"
+@using MurderMysteryParty.Services
+@inject GameSessionService GameSessionService
+@rendermode InteractiveServer
+
+<PageTitle>Forensic Report - Murder Investigation</PageTitle>
+
+<div class="forensic-container">
+    @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
+    {
+        <div class="forensic-header">
+            <h1 class="forensic-title">FORENSIC REPORT</h1>
+            <h2 class="forensic-subtitle">Prepared by: City Coroner's Office</h2>
+            <div class="navigation-buttons">
+                <a href="/" class="nav-btn home-btn">🏠 Back to Home</a>
+                <a href="/mycharacter" class="nav-btn character-btn">🎭 My Character</a>
+                <a href="/characters" class="nav-btn characters-btn">👥 All Characters</a>
+                <a href="/floorplan" class="nav-btn floor-plan-btn">🗺️ Floor Plan</a>
+            </div>
+        </div>
+
+        <div class="forensic-content">
+            <div class="evidence-warning">
+                <p class="warning-text">⚠️ CONFIDENTIAL EVIDENCE - Round 2B Investigation Material</p>
+            </div>
+
+            <div class="forensic-sections">
+                <div class="forensic-section">
+                    <h3>Identity of Deceased</h3>
+                    <div class="evidence-details">
+                        <p><strong>Name:</strong> Hal Sapone</p>
+                        <p><strong>Sex:</strong> Male</p>
+                        <p><strong>Approx. Age:</strong> Late 40s</p>
+                    </div>
+                </div>
+
+                <div class="forensic-section">
+                    <h3>Location of Body</h3>
+                    <div class="evidence-details">
+                        <p>Found in the rear storage hallway, lying on his right side.</p>
+                        <p>No signs that the body was moved.</p>
+                    </div>
+                </div>
+
+                <div class="forensic-section">
+                    <h3>Time of Death (Estimated)</h3>
+                    <div class="evidence-details">
+                        <p><strong>Between 9:40 PM and 10:00 PM.</strong></p>
+                    </div>
+                </div>
+
+                <div class="forensic-section">
+                    <h3>Cause of Death</h3>
+                    <div class="evidence-details">
+                        <p>Single gunshot wound to the left upper chest.</p>
+                        <p>No exit wound. Bullet is likely still inside the body.</p>
+                        <p><strong>Clear signs of close-range powder burns.</strong></p>
+                    </div>
+                </div>
+
+                <div class="forensic-section">
+                    <h3>Ballistics</h3>
+                    <div class="evidence-details">
+                        <p>Wound consistent with a small caliber handgun.</p>
+                        <p>No shell casing was found; small caliber handgun (.32 or .38).</p>
+                    </div>
+                </div>
+
+                <div class="forensic-section">
+                    <h3>Blood Evidence</h3>
+                    <div class="evidence-details">
+                        <p><strong>Blood type:</strong> O</p>
+                        <p>Blood pooled directly beneath the body.</p>
+                        <p>Fine spatter suggests the victim was likely standing or sitting upright when shot.</p>
+                        <p>No bloody footprints or smears.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="investigation-note">
+                <p class="note-text">
+                    🔍 <strong>Investigation Note:</strong> Use this forensic evidence to cross-reference with character alibis 
+                    and testimonies. Pay special attention to the time of death, location, and weapon details.
+                </p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="locked-content">
+            <div class="lock-message">
+                <h1 class="locked-title">🔒 Evidence Locked</h1>
+                <p class="locked-text">
+                    The forensic report is not yet available. This evidence will be released 
+                    when Round 2 Part B (Post-Murder Investigation) is unlocked by the game administrator.
+                </p>
+                <div class="locked-navigation">
+                    <a href="/" class="nav-btn">🏠 Back to Home</a>
+                    <a href="/mycharacter" class="nav-btn">🎭 My Character</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .forensic-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .forensic-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        border-bottom: 3px solid #dc3545;
+    }
+
+    .forensic-title {
+        color: #dc3545;
+        font-size: 2.5rem;
+        margin: 0 0 10px 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        font-weight: bold;
+        letter-spacing: 3px;
+    }
+
+    .forensic-subtitle {
+        color: #f5f5dc;
+        font-size: 1.2rem;
+        margin: 0 0 20px 0;
+        font-style: italic;
+    }
+
+    .navigation-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .nav-btn {
+        padding: 8px 16px;
+        border: 2px solid;
+        background: transparent;
+        color: inherit;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .home-btn {
+        border-color: #d4af37;
+        color: #d4af37;
+    }
+
+    .home-btn:hover {
+        background: #d4af37;
+        color: #1a1a1a;
+    }
+
+    .character-btn {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .character-btn:hover {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .characters-btn {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+
+    .characters-btn:hover {
+        background: #17a2b8;
+        color: #fff;
+    }
+
+    .floor-plan-btn {
+        border-color: #6f42c1;
+        color: #6f42c1;
+    }
+
+    .floor-plan-btn:hover {
+        background: #6f42c1;
+        color: #fff;
+    }
+
+    .evidence-warning {
+        background: rgba(220, 53, 69, 0.2);
+        border: 2px solid #dc3545;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .warning-text {
+        color: #dc3545;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .forensic-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+
+    .forensic-section {
+        background: rgba(139, 69, 19, 0.2);
+        border: 2px solid #8b4513;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .forensic-section h3 {
+        color: #d4af37;
+        font-size: 1.4rem;
+        margin: 0 0 15px 0;
+        border-bottom: 1px solid #d4af37;
+        padding-bottom: 5px;
+    }
+
+    .evidence-details {
+        color: #f5f5dc;
+        line-height: 1.6;
+    }
+
+    .evidence-details p {
+        margin: 8px 0;
+        font-size: 1.05rem;
+    }
+
+    .evidence-details strong {
+        color: #dc3545;
+    }
+
+    .investigation-note {
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .note-text {
+        color: #d4af37;
+        font-size: 1.1rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Locked content styles */
+    .locked-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+    }
+
+    .lock-message {
+        text-align: center;
+        background: rgba(139, 69, 19, 0.3);
+        border: 3px solid #8b4513;
+        border-radius: 15px;
+        padding: 40px;
+        max-width: 500px;
+    }
+
+    .locked-title {
+        color: #dc3545;
+        font-size: 2rem;
+        margin: 0 0 20px 0;
+    }
+
+    .locked-text {
+        color: #f5f5dc;
+        font-size: 1.2rem;
+        line-height: 1.6;
+        margin: 0 0 25px 0;
+    }
+
+    .locked-navigation {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    /* Mobile responsiveness */
+    @@media (max-width: 768px) {
+        .forensic-container {
+            padding: 10px;
+        }
+
+        .forensic-title {
+            font-size: 2rem;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 200px;
+        }
+
+        .forensic-section {
+            padding: 15px;
+        }
+    }
+</style>
