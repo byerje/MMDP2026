@@ -1,0 +1,262 @@
+@page "/characters"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject CharacterService CharacterService
+
+<PageTitle>Characters - Murder Mystery Dinner Party</PageTitle>
+
+<div class="character-list-container">
+    <div class="header">
+        <h1 class="page-title">Meet the Cast</h1>
+        <h2 class="page-subtitle">1920's SpeakEasy Gala Character Profiles</h2>
+        <a href="/" class="back-home-btn">← Back to Homepage</a>
+    </div>
+
+    <div class="characters-grid">
+        @foreach (var character in allCharacters)
+        {
+            <div class="character-profile @(character.IsAssigned ? "assigned" : "")">
+                <div class="character-header">
+                    <h3 class="character-name">@character.Name</h3>
+                    @if (character.IsAssigned)
+                    {
+                        <span class="assigned-badge">ASSIGNED</span>
+                    }
+                </div>
+                
+                <div class="character-details">
+                    <div class="basic-info">
+                        <p><strong>Occupation:</strong> @character.Occupation</p>
+                        <p><strong>Relationship:</strong> @character.Relationship</p>
+                    </div>
+                    
+                    <div class="character-background">
+                        <h4>Background</h4>
+                        <p>@character.Background</p>
+                    </div>
+                    
+                    <div class="character-traits">
+                        <h4>Personality</h4>
+                        <p>@character.PersonalityTraits</p>
+                    </div>
+                    
+                    <div class="character-goals">
+                        <h4>Goals</h4>
+                        <p>@character.Goals</p>
+                    </div>
+                    
+                    @* <div class="character-secrets">
+                        <h4>Secrets</h4>
+                        <p class="secret-text">@character.Secrets</p>
+                    </div> *@
+                    
+                    @* <div class="character-costume">
+                        <h4>Suggested Costume</h4>
+                        <p class="costume-text">@character.Costume</p>
+                    </div> *@
+                </div>
+            </div>
+        }
+    </div>
+    
+    <div class="reset-section">
+        <button class="reset-btn" @onclick="ResetAssignments">
+            🔄 Reset All Character Assignments
+        </button>
+        <p class="reset-note">Use this to clear all assignments and start over</p>
+    </div>
+</div>
+
+<style>
+    .character-list-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+        border-bottom: 3px solid #d4af37;
+        padding-bottom: 20px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        color: #d4af37;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .page-subtitle {
+        font-size: 1.4rem;
+        color: #f5f5dc;
+        margin: 10px 0;
+        font-style: italic;
+    }
+
+    .back-home-btn {
+        display: inline-block;
+        background: transparent;
+        color: #d4af37;
+        border: 2px solid #d4af37;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin-top: 15px;
+    }
+
+    .back-home-btn:hover {
+        background: #d4af37;
+        color: #1a1a1a;
+    }
+
+    .characters-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .character-profile {
+        background: rgba(212, 175, 55, 0.05);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+
+    .character-profile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .character-profile.assigned {
+        border-color: #8b4513;
+        background: rgba(139, 69, 19, 0.1);
+    }
+
+    .character-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #d4af37;
+    }
+
+    .character-name {
+        color: #d4af37;
+        font-size: 1.4rem;
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .assigned-badge {
+        background: #8b4513;
+        color: #f5f5dc;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .character-details {
+        display: grid;
+        gap: 15px;
+    }
+
+    .basic-info {
+        background: rgba(0,0,0,0.2);
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .basic-info p {
+        margin: 5px 0;
+        font-size: 0.95rem;
+    }
+
+    .character-background, .character-traits, .character-goals, 
+    .character-secrets, .character-costume {
+        border-left: 3px solid #d4af37;
+        padding-left: 10px;
+    }
+
+    .character-background h4, .character-traits h4, .character-goals h4,
+    .character-secrets h4, .character-costume h4 {
+        color: #d4af37;
+        font-size: 1rem;
+        margin: 0 0 8px 0;
+    }
+
+    .character-background p, .character-traits p, .character-goals p,
+    .character-secrets p, .character-costume p {
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    .secret-text {
+        color: #ff6b6b !important;
+        font-style: italic;
+    }
+
+    .costume-text {
+        color: #87ceeb !important;
+        font-weight: 500;
+    }
+
+    .reset-section {
+        text-align: center;
+        padding: 30px;
+        border-top: 2px solid #d4af37;
+    }
+
+    .reset-btn {
+        background: linear-gradient(45deg, #8b4513, #a0522d);
+        color: #f5f5dc;
+        border: none;
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .reset-btn:hover {
+        background: linear-gradient(45deg, #a0522d, #8b4513);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+    }
+
+    .reset-note {
+        color: #ccc;
+        font-size: 0.9rem;
+        margin-top: 10px;
+    }
+</style>
+
+@code {
+    private List<Character> allCharacters = new();
+
+    protected override void OnInitialized()
+    {
+        allCharacters = CharacterService.GetAllCharacters();
+    }
+
+    private void ResetAssignments()
+    {
+        CharacterService.ResetCharacterAssignments();
+        allCharacters = CharacterService.GetAllCharacters(); // Refresh the list
+    }
+}

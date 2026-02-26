@@ -1,0 +1,381 @@
+﻿@page "/"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject CharacterService CharacterService
+@inject GameSessionService GameSessionService
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<PageTitle>Murder Mystery Dinner Party - 1920's SpeakEasy Gala 2026</PageTitle>
+
+<div class="speakeasy-container">
+    <div class="invitation-header">
+        <h1 class="gatsby-title">Murder Mystery Dinner Party</h1>
+        <h2 class="event-subtitle">1920's SpeakEasy Gala 2026</h2>
+        <h3 class="date-location">February 25, 2026 | Silver Serpent Speakeasy</h3>
+    </div>
+
+    <div class="invitation-content">
+        <div class="art-deco-border">
+            <p class="invitation-text">
+                <em>You are cordially invited to step back in time to the golden age of jazz, gin, and glamour!</em>
+            </p>
+            
+            <p class="invitation-details">
+                Join us for an evening of mystery, intrigue, and 1920s sophistication as we gather at Silver Serpent Speakeasy 
+                for an unforgettable murder mystery dinner party. Don your finest flapper dress or sharpest suit, 
+                and prepare to become part of a thrilling whodunit that will test your detective skills!
+            </p>
+
+            <div class="party-details">
+                <h4>What Awaits You:</h4>
+                <ul>
+                    <li>🍸 Prohibition-era cocktails and mocktails</li>
+                    <li>🎭 Interactive murder mystery experience</li>
+                    <li>🎷 Live jazz music and 1920s entertainment</li>
+                    <li>🏆 Prizes for best costume and detective work</li>
+                    <li>🍽️ Delicious period-appropriate dinner</li>
+                </ul>
+            </div>
+
+            <div class="character-assignment">
+                <h4>Get Your Character Assignment</h4>
+                <p>Scan the QR code below to be assigned your character for the evening!</p>
+                
+                @if (assignedCharacter != null)
+                {
+                    <div class="character-reveal">
+                        <h5>Your Character:</h5>
+                        <div class="character-card">
+                            <h6>@assignedCharacter.Name</h6>
+                            <p><strong>Occupation:</strong> @assignedCharacter.Occupation</p>
+                            <p><strong>Costume:</strong> @assignedCharacter.Costume</p>
+                            <p><em>More character details will be provided at the party!</em></p>
+                        </div>
+                        <div class="character-actions">
+                            <a href="/my-character" class="character-btn">🎭 View My Character Card</a>
+                            <button class="clear-assignment-btn" @onclick="ClearAssignment">Clear Assignment</button>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="qr-section">
+                        <button class="qr-button" @onclick="AssignCharacter">
+                            📱 Scan QR Code / Get Character
+                        </button>
+                        <p class="qr-note">Click the button above to simulate QR code scanning and receive your character assignment!</p>
+                    </div>
+                }
+            </div>
+
+            <div class="navigation-section">
+                <a href="/characters" class="view-all-btn">View All Characters</a>
+                <a href="/admin" class="admin-btn">🛠️ Game Admin</a>
+            </div>
+
+            <div class="dress-code">
+                <h4>Dress Code: 1920s Speakeasy Chic</h4>
+                <p>
+                    <strong>Ladies:</strong> Flapper dresses, headbands with feathers, long pearl necklaces, T-bar shoes<br/>
+                    <strong>Gentlemen:</strong> Three-piece suits, bow ties, suspenders, pocket watches, fedora hats
+                </p>
+            </div>
+
+            <div class="rsvp-info">
+                <p><strong>RSVP by:</strong> February 20, 2026</p>
+                <p><strong>Contact:</strong> Victoria Sterling at sterling@speakeasy1920.com</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .speakeasy-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .invitation-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #d4af37;
+        padding-bottom: 20px;
+    }
+
+    .gatsby-title {
+        font-size: 2.5rem;
+        color: #d4af37;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .event-subtitle {
+        font-size: 1.8rem;
+        color: #f5f5dc;
+        margin: 10px 0;
+        font-style: italic;
+    }
+
+    .date-location {
+        font-size: 1.2rem;
+        color: #d4af37;
+        margin: 10px 0;
+    }
+
+    .art-deco-border {
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        padding: 30px;
+        background: rgba(212, 175, 55, 0.05);
+        box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1);
+    }
+
+    .invitation-text {
+        font-size: 1.3rem;
+        text-align: center;
+        color: #d4af37;
+        margin-bottom: 25px;
+    }
+
+    .invitation-details {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 25px;
+        text-align: justify;
+    }
+
+    .party-details, .character-assignment, .dress-code, .rsvp-info {
+        margin: 25px 0;
+        padding: 15px;
+        border-left: 3px solid #d4af37;
+        background: rgba(0,0,0,0.2);
+    }
+
+    .party-details h4, .character-assignment h4, .dress-code h4 {
+        color: #d4af37;
+        margin-bottom: 15px;
+    }
+
+    .party-details ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .party-details ul li {
+        margin: 8px 0;
+        font-size: 1.1rem;
+    }
+
+    .qr-button {
+        background: linear-gradient(45deg, #d4af37, #b8941f);
+        color: #1a1a1a;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .qr-button:hover {
+        background: linear-gradient(45deg, #b8941f, #d4af37);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .qr-note {
+        text-align: center;
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-top: 10px;
+    }
+
+    .character-reveal {
+        text-align: center;
+    }
+
+    .character-card {
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid #d4af37;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+    }
+
+    .character-card h6 {
+        color: #d4af37;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    .character-card p {
+        margin: 8px 0;
+        font-size: 1rem;
+    }
+
+    .character-actions {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .character-btn {
+        background: linear-gradient(45deg, #d4af37, #b8941f);
+        color: #1a1a1a;
+        border: none;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+
+    .character-btn:hover {
+        background: linear-gradient(45deg, #b8941f, #d4af37);
+        transform: translateY(-2px);
+        box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+    }
+
+    .clear-assignment-btn {
+        background: transparent;
+        color: #dc3545;
+        border: 2px solid #dc3545;
+        padding: 8px 16px;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .clear-assignment-btn:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .view-all-btn, .admin-btn {
+        display: inline-block;
+        background: transparent;
+        color: #d4af37;
+        border: 2px solid #d4af37;
+        padding: 12px 25px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        margin: 10px;
+    }
+
+    .view-all-btn:hover, .admin-btn:hover {
+        background: #d4af37;
+        color: #1a1a1a;
+    }
+
+    .admin-btn {
+        border-color: #17a2b8;
+        color: #17a2b8;
+    }
+
+    .admin-btn:hover {
+        background: #17a2b8;
+        color: #fff;
+    }
+
+    .navigation-section {
+        text-align: center;
+        margin: 30px 0;
+    }
+</style>
+
+@code {
+    private Character? assignedCharacter = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // No localStorage calls here - moved to OnAfterRenderAsync
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                // Check if user already has an assigned character in localStorage
+                var characterIdString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
+                if (!string.IsNullOrEmpty(characterIdString) && int.TryParse(characterIdString, out int characterId))
+                {
+                    assignedCharacter = CharacterService.GetCharacterById(characterId);
+                    // Verify the character is still assigned in the service
+                    if (assignedCharacter != null && !assignedCharacter.IsAssigned)
+                    {
+                        assignedCharacter = null;
+                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+                    }
+                }
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                // Handle any JS interop exceptions
+                Console.WriteLine($"Error loading character assignment: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task AssignCharacter()
+    {
+        assignedCharacter = CharacterService.AssignRandomCharacter();
+        
+        if (assignedCharacter != null)
+        {
+            try
+            {
+                // Store the assigned character ID in localStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", assignedCharacter.Id.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error storing character assignment: {ex.Message}");
+            }
+        }
+        else
+        {
+            // All characters have been assigned
+            // You might want to show a message or handle this case differently
+        }
+    }
+
+    private async Task ClearAssignment()
+    {
+        try
+        {
+            if (assignedCharacter != null)
+            {
+                // Reset the character assignment in the service
+                CharacterService.ResetCharacterAssignment(assignedCharacter.Id);
+                // Clear from localStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+                assignedCharacter = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error clearing assignment: {ex.Message}");
+        }
+    }
+}

@@ -1,0 +1,705 @@
+@page "/my-character"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject CharacterService CharacterService
+@inject GameSessionService GameSessionService
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+@implements IDisposable
+
+<PageTitle>My Character - Murder Mystery</PageTitle>
+
+<div class="character-detail-container">
+    @if (currentCharacter != null)
+    {
+        <div class="character-header">
+            <h1 class="character-name">@currentCharacter.Name</h1>
+            <h2 class="character-occupation">@currentCharacter.Occupation</h2>
+            <div class="navigation-links">
+                <a href="/" class="nav-btn">← Back to Home</a>
+                <a href="/characters" class="nav-btn">View All Characters</a>
+                <button class="refresh-btn" @onclick="RefreshGameState">🔄 Refresh</button>
+                <button class="clear-btn" @onclick="ClearAssignment">Clear My Assignment</button>
+            </div>
+        </div>
+
+        <div class="character-profile">
+            <div class="profile-section">
+                <h3>Your Character Profile</h3>
+                <div class="profile-grid">
+                    <div class="profile-item">
+                        <h4>Background</h4>
+                        <p>@currentCharacter.Background</p>
+                    </div>
+                    <div class="profile-item">
+                        <h4>Personality</h4>
+                        <p>@currentCharacter.PersonalityTraits</p>
+                    </div>
+                    <div class="profile-item">
+                        <h4>Goals</h4>
+                        <p>@currentCharacter.Goals</p>
+                    </div>
+                    <div class="profile-item">
+                        <h4>Costume</h4>
+                        <p>@currentCharacter.Costume</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rounds-container">
+            <div class="current-round-status">
+                <h3>Game Status: @GameSessionService.GetCurrentRoundName()</h3>
+            </div>
+
+            <div class="rounds-grid">
+                @if (gameSession.IsRound1Unlocked)
+                {
+                    <div class="round-card unlocked">
+                        <h4>🎭 Round 1</h4>
+                        <div class="round-content">
+                            @if (!string.IsNullOrEmpty(currentCharacter.Round1Content))
+                            {
+                                @((MarkupString)FormatRoundContent(currentCharacter.Round1Content))
+                            }
+                            else
+                            {
+                                <p><em>Round 1 content coming soon...</em></p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="round-card locked">
+                        <h4>🔒 Round 1</h4>
+                        <p class="locked-text">Waiting for game master to unlock...</p>
+                    </div>
+                }
+
+                @if (gameSession.IsRound2AUnlocked)
+                {
+                    <div class="round-card unlocked">
+                        <h4>🕵️ Round 2 - Part A</h4>
+                        <p class="round-subtitle">Pre-Murder Investigation</p>
+                        <div class="round-content">
+                            @if (!string.IsNullOrEmpty(currentCharacter.Round2AContent))
+                            {
+                                @((MarkupString)FormatRound2Content(currentCharacter.Round2AContent))
+                            }
+                            else
+                            {
+                                <p><em>Round 2A content coming soon...</em></p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="round-card locked">
+                        <h4>🔒 Round 2 - Part A</h4>
+                        <p class="locked-text">Waiting for game master to unlock...</p>
+                    </div>
+                }
+
+                @if (gameSession.IsRound2BUnlocked)
+                {
+                    <div class="round-card unlocked danger">
+                        <h4>💀 Round 2 - Part B</h4>
+                        <p class="round-subtitle">Post-Murder Response</p>
+                        <div class="round-content">
+                            @if (!string.IsNullOrEmpty(currentCharacter.Round2BContent))
+                            {
+                                @((MarkupString)FormatRound2Content(currentCharacter.Round2BContent))
+                            }
+                            else
+                            {
+                                <p><em>Round 2B content coming soon...</em></p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="round-card locked">
+                        <h4>🔒 Round 2 - Part B</h4>
+                        <p class="locked-text">Waiting for game master to unlock...</p>
+                    </div>
+                }
+
+                @if (gameSession.IsRound3AUnlocked)
+                {
+                    <div class="round-card unlocked warning">
+                        <h4>🎯 Round 3 - Part A</h4>
+                        <p class="round-subtitle">Motive Reveal</p>
+                        <div class="round-content">
+                            @if (!string.IsNullOrEmpty(currentCharacter.Round3AMotiveReveal))
+                            {
+                                <p><strong>Your Motive:</strong> @currentCharacter.Round3AMotiveReveal</p>
+                            }
+                            else
+                            {
+                                <p><em>Motive reveal coming soon...</em></p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="round-card locked">
+                        <h4>🔒 Round 3 - Part A</h4>
+                        <p class="locked-text">Waiting for game master to unlock...</p>
+                    </div>
+                }
+
+                @if (gameSession.IsRound3BUnlocked)
+                {
+                    <div class="round-card unlocked chaos">
+                        <h4>⚡ Round 3 - Part B</h4>
+                        <p class="round-subtitle">Chaotic Ending</p>
+                        <div class="round-content">
+                            @if (!string.IsNullOrEmpty(currentCharacter.Round3BChaoticEnding))
+                            {
+                                <p>@currentCharacter.Round3BChaoticEnding</p>
+                            }
+                            else
+                            {
+                                <p><em>Final round instructions coming soon...</em></p>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="round-card locked">
+                        <h4>🔒 Round 3 - Part B</h4>
+                        <p class="locked-text">Waiting for game master to unlock...</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="character-secrets">
+            <h3>🤫 Your Secret Information</h3>
+            <div class="secrets-content">
+                <p>@currentCharacter.Secrets</p>
+                <p class="secrets-warning"><strong>⚠️ Keep this information private! Do not share with other players unless instructed to do so in a specific round.</strong></p>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="no-character">
+            <h2>No Character Assigned</h2>
+            <p>You haven't been assigned a character yet. Please go back to the home page and get your character assignment.</p>
+            <a href="/" class="nav-btn">← Back to Home</a>
+        </div>
+    }
+</div>
+
+<style>
+    .character-detail-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .character-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #d4af37;
+        padding-bottom: 20px;
+    }
+
+    .character-name {
+        font-size: 2.5rem;
+        color: #d4af37;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .character-occupation {
+        font-size: 1.4rem;
+        color: #f5f5dc;
+        margin: 10px 0;
+        font-style: italic;
+    }
+
+    .navigation-links {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .nav-btn, .clear-btn, .refresh-btn {
+        display: inline-block;
+        background: transparent;
+        color: #d4af37;
+        border: 2px solid #d4af37;
+        padding: 8px 16px;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .nav-btn:hover, .clear-btn:hover, .refresh-btn:hover {
+        background: #d4af37;
+        color: #1a1a1a;
+    }
+
+    .clear-btn {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+
+    .clear-btn:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .refresh-btn {
+        border-color: #28a745;
+        color: #28a745;
+    }
+
+    .refresh-btn:hover {
+        background: #28a745;
+        color: #fff;
+    }
+
+    .character-profile {
+        margin: 30px 0;
+    }
+
+    .profile-section h3 {
+        color: #d4af37;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .profile-item {
+        background: rgba(212, 175, 55, 0.05);
+        border: 1px solid #d4af37;
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .profile-item h4 {
+        color: #d4af37;
+        margin: 0 0 10px 0;
+        font-size: 1.1rem;
+    }
+
+    .profile-item p {
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    .current-round-status {
+        text-align: center;
+        margin: 30px 0;
+        padding: 15px;
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+    }
+
+    .current-round-status h3 {
+        color: #d4af37;
+        margin: 0;
+        font-size: 1.3rem;
+    }
+
+    .rounds-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .round-card {
+        border-radius: 10px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .round-card.locked {
+        background: rgba(139, 69, 19, 0.1);
+        border: 2px solid #8b4513;
+        opacity: 0.6;
+    }
+
+    .round-card.unlocked {
+        background: rgba(212, 175, 55, 0.1);
+        border: 2px solid #d4af37;
+        box-shadow: 0 2px 10px rgba(212, 175, 55, 0.2);
+    }
+
+    .round-card.danger {
+        border-color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    .round-card.warning {
+        border-color: #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+    }
+
+    .round-card.chaos {
+        border-color: #e83e8c;
+        background: rgba(232, 62, 140, 0.1);
+    }
+
+    .round-card h4 {
+        color: #d4af37;
+        margin: 0 0 10px 0;
+        font-size: 1.3rem;
+    }
+
+    .round-subtitle {
+        color: #ccc;
+        font-style: italic;
+        margin: 5px 0 15px 0;
+        font-size: 0.9rem;
+    }
+
+    .round-content {
+        margin-top: 15px;
+    }
+
+    .round-content p {
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    .content-section {
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        color: #d4af37;
+        font-weight: bold;
+        font-size: 1rem;
+        margin: 0 0 10px 0;
+        text-decoration: underline;
+    }
+
+    .secrets-title {
+        color: #ff6b6b;
+    }
+
+    .round-list {
+        margin: 0;
+        padding-left: 20px;
+        list-style-type: disc;
+    }
+
+    .round-list li {
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .secrets-list li {
+        color: #ffcccc;
+        font-style: italic;
+    }
+
+    .concealed-secrets {
+        background: rgba(255, 107, 107, 0.1);
+        border-left: 3px solid #ff6b6b;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .locked-text {
+        color: #999;
+        font-style: italic;
+        margin: 0;
+    }
+
+    .character-secrets {
+        margin: 40px 0;
+        padding: 20px;
+        background: rgba(220, 53, 69, 0.1);
+        border: 2px solid #dc3545;
+        border-radius: 10px;
+    }
+
+    .character-secrets h3 {
+        color: #dc3545;
+        margin: 0 0 15px 0;
+        text-align: center;
+    }
+
+    .secrets-content p {
+        margin: 10px 0;
+        line-height: 1.4;
+    }
+
+    .secrets-warning {
+        color: #ffc107 !important;
+        font-weight: bold;
+        font-size: 0.9rem;
+        text-align: center;
+        margin-top: 15px !important;
+    }
+
+    .no-character {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .no-character h2 {
+        color: #d4af37;
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .no-character p {
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+        line-height: 1.5;
+    }
+</style>
+
+@code {
+    private Character? currentCharacter;
+    private GameSession gameSession = new();
+    private Timer? refreshTimer;
+    private bool isInitialized = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gameSession = GameSessionService.GetGameSession();
+        
+        // Subscribe to game state changes
+        GameSessionService.OnGameStateChanged += OnGameStateChanged;
+        
+        // Set up a timer to refresh the game state every 5 seconds as backup
+        refreshTimer = new Timer(async _ => await InvokeAsync(async () => {
+            if (isInitialized)
+            {
+                await RefreshCharacterFromStorage();
+                StateHasChanged();
+            }
+        }), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await RefreshCharacterFromStorage();
+            isInitialized = true;
+            StateHasChanged();
+        }
+    }
+
+    private async void OnGameStateChanged()
+    {
+        await InvokeAsync(async () => {
+            gameSession = GameSessionService.GetGameSession();
+            StateHasChanged();
+        });
+    }
+
+    private async Task RefreshGameState()
+    {
+        gameSession = GameSessionService.GetGameSession();
+        if (isInitialized)
+        {
+            await RefreshCharacterFromStorage();
+        }
+    }
+
+    private async Task RefreshCharacterFromStorage()
+    {
+        try
+        {
+            // Get assigned character ID from localStorage
+            var characterIdString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
+            if (!string.IsNullOrEmpty(characterIdString) && int.TryParse(characterIdString, out int characterId))
+            {
+                currentCharacter = CharacterService.GetCharacterById(characterId);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle any JS interop exceptions
+            Console.WriteLine($"Error retrieving character assignment: {ex.Message}");
+        }
+    }
+
+    private async Task ClearAssignment()
+    {
+        try
+        {
+            if (currentCharacter != null)
+            {
+                // Reset the character assignment in the service
+                CharacterService.ResetCharacterAssignment(currentCharacter.Id);
+                // Clear from localStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+                currentCharacter = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error clearing assignment: {ex.Message}");
+        }
+    }
+
+    private string FormatRoundContent(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return "";
+
+        // Split content into sections
+        var sections = content.Split(new[] { "CONCEALED SECRETS:" }, StringSplitOptions.RemoveEmptyEntries);
+        
+        var formattedHtml = "";
+        
+        // Process first section (Interactions)
+        if (sections.Length > 0)
+        {
+            var interactionsSection = sections[0].Replace("INTERACTIONS & REVEAL CLUES:", "").Trim();
+            if (!string.IsNullOrEmpty(interactionsSection))
+            {
+                formattedHtml += "<div class='content-section'>";
+                formattedHtml += "<h5 class='section-title'>INTERACTIONS & REVEAL CLUES:</h5>";
+                formattedHtml += "<ul class='round-list'>";
+                
+                var interactions = interactionsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var interaction in interactions)
+                {
+                    var cleanInteraction = interaction.Trim();
+                    if (!string.IsNullOrEmpty(cleanInteraction))
+                    {
+                        formattedHtml += $"<li>{cleanInteraction}</li>";
+                    }
+                }
+                formattedHtml += "</ul></div>";
+            }
+        }
+        
+        // Process second section (Concealed Secrets)
+        if (sections.Length > 1)
+        {
+            var secretsSection = sections[1].Trim();
+            if (!string.IsNullOrEmpty(secretsSection))
+            {
+                formattedHtml += "<div class='content-section concealed-secrets'>";
+                formattedHtml += "<h5 class='section-title secrets-title'>CONCEALED SECRETS:</h5>";
+                formattedHtml += "<ul class='round-list secrets-list'>";
+                
+                var secrets = secretsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var secret in secrets)
+                {
+                    var cleanSecret = secret.Trim();
+                    if (!string.IsNullOrEmpty(cleanSecret))
+                    {
+                        formattedHtml += $"<li>{cleanSecret}</li>";
+                    }
+                }
+                formattedHtml += "</ul></div>";
+            }
+        }
+        
+        return formattedHtml;
+    }
+
+    private string FormatRound2Content(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return "";
+
+        var formattedHtml = "";
+        
+        // Handle Round 2 content which has PART A/PART B structure
+        if (content.Contains("PART A") || content.Contains("PART B"))
+        {
+            // Split by lines to process each line
+            var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.Trim();
+                
+                if (trimmedLine.StartsWith("PART A") || trimmedLine.StartsWith("PART B"))
+                {
+                    // Format part headers
+                    formattedHtml += $"<div class='content-section'><h5 class='section-title'>{trimmedLine}</h5>";
+                }
+                else if (trimmedLine.StartsWith("•"))
+                {
+                    // Start a bullet list if not already in one
+                    if (!formattedHtml.EndsWith("<ul class='round-list'>"))
+                    {
+                        formattedHtml += "<ul class='round-list'>";
+                    }
+                    
+                    var bulletContent = trimmedLine.Substring(1).Trim();
+                    formattedHtml += $"<li>{bulletContent}</li>";
+                }
+                else if (trimmedLine.StartsWith(" ") && trimmedLine.Contains("If asked"))
+                {
+                    // Handle sub-bullets for corroboration
+                    if (!formattedHtml.EndsWith("</ul>"))
+                    {
+                        formattedHtml += "</ul>";
+                    }
+                    formattedHtml += $"<div class='corroboration-section'><p class='corroboration-text'>{trimmedLine.Trim()}</p></div>";
+                }
+                else if (!string.IsNullOrEmpty(trimmedLine))
+                {
+                    // Close any open list
+                    if (formattedHtml.EndsWith("></ul>") == false && formattedHtml.Contains("<ul class='round-list'>"))
+                    {
+                        formattedHtml += "</ul>";
+                    }
+                    formattedHtml += $"<p>{trimmedLine}</p>";
+                }
+            }
+            
+            // Close any remaining open tags
+            if (formattedHtml.Contains("<ul class='round-list'>") && !formattedHtml.EndsWith("</ul>"))
+            {
+                formattedHtml += "</ul>";
+            }
+            if (formattedHtml.Contains("<div class='content-section'>"))
+            {
+                formattedHtml += "</div>";
+            }
+        }
+        else
+        {
+            // Fallback for any content that doesn't match expected format
+            formattedHtml = $"<p>{content.Replace("\n", "<br>")}</p>";
+        }
+        
+        return formattedHtml;
+    }
+
+    public void Dispose()
+    {
+        GameSessionService.OnGameStateChanged -= OnGameStateChanged;
+        refreshTimer?.Dispose();
+    }
+}
