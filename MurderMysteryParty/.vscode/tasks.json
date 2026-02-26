@@ -7,7 +7,6 @@
 			"command": "dotnet",
 			"args": [
 				"watch",
-				"run",
 				"--project",
 				"MurderMysteryParty.csproj"
 			],

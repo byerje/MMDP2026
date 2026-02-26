@@ -1,7 +1,6 @@
 @page "/forensic-report"
 @using MurderMysteryParty.Services
 @inject GameSessionService GameSessionService
-@rendermode InteractiveServer
 
 <div class="forensic-container">
     @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
