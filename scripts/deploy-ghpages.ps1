@@ -30,7 +30,7 @@ if (-not $remote) { Write-Error "Remote origin not found; ensure this repo has a
 git remote add origin $remote
 git checkout -b gh-pages
 git add --all
-git commit -m "Deploy to gh-pages" || Write-Host "No changes to commit"
+git commit -m "Deploy to gh-pages"
 
 git push origin gh-pages --force
 Pop-Location
