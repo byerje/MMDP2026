@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "MurderMysteryParty",
   "resources": {
-    "hash": "sha256-j5qX5Uf4Z7lfSrMOaTIXr4QkgI+bj5hTsYjsFcVTSGM=",
+    "hash": "sha256-Y3FinJpZu7jvf41GVeSoAkDJatnasaz0SdiG3CJUa/M=",
     "jsModuleNative": {
       "dotnet.native.8.0.24.ncpkt2fsji.js": "sha256-2i44rw0w4s7NM66Uq7RTG6s21jbKfy3bOb5EvC7+Lg8="
     },
@@ -31,7 +31,7 @@
       "Microsoft.Extensions.Primitives.wasm": "sha256-6187ynEahDlSLMBvD4vAmiLpZ3clRb5xu6rM7O8AxNo=",
       "Microsoft.JSInterop.wasm": "sha256-lXwhdv0Is9FMH/j0+WH3zoNWAGLbVaONtGucJ/4URQ0=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-CQVLCKiSxLN5ghyJZG3mhnMGRROdqrbNUjtAXB0nWb8=",
-      "MurderMysteryParty.wasm": "sha256-6iAfDvMggnZvJnJ9KI7VVacF47uHZfs2uEuJ0Daxg2I=",
+      "MurderMysteryParty.wasm": "sha256-jYDxfnHsm4cjvezh/Z8QnyQ3pkJ3zMQhKb2uxLIqqHs=",
       "System.Collections.Concurrent.wasm": "sha256-ddCT9bmSLmFjgBPo/tEfiDB+F+2Hdk/W3umsvV3/pc8=",
       "System.Collections.wasm": "sha256-ik/m93FSbPqsXsfBxH7A4G+yjVNjsDIQQWtT1nvThLk=",
       "System.ComponentModel.wasm": "sha256-QtJbMlfu3PMpRubWU0o28pVOoLgM0g4SR7QBQ1dBtAg=",
