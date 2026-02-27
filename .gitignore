@@ -55,6 +55,8 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio files
 /.vs
-/MurderMysteryParty/.vs/MurderMysteryParty
+/MurderMysteryParty/.vs*
 /MurderMysteryParty/MurderMysteryParty.csproj.user
