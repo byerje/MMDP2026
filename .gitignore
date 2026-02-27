@@ -56,3 +56,5 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 /.vs
+/MurderMysteryParty/.vs/MurderMysteryParty
+/MurderMysteryParty/MurderMysteryParty.csproj.user
