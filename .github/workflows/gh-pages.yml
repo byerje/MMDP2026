@@ -18,7 +18,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Publish Blazor WebAssembly
-        run: dotnet publish MurderMysteryParty/MurderMysteryParty.csproj -c Release -o publish
+        run: dotnet publish MurderMysteryParty/MurderMysteryParty.csproj -c Release -o publish -p:PathBase=/MMDP2026
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:

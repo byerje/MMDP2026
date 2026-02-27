@@ -12,20 +12,6 @@
 </head>
 <body>
     <div id="app">Loading... wait for it...</div>
-    <script>
-        // Set the base href dynamically based on the current location
-        // For GitHub Pages: https://byerje.github.io/MMDP2026 -> use /MMDP2026/
-        // For local development: http://localhost:5000 -> use /
-        const pathname = window.location.pathname;
-        const isGitHubPages = window.location.hostname.includes('github.io');
-        
-        let baseHref = '/';
-        if (isGitHubPages && pathname.includes('/MMDP2026')) {
-            baseHref = '/MMDP2026/';
-        }
-        
-        document.querySelector('base').setAttribute('href', baseHref);
-    </script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>
