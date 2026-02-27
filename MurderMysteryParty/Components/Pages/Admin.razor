@@ -120,42 +120,7 @@
         margin-top: 15px;
     }
 
-    .back-home-btn, .floor-plan-btn, .characters-btn {
-        display: inline-block;
-        background: transparent;
-        color: #d4af37;
-        border: 2px solid #d4af37;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-    }
-
-    .back-home-btn:hover, .floor-plan-btn:hover, .characters-btn:hover {
-        background: #d4af37;
-        color: #1a1a1a;
-    }
-
-    .floor-plan-btn {
-        border-color: #28a745;
-        color: #28a745;
-    }
-
-    .floor-plan-btn:hover {
-        background: #28a745;
-        color: #fff;
-    }
-
-    .characters-btn {
-        border-color: #17a2b8;
-        color: #17a2b8;
-    }
-
-    .characters-btn:hover {
-        background: #17a2b8;
-        color: #fff;
-    }
+    /* Button styles moved to wwwroot/app.css for site-wide consistency */
 
     .game-status {
         text-align: center;
@@ -205,27 +170,16 @@
     }
 
     .control-btn {
-        background: linear-gradient(45deg, #8b4513, #a0522d);
-        color: #f5f5dc;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
+        /* control button visual moved to app.css; keep layout-specific properties here if needed */
         width: 100%;
     }
 
     .control-btn:hover:not(:disabled) {
-        background: linear-gradient(45deg, #a0522d, #8b4513);
-        transform: translateY(-2px);
+        /* hover handled in app.css */
     }
 
     .control-btn:disabled {
-        background: linear-gradient(45deg, #d4af37, #b8941f);
-        color: #1a1a1a;
-        cursor: not-allowed;
+        /* disabled visual handled in app.css */
     }
 
     .game-actions {
@@ -233,24 +187,6 @@
         margin: 40px 0;
         padding: 20px;
         border-top: 2px solid #d4af37;
-    }
-
-    .reset-btn {
-        background: linear-gradient(45deg, #dc3545, #c82333);
-        color: #fff;
-        border: none;
-        padding: 12px 25px;
-        font-size: 1.1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.3s ease;
-    }
-
-    .reset-btn:hover {
-        background: linear-gradient(45deg, #c82333, #dc3545);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
     }
 
     .reset-note {

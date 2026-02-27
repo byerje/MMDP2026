@@ -63,73 +63,7 @@
         margin-top: 20px;
     }
 
-    /* Use the same outlined/default button look used across other pages,
-       and provide per-button color overrides so buttons look identical site-wide. */
-    .nav-btn {
-        display: inline-block;
-        background: transparent;
-        color: #d4af37;
-        border: 2px solid #d4af37;
-        padding: 10px 20px;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .nav-btn:hover {
-        background: #d4af37;
-        color: #1a1a1a;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.4);
-    }
-
-    /* Per-button color overrides — match what other pages use */
-    .nav-btn.floor-plan-btn,
-    .floor-plan-btn {
-        border-color: #28a745;
-        color: #28a745;
-    }
-    .nav-btn.floor-plan-btn:hover,
-    .floor-plan-btn:hover {
-        background: #28a745;
-        color: #fff;
-    }
-
-    .nav-btn.character-btn,
-    .character-btn {
-        border-color: #dc3545;
-        color: #dc3545;
-    }
-    .nav-btn.character-btn:hover,
-    .character-btn:hover {
-        background: #dc3545;
-        color: #fff;
-    }
-
-    .nav-btn.characters-btn,
-    .characters-btn {
-        border-color: #17a2b8;
-        color: #17a2b8;
-    }
-    .nav-btn.characters-btn:hover,
-    .characters-btn:hover {
-        background: #17a2b8;
-        color: #fff;
-    }
-
-    .nav-btn.home-btn,
-    .back-home-btn {
-        /* default gold outline */
-        border-color: #d4af37;
-        color: #d4af37;
-    }
-    .nav-btn.home-btn:hover,
-    .back-home-btn:hover {
-        background: #d4af37;
-        color: #1a1a1a;
-    }
+    /* Button styles centralized in wwwroot/app.css */
 
     .floor-plan-content {
         display: flex;
