@@ -15,12 +15,12 @@
             <h1 class="character-name">@currentCharacter.Name</h1>
             <h2 class="character-occupation">@currentCharacter.Occupation</h2>
             <div class="navigation-links">
-                <a href="/" class="nav-btn">🏠 Back to Home</a>
-                <a href="/characters" class="nav-btn">👥 View All Characters</a>
-                <a href="/floorplan" class="nav-btn floor-plan-btn">🗺️ Floor Plan</a>
+                <a href="" class="nav-btn">🏠 Back to Home</a>
+                <a href="characters" class="nav-btn">👥 View All Characters</a>
+                <a href="floorplan" class="nav-btn floor-plan-btn">🗺️ Floor Plan</a>
                 @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
                 {
-                    <a href="/forensic-report" class="nav-btn forensic-btn">🔬 Forensic Report</a>
+                    <a href="forensic-report" class="nav-btn forensic-btn">🔬 Forensic Report</a>
                 }
                 else
                 {
@@ -200,7 +200,7 @@
         <div class="no-character">
             <h2>No Character Assigned</h2>
             <p>You haven't been assigned a character yet. Please go back to the home page and get your character assignment.</p>
-            <a href="/" class="nav-btn">← Back to Home</a>
+            <a href="" class="nav-btn">← Back to Home</a>
         </div>
     }
 </div>
