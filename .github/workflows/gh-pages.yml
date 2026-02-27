@@ -27,3 +27,4 @@ jobs:
           publish_dir: publish/wwwroot
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          enable_jekyll: false
