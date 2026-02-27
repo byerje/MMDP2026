@@ -1,4 +1,28 @@
 ﻿@using Microsoft.AspNetCore.Components.WebAssembly.Services
+@using MurderMysteryParty.Services
+@implements IAsyncDisposable
+@inject RoundSignalRService RoundSignalRService
+@inject GameSessionService GameSessionService
 
 <Routes />
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
+        await RoundSignalRService.StartAsync();
+    }
+
+    private Task OnRoundUnlocked(int round)
+    {
+        GameSessionService.ApplyRoundUnlock(round);
+        return Task.CompletedTask;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
+        await RoundSignalRService.DisposeAsync();
+    }
+}
 

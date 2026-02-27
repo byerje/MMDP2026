@@ -67,6 +67,32 @@ namespace MurderMysteryParty.Services
             NotifyStateChanged();
         }
 
+        public void ApplyRoundUnlock(int round)
+        {
+            switch (round)
+            {
+                case 1:
+                    _gameSession.IsRound1Unlocked = true;
+                    _gameSession.CurrentRound = 1;
+                    break;
+                case 2:
+                    _gameSession.IsRound2AUnlocked = true;
+                    _gameSession.CurrentRound = 2;
+                    break;
+                case 3:
+                    _gameSession.IsRound2BUnlocked = true;
+                    _gameSession.CurrentRound = 3;
+                    break;
+                case 4:
+                    _gameSession.IsRound3AUnlocked = true;
+                    _gameSession.IsRound3BUnlocked = true;
+                    _gameSession.CurrentRound = 4;
+                    break;
+            }
+
+            NotifyStateChanged();
+        }
+
         public bool IsRoundUnlocked(int round)
         {
             return round switch

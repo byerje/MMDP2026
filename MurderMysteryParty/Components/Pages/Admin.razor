@@ -3,6 +3,7 @@
 @using MurderMysteryParty.Services
 @inject GameSessionService GameSessionService
 @inject CharacterService CharacterService
+@inject RoundSignalRService RoundSignalRService
 
 <PageTitle>Admin - Murder Mystery Game Control</PageTitle>
 
@@ -246,30 +247,34 @@
     private GameSession gameSession = new();
     private List<Character> allCharacters = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         gameSession = GameSessionService.GetGameSession();
         allCharacters = CharacterService.GetAllCharacters();
+        await RoundSignalRService.StartAsync();
     }
 
-    private void UnlockRound1()
+    private async Task UnlockRound1()
     {
         GameSessionService.UnlockRound1();
         gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendRoundUnlockedAsync(1);
         StateHasChanged();
     }
 
-    private void UnlockRound2A()
+    private async Task UnlockRound2A()
     {
         GameSessionService.UnlockRound2A();
         gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendRoundUnlockedAsync(2);
         StateHasChanged();
     }
 
-    private void UnlockRound2B()
+    private async Task UnlockRound2B()
     {
         GameSessionService.UnlockRound2B();
         gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendRoundUnlockedAsync(3);
         StateHasChanged();
     }
 
@@ -287,10 +292,11 @@
         StateHasChanged();
     }
 
-    private void UnlockRound3()
+    private async Task UnlockRound3()
     {
         GameSessionService.UnlockRound3();
         gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendRoundUnlockedAsync(4);
         StateHasChanged();
     }
 
