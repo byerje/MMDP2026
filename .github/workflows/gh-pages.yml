@@ -18,7 +18,9 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Publish Blazor WebAssembly
-        run: dotnet publish MurderMysteryParty/MurderMysteryParty.csproj -c Release -o publish -p:PathBase=/MMDP2026
+        run: dotnet publish MurderMysteryParty/MurderMysteryParty.csproj -c Release -o publish
+      - name: Fix base href for GitHub Pages
+        run: sed -i 's|<base href="/" />|<base href="/MMDP2026/" />|g' publish/wwwroot/index.html
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
