@@ -60,3 +60,4 @@ nunit-*.xml
 /.vs
 /MurderMysteryParty/.vs*
 /MurderMysteryParty/MurderMysteryParty.csproj.user
+/MurderMysteryParty/DOCS

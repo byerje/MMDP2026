@@ -30,16 +30,17 @@
 
         <div class="character-qr-section">
             <h3>Assign This Character</h3>
-            <p>Scan this QR code or tap it to claim this character.</p>
+            @if (!string.IsNullOrWhiteSpace(statusMessage))
+            {
+                <p class="assignment-status @GetStatusClass()">@statusMessage</p>
+            }
+            <p>Scan this QR code or tap the button to claim this character.</p>
             <button class="qr-button" @onclick="AssignCharacter" disabled="@isAssignDisabled">
                 <img src="@qrCodeUrl" alt="QR code for @character.Name" />
             </button>
-            <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">Assign @character.Name</button>
-
-            @if (!string.IsNullOrWhiteSpace(statusMessage))
-            {
-                <p class="assignment-status">@statusMessage</p>
-            }
+            <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">
+                @(isAssignDisabled ? "Unavailable" : $"Assign {character.Name}")
+            </button>
         </div>
 
         <div class="character-detail-body">
@@ -116,7 +117,30 @@
 
     .assignment-status {
         margin-top: 15px;
-        color: #f5f5dc;
+        margin-bottom: 15px;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.05rem;
+    }
+
+    .status-success {
+        background: rgba(40, 167, 69, 0.15);
+        border: 2px solid #28a745;
+        color: #28a745;
+    }
+
+    .status-error {
+        background: rgba(220, 53, 69, 0.15);
+        border: 2px solid #dc3545;
+        color: #dc3545;
+    }
+
+    .status-warning {
+        background: rgba(255, 193, 7, 0.15);
+        border: 2px solid #ffc107;
+        color: #ffc107;
     }
 
     .character-detail-body {
@@ -132,6 +156,18 @@
     .character-missing {
         text-align: center;
         padding: 40px;
+    }
+
+    .status-success {
+        color: #28a745;
+    }
+
+    .status-error {
+        color: #dc3545;
+    }
+
+    .status-warning {
+        color: #ffc107;
     }
 </style>
 
@@ -151,7 +187,37 @@
         character = CharacterService.GetCharacterById(CharacterId);
         qrCodeUrl = BuildQrCodeUrl();
         await LoadAssignmentState();
+        UpdateStatusMessage();
         await TryAutoAssign();
+    }
+
+    private void UpdateStatusMessage()
+    {
+        if (character == null)
+        {
+            statusMessage = "Character not found.";
+            return;
+        }
+
+        if (assignedCharacterId == CharacterId.ToString())
+        {
+            statusMessage = $"? You are currently assigned as {character.Name}.";
+            return;
+        }
+
+        if (IsAssignedToDifferentCharacter())
+        {
+            statusMessage = "?? You already have a different character assigned. Clear your current assignment first.";
+            return;
+        }
+
+        if (character.IsAssigned)
+        {
+            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            return;
+        }
+
+        statusMessage = $"Tap the button below to claim {character.Name}!";
     }
 
     private string BuildQrCodeUrl()
@@ -201,33 +267,52 @@
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "You already have a character assigned. Clear it before choosing another.";
+            statusMessage = "?? You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
         {
-            statusMessage = "This character is already assigned to another player.";
+            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            await LoadAssignmentState();
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = "This character is already assigned to you.";
+            statusMessage = $"? You are already assigned as {character.Name}.";
             return;
         }
 
         if (!CharacterService.TryAssignCharacter(CharacterId))
         {
-            statusMessage = "This character is no longer available.";
+            statusMessage = $"? {character.Name} was just claimed by another player. Please choose a different character.";
             await LoadAssignmentState();
+            UpdateStatusMessage();
+            StateHasChanged();
             return;
         }
 
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", CharacterId.ToString());
         await RoundSignalRService.SendCharacterAssignmentChangedAsync(CharacterId, true);
         assignedCharacterId = CharacterId.ToString();
-        statusMessage = $"You are now assigned as {character.Name}.";
+        statusMessage = $"?? Success! You are now assigned as {character.Name}.";
         await LoadAssignmentState();
+    }
+
+    private string GetStatusClass()
+    {
+        if (statusMessage == null) return "";
+        
+        if (statusMessage.StartsWith("?") || statusMessage.StartsWith("??"))
+            return "status-success";
+        
+        if (statusMessage.StartsWith("?"))
+            return "status-error";
+        
+        if (statusMessage.StartsWith("??"))
+            return "status-warning";
+        
+        return "";
     }
 }

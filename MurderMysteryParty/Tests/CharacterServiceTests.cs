@@ -169,4 +169,36 @@ public class CharacterServiceTests
         // Assert
         Assert.True(eventFired);
     }
+
+    [Fact]
+    public void TryAssignCharacter_SimultaneousAttempts_OnlyOneSucceeds()
+    {
+        // Arrange
+        var service = new CharacterService();
+
+        // Act
+        var result1 = service.TryAssignCharacter(1);
+        var result2 = service.TryAssignCharacter(1);
+
+        // Assert
+        Assert.True(result1);
+        Assert.False(result2);
+        var character = service.GetCharacterById(1);
+        Assert.True(character?.IsAssigned);
+    }
+
+    [Fact]
+    public void GetCharacterById_AssignedCharacter_ReturnsAssignedState()
+    {
+        // Arrange
+        var service = new CharacterService();
+        service.TryAssignCharacter(1);
+
+        // Act
+        var character = service.GetCharacterById(1);
+
+        // Assert
+        Assert.NotNull(character);
+        Assert.True(character.IsAssigned);
+    }
 }
