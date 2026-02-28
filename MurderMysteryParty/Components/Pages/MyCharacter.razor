@@ -197,7 +197,7 @@
             <h3>🤫 Your Secret Information</h3>
             <div class="secrets-content">
                 <p>@currentCharacter.Secrets</p>
-                <p class="secrets-warning"><strong>⚠️ Keep this information private! Do not share with other players unless instructed to do so in a specific round.</strong></p>
+                <p class="secrets-warning"><strong>⚠️ Keep this information private! Unless you wish to do so in order to gain others' secrets'.</strong></p>
             </div>
         </div>
 
@@ -415,8 +415,16 @@
     }
 
     .round-content p {
-        margin: 0;
+        margin: 0 0 10px 0;
         line-height: 1.5;
+    }
+
+    .round-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .round-content h5 {
+        margin-top: 0;
     }
 
     .content-section {
@@ -436,14 +444,14 @@
     }
 
     .round-list {
-        margin: 0;
-        padding-left: 20px;
+        margin: 10px 0;
+        padding-left: 25px;
         list-style-type: disc;
     }
 
     .round-list li {
-        margin-bottom: 8px;
-        line-height: 1.4;
+        margin-bottom: 10px;
+        line-height: 1.5;
     }
 
     .secrets-list li {
@@ -454,8 +462,25 @@
     .concealed-secrets {
         background: rgba(255, 107, 107, 0.1);
         border-left: 3px solid #ff6b6b;
-        padding: 10px;
+        padding: 12px;
+        margin-top: 15px;
         border-radius: 5px;
+    }
+
+    .corroboration-section {
+        margin: 8px 0 8px 20px;
+        padding: 10px 12px;
+        background: rgba(108, 117, 125, 0.15);
+        border-left: 3px solid #6c757d;
+        border-radius: 4px;
+    }
+
+    .corroboration-text {
+        margin: 0;
+        font-style: italic;
+        color: #ccc;
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
 
     .locked-text {
@@ -684,6 +709,8 @@
             return "";
 
         var formattedHtml = "";
+        var inList = false;
+        var inSection = false;
         
         if (content.Contains("PART A") || content.Contains("PART B"))
         {
@@ -695,41 +722,57 @@
                 
                 if (trimmedLine.StartsWith("PART A") || trimmedLine.StartsWith("PART B"))
                 {
+                    // Close previous section and list
+                    if (inList)
+                    {
+                        formattedHtml += "</ul>";
+                        inList = false;
+                    }
+                    if (inSection)
+                    {
+                        formattedHtml += "</div>";
+                    }
+                    
                     formattedHtml += $"<div class='content-section'><h5 class='section-title'>{trimmedLine}</h5>";
+                    inSection = true;
                 }
                 else if (trimmedLine.StartsWith("•"))
                 {
-                    if (!formattedHtml.EndsWith("<ul class='round-list'>"))
+                    if (!inList)
                     {
                         formattedHtml += "<ul class='round-list'>";
+                        inList = true;
                     }
                     
                     var bulletContent = trimmedLine.Substring(1).Trim();
                     formattedHtml += $"<li>{bulletContent}</li>";
                 }
-                else if (trimmedLine.StartsWith(" ") && trimmedLine.Contains("If asked"))
+                else if (trimmedLine.Contains("If asked") || trimmedLine.Contains("corroborate"))
                 {
-                    if (!formattedHtml.EndsWith("</ul>"))
+                    if (inList)
                     {
                         formattedHtml += "</ul>";
+                        inList = false;
                     }
-                    formattedHtml += $"<div class='corroboration-section'><p class='corroboration-text'>{trimmedLine.Trim()}</p></div>";
+                    formattedHtml += $"<div class='corroboration-section'><p class='corroboration-text'>{trimmedLine}</p></div>";
                 }
                 else if (!string.IsNullOrEmpty(trimmedLine))
                 {
-                    if (formattedHtml.EndsWith("></ul>") == false && formattedHtml.Contains("<ul class='round-list'>"))
+                    if (inList)
                     {
                         formattedHtml += "</ul>";
+                        inList = false;
                     }
                     formattedHtml += $"<p>{trimmedLine}</p>";
                 }
             }
             
-            if (formattedHtml.Contains("<ul class='round-list'>") && !formattedHtml.EndsWith("</ul>"))
+            // Close any remaining open tags
+            if (inList)
             {
                 formattedHtml += "</ul>";
             }
-            if (formattedHtml.Contains("<div class='content-section'>"))
+            if (inSection)
             {
                 formattedHtml += "</div>";
             }
