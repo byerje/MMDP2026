@@ -4,81 +4,108 @@
 @inject GameSessionService GameSessionService
 @inject CharacterService CharacterService
 @inject RoundSignalRService RoundSignalRService
+@inject AdminAuthService AdminAuthService
 
 <PageTitle>Admin - Murder Mystery Game Control</PageTitle>
 
-<div class="admin-container">
-    <div class="admin-header">
-        <h1 class="admin-title">Game Administration</h1>
-        <h2 class="admin-subtitle">Round Control Center</h2>
-        <div class="admin-navigation">
-            <a href="" class="back-home-btn">🏠 Back to Home</a>
-            <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
-            <a href="characters" class="characters-btn">👥 All Characters</a>
+@if (!AdminAuthService.IsAuthenticated)
+{
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Game Administration</h1>
+            <h2 class="admin-subtitle">Admin Login Required</h2>
         </div>
-    </div>
 
-    <div class="game-status">
-        <h3>Current Status: @GameSessionService.GetCurrentRoundName()</h3>
-    </div>
-
-    <div class="round-controls">
-        <div class="round-control-grid">
-            <div class="round-card @(gameSession.IsRound1Unlocked ? "unlocked" : "")">
-                <h4>Round 1</h4>
-                <p>Initial character introductions and setup</p>
-                <button class="control-btn" @onclick="UnlockRound1" disabled="@gameSession.IsRound1Unlocked">
-                    @(gameSession.IsRound1Unlocked ? "✓ Unlocked" : "Unlock Round 1")
-                </button>
-            </div>
-
-            <div class="round-card @(gameSession.IsRound2AUnlocked ? "unlocked" : "")">
-                <h4>Round 2 - Part A</h4>
-                <p>Pre-murder investigation and clue gathering</p>
-                <button class="control-btn" @onclick="UnlockRound2A" disabled="@gameSession.IsRound2AUnlocked">
-                    @(gameSession.IsRound2AUnlocked ? "✓ Unlocked" : "Unlock Round 2A")
-                </button>
-            </div>
-
-            <div class="round-card @(gameSession.IsRound2BUnlocked ? "unlocked" : "")">
-                <h4>Round 2 - Part B</h4>
-                <p>Post-murder response and immediate investigation</p>
-                <button class="control-btn" @onclick="UnlockRound2B" disabled="@gameSession.IsRound2BUnlocked">
-                    @(gameSession.IsRound2BUnlocked ? "✓ Unlocked" : "Unlock Round 2B")
-                </button>
-            </div>
-
-            <div class="round-card @((gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked) ? "unlocked" : "")">
-                <h4>Round 3</h4>
-                <p>Final reveal, motive reveals, and chaotic ending</p>
-                <button class="control-btn" @onclick="UnlockRound3" disabled="@(gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked)">
-                    @((gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked) ? "✓ Unlocked" : "Unlock Round 3")
-                </button>
-            </div>
+        <div class="game-status">
+            <h3>Enter Admin Password</h3>
         </div>
-    </div>
 
-    <div class="game-actions">
-        <button class="reset-btn" @onclick="ResetGame">
-            🔄 Reset Entire Game
-        </button>
-        <p class="reset-note">This will reset all rounds and character assignments</p>
-    </div>
-
-    <div class="character-status">
-        <h3>Character Assignment Status</h3>
-        <div class="character-grid">
-            @foreach (var character in allCharacters)
+        <div class="game-actions">
+            <input class="admin-password" type="password" @bind="adminPassword" placeholder="Admin password" />
+            <button class="control-btn" @onclick="AuthenticateAdmin">Login</button>
+            @if (!string.IsNullOrWhiteSpace(loginError))
             {
-                <div class="character-status-card @(character.IsAssigned ? "assigned" : "")">
-                    <h4>@character.Name</h4>
-                    <p>@character.Occupation</p>
-                    <span class="status-badge">@(character.IsAssigned ? "ASSIGNED" : "AVAILABLE")</span>
-                </div>
+                <p class="reset-note">@loginError</p>
             }
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1 class="admin-title">Game Administration</h1>
+            <h2 class="admin-subtitle">Round Control Center</h2>
+            <div class="admin-navigation">
+                <a href="" class="back-home-btn">🏠 Back to Home</a>
+                <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
+                <a href="characters" class="characters-btn">👥 All Characters</a>
+                <button class="reset-btn" @onclick="Logout">Log Out</button>
+            </div>
+        </div>
+
+        <div class="game-status">
+            <h3>Current Status: @GameSessionService.GetCurrentRoundName()</h3>
+        </div>
+
+        <div class="round-controls">
+            <div class="round-control-grid">
+                <div class="round-card @(gameSession.IsRound1Unlocked ? "unlocked" : "")">
+                    <h4>Round 1</h4>
+                    <p>Initial character introductions and setup</p>
+                    <button class="control-btn" @onclick="UnlockRound1" disabled="@gameSession.IsRound1Unlocked">
+                        @(gameSession.IsRound1Unlocked ? "✓ Unlocked" : "Unlock Round 1")
+                    </button>
+                </div>
+
+                <div class="round-card @(gameSession.IsRound2AUnlocked ? "unlocked" : "")">
+                    <h4>Round 2 - Part A</h4>
+                    <p>Pre-murder investigation and clue gathering</p>
+                    <button class="control-btn" @onclick="UnlockRound2A" disabled="@gameSession.IsRound2AUnlocked">
+                        @(gameSession.IsRound2AUnlocked ? "✓ Unlocked" : "Unlock Round 2A")
+                    </button>
+                </div>
+
+                <div class="round-card @(gameSession.IsRound2BUnlocked ? "unlocked" : "")">
+                    <h4>Round 2 - Part B</h4>
+                    <p>Post-murder response and immediate investigation</p>
+                    <button class="control-btn" @onclick="UnlockRound2B" disabled="@gameSession.IsRound2BUnlocked">
+                        @(gameSession.IsRound2BUnlocked ? "✓ Unlocked" : "Unlock Round 2B")
+                    </button>
+                </div>
+
+                <div class="round-card @((gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked) ? "unlocked" : "")">
+                    <h4>Round 3</h4>
+                    <p>Final reveal, motive reveals, and chaotic ending</p>
+                    <button class="control-btn" @onclick="UnlockRound3" disabled="@(gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked)">
+                        @((gameSession.IsRound3AUnlocked && gameSession.IsRound3BUnlocked) ? "✓ Unlocked" : "Unlock Round 3")
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-actions">
+            <button class="reset-btn" @onclick="ResetGame">
+                🔄 Reset Entire Game
+            </button>
+            <p class="reset-note">This will reset all rounds and character assignments</p>
+        </div>
+
+        <div class="character-status">
+            <h3>Character Assignment Status</h3>
+            <div class="character-grid">
+                @foreach (var character in allCharacters)
+                {
+                    <div class="character-status-card @(character.IsAssigned ? "assigned" : "")">
+                        <h4>@character.Name</h4>
+                        <p>@character.Occupation</p>
+                        <span class="status-badge">@(character.IsAssigned ? "ASSIGNED" : "AVAILABLE")</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
 
 <style>
     .admin-container {
@@ -241,17 +268,50 @@
         background: #d4af37;
         color: #1a1a1a;
     }
+
+    .admin-password {
+        padding: 10px 14px;
+        border-radius: 6px;
+        border: 1px solid #d4af37;
+        background: rgba(0,0,0,0.4);
+        color: #f5f5dc;
+        margin-right: 10px;
+        min-width: 240px;
+    }
 </style>
 
 @code {
     private GameSession gameSession = new();
     private List<Character> allCharacters = new();
+    private string adminPassword = string.Empty;
+    private string? loginError;
 
     protected override async Task OnInitializedAsync()
     {
+        await AdminAuthService.InitializeAsync();
         gameSession = GameSessionService.GetGameSession();
         allCharacters = CharacterService.GetAllCharacters();
         await RoundSignalRService.StartAsync();
+    }
+
+    private async Task AuthenticateAdmin()
+    {
+        loginError = null;
+        if (await AdminAuthService.LoginAsync(adminPassword))
+        {
+            adminPassword = string.Empty;
+            StateHasChanged();
+            return;
+        }
+
+        loginError = "Invalid password.";
+    }
+
+    private async Task Logout()
+    {
+        await AdminAuthService.LogoutAsync();
+        adminPassword = string.Empty;
+        loginError = null;
     }
 
     private async Task UnlockRound1()

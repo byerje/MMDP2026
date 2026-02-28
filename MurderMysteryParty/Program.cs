@@ -12,5 +12,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton<CharacterService>();
 builder.Services.AddSingleton<GameSessionService>();
 builder.Services.AddSingleton<RoundSignalRService>();
+builder.Services.AddScoped<AdminAuthService>();
 
 await builder.Build().RunAsync();

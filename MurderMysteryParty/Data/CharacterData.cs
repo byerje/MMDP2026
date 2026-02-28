@@ -266,7 +266,7 @@ namespace MurderMysteryParty.Data
                     Name = "Officer Clyde Mulligan",
                     Occupation = "Prohibition Agent",
                     Relationship = "Federal agent investigating the speakeasy operation",
-                    Background = "Commanding lawman with a watchful eye.",
+                    Background = "Commanding lawman with a watchful eye. Your friend call you 'Clipper'",
                     PersonalityTraits = "Authoritative, observant, morally conflicted",
                     Goals = "To enforce prohibition laws while navigating corruption",
                     Secrets = "He's been taking bribes from multiple criminal organizations",
