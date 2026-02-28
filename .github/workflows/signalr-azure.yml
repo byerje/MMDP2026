@@ -1,0 +1,34 @@
+name: Build and Deploy SignalR Server to Azure
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'MurderMysteryParty/SignalRServer/**'
+      - '.github/workflows/signalr-azure.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore MurderMysteryParty/SignalRServer/SignalRServer.csproj
+
+      - name: Build
+        run: dotnet build MurderMysteryParty/SignalRServer/SignalRServer.csproj -c Release --no-restore
+
+      - name: Publish SignalR Server
+        run: dotnet publish MurderMysteryParty/SignalRServer/SignalRServer.csproj -c Release -o publish --no-build
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: MySignalRHub
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: publish
