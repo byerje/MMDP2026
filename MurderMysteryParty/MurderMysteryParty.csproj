@@ -21,9 +21,13 @@
 
   <ItemGroup>
     <Compile Remove="SignalRServer\**\*.cs" />
+    <Compile Remove="Tests\**\*.cs" />
     <Content Remove="SignalRServer\**" />
+    <Content Remove="Tests\**" />
     <EmbeddedResource Remove="SignalRServer\**" />
+    <EmbeddedResource Remove="Tests\**" />
     <None Remove="SignalRServer\**" />
+    <None Remove="Tests\**" />
   </ItemGroup>
 
 </Project>
