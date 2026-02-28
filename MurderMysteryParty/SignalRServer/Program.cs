@@ -9,7 +9,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         var clientUrl = builder.Configuration["ClientUrl"] ?? "http://localhost:5059";
-        policy.WithOrigins(clientUrl, "http://localhost:5000")
+        policy.WithOrigins(clientUrl, "http://localhost:5000", "https://byerje.github.io")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
