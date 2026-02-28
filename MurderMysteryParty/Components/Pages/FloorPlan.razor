@@ -24,13 +24,14 @@
 
 <style>
     .floor-plan-container {
-        max-width: 1200px;
+        max-width: 1000px;
         margin: 0 auto;
         padding: 20px;
         font-family: 'Times New Roman', serif;
         background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
         color: #f5f5dc;
         min-height: 100vh;
+        width: 100%;
     }
 
     .floor-plan-header {
@@ -98,9 +99,10 @@
         height: auto;
         border: 3px solid #d4af37;
         border-radius: 10px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
         cursor: pointer;
         transition: all 0.3s ease;
+        display: block;
+        margin: 0 auto;
     }
 
     .floor-plan-image:hover {

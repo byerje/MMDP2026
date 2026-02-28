@@ -69,6 +69,36 @@
         background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
         color: #f5f5dc;
         min-height: 100vh;
+        width: 100%;
+    }
+
+    @@media (max-width: 768px) {
+        .character-detail-container {
+            padding: 10px;
+        }
+
+        .character-name {
+            font-size: 1.8rem;
+        }
+
+        .character-navigation {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .character-navigation a, .character-navigation button {
+            width: 100%;
+        }
+
+        .character-qr-section {
+            padding: 15px;
+        }
+
+        .character-qr-section img {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto;
+        }
     }
 
     .character-detail-header {
@@ -316,3 +346,4 @@
         return "";
     }
 }
+

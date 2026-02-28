@@ -65,6 +65,35 @@
         background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
         color: #f5f5dc;
         min-height: 100vh;
+        width: 100%;
+    }
+
+    @@media (max-width: 768px) {
+        .speakeasy-container {
+            padding: 10px;
+        }
+
+        .gatsby-title {
+            font-size: 1.8rem;
+        }
+
+        .event-subtitle {
+            font-size: 1.3rem;
+        }
+
+        .art-deco-border {
+            padding: 15px;
+        }
+
+        .navigation-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .navigation-section a, .navigation-section button {
+            width: 100%;
+        }
     }
 
     .invitation-header {

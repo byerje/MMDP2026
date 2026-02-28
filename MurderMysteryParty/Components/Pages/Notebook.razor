@@ -1,16 +1,16 @@
-﻿@page "/notebook"
+@page "/notebook"
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Notebook - Murder Mystery Party</PageTitle>
 
 <div class="notebook-container">
     <div class="notebook-header">
-        <h1 class="notebook-title">🗒️ Detective Notebook</h1>
+        <h1 class="notebook-title">??? Detective Notebook</h1>
         <h2 class="notebook-subtitle">Your Personal Investigation Notes</h2>
         <div class="notebook-navigation">
-            <a href="" class="back-home-btn">🏠 Back to Home</a>
-            <a href="my-character" class="character-btn">🎭 My Character</a>
-            <a href="characters" class="view-all-btn">👥 All Characters</a>
+            <a href="" class="back-home-btn">?? Back to Home</a>
+            <a href="my-character" class="character-btn">?? My Character</a>
+            <a href="characters" class="view-all-btn">?? All Characters</a>
         </div>
     </div>
 
@@ -34,6 +34,35 @@
         background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
         color: #f5f5dc;
         min-height: 100vh;
+        width: 100%;
+    }
+
+    @@media (max-width: 768px) {
+        .notebook-container {
+            padding: 10px;
+        }
+
+        .notebook-title {
+            font-size: 1.8rem;
+        }
+
+        .notebook-body {
+            padding: 15px;
+        }
+
+        .notebook-navigation {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .notebook-navigation a {
+            width: 100%;
+        }
+
+        .notes-input {
+            font-size: 0.95rem;
+            min-height: 300px;
+        }
     }
 
     .notebook-header {
@@ -162,3 +191,4 @@
         }
     }
 }
+
