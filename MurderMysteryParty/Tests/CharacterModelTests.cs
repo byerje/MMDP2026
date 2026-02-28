@@ -19,7 +19,7 @@ public class CharacterModelTests
             Goals = "Test goals",
             Secrets = "Test secrets",
             Costume = "Test costume",
-            Relationship = "Test relationship"
+            Description = "Test description"
         };
 
         // Assert
@@ -40,7 +40,7 @@ public class CharacterModelTests
             Goals = "Become famous",
             Secrets = "Secret past",
             Costume = "Flapper dress",
-            Relationship = "Friend of victim"
+            Description = "Friend of victim"
         };
 
         // Act & Assert
@@ -52,7 +52,7 @@ public class CharacterModelTests
         Assert.Equal("Become famous", character.Goals);
         Assert.Equal("Secret past", character.Secrets);
         Assert.Equal("Flapper dress", character.Costume);
-        Assert.Equal("Friend of victim", character.Relationship);
+        Assert.Equal("Friend of victim", character.Description);
     }
 
     [Fact]

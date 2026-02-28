@@ -4,6 +4,8 @@
 @inject RoundSignalRService RoundSignalRService
 @inject GameSessionService GameSessionService
 @inject CharacterService CharacterService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <Routes />
 
@@ -13,6 +15,28 @@
         RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged += OnCharacterAssignmentChanged;
         await RoundSignalRService.StartAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var isRefresh = await JSRuntime.InvokeAsync<bool>("isPageRefresh");
+                var currentPath = await JSRuntime.InvokeAsync<string>("getCurrentPath");
+                
+                // If user refreshed on a non-home page, redirect to home
+                if (isRefresh && currentPath != "/" && !string.IsNullOrEmpty(currentPath))
+                {
+                    NavigationManager.NavigateTo("/", forceLoad: true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking refresh state: {ex.Message}");
+            }
+        }
     }
 
     private Task OnRoundUnlocked(int round)

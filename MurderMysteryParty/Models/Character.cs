@@ -5,7 +5,7 @@ namespace MurderMysteryParty.Models
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Occupation { get; set; } = string.Empty;
-        public string Relationship { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public string Background { get; set; } = string.Empty;
         public string PersonalityTraits { get; set; } = string.Empty;
         public string Goals { get; set; } = string.Empty;

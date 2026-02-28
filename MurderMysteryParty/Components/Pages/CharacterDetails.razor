@@ -21,8 +21,9 @@
         <div class="character-detail-header">
             <h1 class="character-name">@character.Name</h1>
             <p class="character-occupation">@character.Occupation</p>
+            <p class="character-description">@character.Description</p>
             <div class="character-navigation">
-                <a href="characters" class="view-all-btn">?? View All Characters</a>
+                <a href="characters" class="view-all-btn">? View All Characters</a>
                 <a href="my-character" class="character-btn">?? My Character</a>
                 <a href="" class="back-home-btn">?? Back to Home</a>
             </div>
@@ -41,21 +42,6 @@
             <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">
                 @(isAssignDisabled ? "Unavailable" : $"Assign {character.Name}")
             </button>
-        </div>
-
-        <div class="character-detail-body">
-            <div class="detail-card">
-                <h4>Background</h4>
-                <p>@character.Background</p>
-            </div>
-            <div class="detail-card">
-                <h4>Personality</h4>
-                <p>@character.PersonalityTraits</p>
-            </div>
-            <div class="detail-card">
-                <h4>Goals</h4>
-                <p>@character.Goals</p>
-            </div>
         </div>
     }
 </div>
@@ -122,6 +108,16 @@
         font-style: italic;
     }
 
+    .character-description {
+        font-size: 1rem;
+        color: #ccc;
+        margin: 12px 0 0 0;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.5;
+    }
+
     .character-navigation {
         margin-top: 15px;
         display: flex;
@@ -171,16 +167,6 @@
         background: rgba(255, 193, 7, 0.15);
         border: 2px solid #ffc107;
         color: #ffc107;
-    }
-
-    .character-detail-body {
-        display: grid;
-        gap: 20px;
-    }
-
-    .detail-card {
-        border-left: 3px solid #d4af37;
-        padding-left: 12px;
     }
 
     .character-missing {
