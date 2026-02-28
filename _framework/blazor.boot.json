@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "MurderMysteryParty",
   "resources": {
-    "hash": "sha256-dRPhmjIiJK9x93kefqglf1TWimUKbK7Bxu8rKjBq+dQ=",
+    "hash": "sha256-AEzWUC3BlL/ZqiN3oIzV595WSwSwp+kAz/zYyO1DTFA=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-NljIbpK/1KCj0+knpX8U77Rbl5kTtfFIuFjK7AuczEw="
     },
@@ -66,7 +66,7 @@
       "System.Threading.Channels.wasm": "sha256-CfMbl9vf1GDVdf2mmkcz0LmFxGPmGR65Lyzfekr22rA=",
       "System.Threading.wasm": "sha256-3umhf/2cM5Pn/n2CFzJ1l5OdS5LpBUZ2s6B1xTaCQYE=",
       "System.Private.CoreLib.wasm": "sha256-radgINSWJbnpVg5CyHTWt5KtGsKchmmGYZB0pjj922A=",
-      "MurderMysteryParty.wasm": "sha256-Vd9tbWK3m+28Sz6QGMOUuiIzPHlsC83aEbX3lhaaoCE="
+      "MurderMysteryParty.wasm": "sha256-gHK38y0pFL+D2qneNjP/LoKCudWD0Gyxd/BDdrAIemA="
     }
   },
   "cacheBootResources": true,
