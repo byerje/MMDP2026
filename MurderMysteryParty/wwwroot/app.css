@@ -73,7 +73,7 @@ h1:focus {
 /* Base outlined button used by nav and action links/buttons */
 .nav-btn, .back-home-btn, .view-all-btn, .admin-btn, .floor-plan-btn, .character-btn, .characters-btn,
 .forensic-btn, .forensic-btn-locked, .refresh-btn, .clear-btn, .clear-assignment-btn, .qr-button,
-.reset-btn, .control-btn {
+.reset-btn, .control-btn, .auth-btn {
   display: inline-block;
   background: transparent;
   color: #d4af37;
@@ -88,19 +88,19 @@ h1:focus {
 
 .nav-btn:hover, .back-home-btn:hover, .view-all-btn:hover, .admin-btn:hover, .floor-plan-btn:hover,
 .character-btn:hover, .characters-btn:hover, .forensic-btn:hover, .refresh-btn:hover, .clear-btn:hover,
-.clear-assignment-btn:hover, .reset-btn:hover, .control-btn:hover {
+.clear-assignment-btn:hover, .reset-btn:hover, .control-btn:hover, .auth-btn:hover {
   background: #d4af37;
   color: #1a1a1a;
 }
 
 /* Per-button color mappings (ensure same color everywhere) */
 
-/* Back to home and general navigation actions use gold */
-.back-home-btn, .nav-btn, .view-all-btn {
+/* Back to home and general navigation actions use yellow */
+.back-home-btn, .nav-btn {
   border-color: #d4af37;
   color: #d4af37;
 }
-.back-home-btn:hover, .nav-btn:hover, .view-all-btn:hover {
+.back-home-btn:hover, .nav-btn:hover {
   background: #d4af37;
   color: #1a1a1a;
 }
@@ -125,53 +125,63 @@ h1:focus {
   color: #fff;
 }
 
-/* Forensic report actions use red */
-.forensic-btn {
+/* Clear actions use red */
+.clear-btn, .clear-assignment-btn {
   border-color: #dc3545;
   color: #dc3545;
 }
-.forensic-btn:hover {
+.clear-btn:hover, .clear-assignment-btn:hover {
   background: #dc3545;
   color: #fff;
 }
 
-/* Clear actions use orange */
-.clear-btn, .clear-assignment-btn {
+/* View all characters uses orange */
+.view-all-btn, .characters-btn {
   border-color: #fd7e14;
   color: #fd7e14;
 }
-.clear-btn:hover, .clear-assignment-btn:hover {
+.view-all-btn:hover, .characters-btn:hover {
   background: #fd7e14;
   color: #fff;
 }
 
-/* Characters list uses teal */
-.characters-btn {
-  border-color: #17a2b8;
-  color: #17a2b8;
-}
-.characters-btn:hover {
-  background: #17a2b8;
-  color: #fff;
-}
-
-/* Admin button uses purple */
-.admin-btn {
+/* Forensic report uses purple */
+.forensic-btn {
   border-color: #6f42c1;
   color: #6f42c1;
 }
-.admin-btn:hover {
+.forensic-btn:hover {
   background: #6f42c1;
   color: #fff;
 }
 
-/* Character button uses pink */
+/* View my character uses white */
 .character-btn {
-  border-color: #e83e8c;
-  color: #e83e8c;
+  border-color: #f8f9fa;
+  color: #f8f9fa;
 }
 .character-btn:hover {
-  background: #e83e8c;
+  background: #f8f9fa;
+  color: #1a1a1a;
+}
+
+/* Admin button uses gray */
+.admin-btn {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+.admin-btn:hover {
+  background: #6c757d;
+  color: #fff;
+}
+
+/* Login/logout uses brown */
+.auth-btn {
+  border-color: #8b5e34;
+  color: #8b5e34;
+}
+.auth-btn:hover {
+  background: #8b5e34;
   color: #fff;
 }
 

@@ -22,7 +22,7 @@
 
         <div class="game-actions">
             <input class="admin-password" type="password" @bind="adminPassword" placeholder="Admin password" />
-            <button class="control-btn" @onclick="AuthenticateAdmin">Login</button>
+            <button class="auth-btn" @onclick="AuthenticateAdmin">Login</button>
             @if (!string.IsNullOrWhiteSpace(loginError))
             {
                 <p class="reset-note">@loginError</p>
@@ -40,7 +40,7 @@ else
                 <a href="" class="back-home-btn">🏠 Back to Home</a>
                 <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
                 <a href="characters" class="characters-btn">👥 All Characters</a>
-                <button class="reset-btn" @onclick="Logout">Log Out</button>
+                <button class="auth-btn" @onclick="Logout">Log Out</button>
             </div>
         </div>
 

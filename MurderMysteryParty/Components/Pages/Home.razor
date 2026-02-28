@@ -1,9 +1,10 @@
-﻿@page "/"
+@page "/"
 @using MurderMysteryParty.Models
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
 @inject GameSessionService GameSessionService
 @inject IJSRuntime JSRuntime
+@inject AdminAuthService AdminAuthService
 
 <PageTitle>Murder Mystery Dinner Party - 1920's SpeakEasy Gala 2026</PageTitle>
 
@@ -29,11 +30,11 @@
             <div class="party-details">
                 <h4>What Awaits You:</h4>
                 <ul>
-                    <li>🍸 Prohibition-era mocktails</li>
-                    <li>🎭 Interactive murder mystery experience</li>
-                    <li>🎷 Great music and 1920s entertainment</li>
-                    <li>🏆 Prizes for best costume and detective work</li>
-                    <li>🍽️ Delicious period-appropriate dinner</li>
+                    <li>?? Prohibition-era mocktails</li>
+                    <li>?? Interactive murder mystery experience</li>
+                    <li>?? Great music and 1920s entertainment</li>
+                    <li>?? Prizes for best costume and detective work</li>
+                    <li>??? Delicious period-appropriate dinner</li>
                 </ul>
             </div>
 
@@ -60,7 +61,7 @@
                             <p><em>More character details will be provided at the party!</em></p>
                         </div>
                         <div class="character-actions">
-                            <a href="my-character" class="character-btn">🎭 View My Character Card</a>
+                            <a href="my-character" class="character-btn">?? View My Character Card</a>
                             <button class="clear-assignment-btn" @onclick="ClearAssignment">Clear Assignment</button>
                         </div>
                     </div>
@@ -69,7 +70,7 @@
                 {
                     <div class="qr-section">
                         <button class="qr-button" @onclick="AssignCharacter">
-                            📱 Scan QR Code / Get Character
+                            ?? Scan QR Code / Get Character
                         </button>
                         <p class="qr-note">Click the button above to simulate QR code scanning and receive your character assignment!</p>
                     </div>
@@ -77,9 +78,12 @@
             </div>
 
             <div class="navigation-section">
-                <a href="characters" class="view-all-btn">👥 View All Characters</a>
-                <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
-                <a href="admin" class="admin-btn">🛠️ Game Admin</a>
+                <a href="characters" class="view-all-btn">?? View All Characters</a>
+                <a href="floorplan" class="floor-plan-btn">??? Floor Plan</a>
+                @if (AdminAuthService.IsAuthenticated)
+                {
+                    <a href="admin" class="admin-btn">??? Game Admin</a>
+                }
             </div>
 
         </div>
@@ -218,6 +222,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await AdminAuthService.InitializeAsync();
         // No localStorage calls here - moved to OnAfterRenderAsync
     }
 
