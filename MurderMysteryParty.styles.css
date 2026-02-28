@@ -3,10 +3,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
 }
 
 main[b-no64orc37c] {
     flex: 1;
+    font-family: inherit;
 }
 
 .sidebar[b-no64orc37c] {

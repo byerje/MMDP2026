@@ -1,0 +1,42 @@
+/* Critical Emoji Font Configuration */
+/* This file ensures emoji characters render correctly across all browsers */
+
+:root {
+    /* Define emoji font stack as a CSS variable for reuse */
+    --emoji-font-stack: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Color', 'Twemoji Mozilla', 'Segoe UI Symbol', 'Noto Color Emoji Compat', sans-serif;
+    --base-font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, var(--emoji-font-stack);
+}
+
+/* Apply emoji fonts to all elements */
+*, *::before, *::after {
+    font-family: var(--base-font-stack) !important;
+}
+
+html {
+    font-family: var(--base-font-stack) !important;
+}
+
+body {
+    font-family: var(--base-font-stack) !important;
+}
+
+/* Ensure buttons and inputs also support emojis */
+button, input, textarea, select, option {
+    font-family: var(--base-font-stack) !important;
+}
+
+/* Override any Times New Roman with emoji support */
+.speakeasy-container,
+.character-detail-container,
+.character-list-container,
+.notebook-container,
+.forensic-container,
+.floor-plan-container,
+.admin-container {
+    font-family: 'Times New Roman', serif, var(--emoji-font-stack) !important;
+}
+
+/* Force emoji rendering for common emoji characters */
+.emoji-text {
+    font-family: var(--emoji-font-stack) !important;
+}
