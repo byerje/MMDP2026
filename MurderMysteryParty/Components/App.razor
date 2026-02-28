@@ -3,6 +3,7 @@
 @implements IAsyncDisposable
 @inject RoundSignalRService RoundSignalRService
 @inject GameSessionService GameSessionService
+@inject CharacterService CharacterService
 
 <Routes />
 
@@ -10,6 +11,7 @@
     protected override async Task OnInitializedAsync()
     {
         RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
+        RoundSignalRService.CharacterAssignmentChanged += OnCharacterAssignmentChanged;
         await RoundSignalRService.StartAsync();
     }
 
@@ -19,9 +21,16 @@
         return Task.CompletedTask;
     }
 
+    private Task OnCharacterAssignmentChanged(int characterId, bool isAssigned)
+    {
+        CharacterService.ApplyAssignmentChange(characterId, isAssigned);
+        return Task.CompletedTask;
+    }
+
     public async ValueTask DisposeAsync()
     {
         RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
+        RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
         await RoundSignalRService.DisposeAsync();
     }
 }

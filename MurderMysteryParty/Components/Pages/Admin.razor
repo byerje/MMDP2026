@@ -5,6 +5,7 @@
 @inject CharacterService CharacterService
 @inject RoundSignalRService RoundSignalRService
 @inject AdminAuthService AdminAuthService
+@implements IDisposable
 
 <PageTitle>Admin - Murder Mystery Game Control</PageTitle>
 
@@ -291,7 +292,18 @@ else
         await AdminAuthService.InitializeAsync();
         gameSession = GameSessionService.GetGameSession();
         allCharacters = CharacterService.GetAllCharacters();
+        CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
         await RoundSignalRService.StartAsync();
+    }
+
+    private async void OnAssignmentsChanged()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
     }
 
     private async Task AuthenticateAdmin()

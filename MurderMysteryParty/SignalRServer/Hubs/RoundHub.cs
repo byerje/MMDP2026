@@ -8,4 +8,9 @@ public class RoundHub : Microsoft.AspNetCore.SignalR.Hub
     {
         await Clients.All.SendAsync("RoundUnlocked", round);
     }
+
+    public async Task SendCharacterAssignmentChanged(int characterId, bool isAssigned)
+    {
+        await Clients.All.SendAsync("CharacterAssignmentChanged", characterId, isAssigned);
+    }
 }

@@ -4,6 +4,7 @@
 @inject CharacterService CharacterService
 @inject GameSessionService GameSessionService
 @inject IJSRuntime JSRuntime
+@inject RoundSignalRService RoundSignalRService
 @implements IDisposable
 
 <PageTitle>My Character - Murder Mystery</PageTitle>
@@ -526,6 +527,7 @@
             {
                 // Reset the character assignment in the service
                 CharacterService.ResetCharacterAssignment(currentCharacter.Id);
+                await RoundSignalRService.SendCharacterAssignmentChangedAsync(currentCharacter.Id, false);
                 // Clear from localStorage
                 await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
                 currentCharacter = null;

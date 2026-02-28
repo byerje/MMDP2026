@@ -16,6 +16,7 @@ public class RoundSignalRService : IAsyncDisposable
     }
 
     public event Func<int, Task>? RoundUnlocked;
+    public event Func<int, bool, Task>? CharacterAssignmentChanged;
 
     public async Task StartAsync()
     {
@@ -44,6 +45,14 @@ public class RoundSignalRService : IAsyncDisposable
             }
         });
 
+        _connection.On<int, bool>("CharacterAssignmentChanged", async (characterId, isAssigned) =>
+        {
+            if (CharacterAssignmentChanged != null)
+            {
+                await CharacterAssignmentChanged.Invoke(characterId, isAssigned);
+            }
+        });
+
         try
         {
             await _connection.StartAsync();
@@ -68,6 +77,21 @@ public class RoundSignalRService : IAsyncDisposable
         }
 
         await _connection.SendAsync("SendRoundUnlocked", round);
+    }
+
+    public async Task SendCharacterAssignmentChangedAsync(int characterId, bool isAssigned)
+    {
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            await StartAsync();
+        }
+
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            return;
+        }
+
+        await _connection.SendAsync("SendCharacterAssignmentChanged", characterId, isAssigned);
     }
 
     public async ValueTask DisposeAsync()
