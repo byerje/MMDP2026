@@ -86,10 +86,14 @@ else
         </div>
 
         <div class="game-actions">
-            <button class="reset-btn" @onclick="ResetGame">
-                🔄 Reset Entire Game
+            <button class="reset-btn" @onclick="ResetAllRounds">
+                🔄 Reset All Rounds
             </button>
-            <p class="reset-note">This will reset all rounds and character assignments</p>
+            <button class="clear-assignment-btn" @onclick="ResetCharacterAssignments">
+                🗑️ Reset Character Assignments
+            </button>
+            <p class="reset-note">This will lock all rounds back to the beginning</p>
+            <p class="reset-note">This will clear all character assignments (does not affect rounds)</p>
         </div>
 
         <div class="character-status">
@@ -244,6 +248,12 @@ else
         margin: 40px 0;
         padding: 20px;
         border-top: 2px solid #d4af37;
+        border-bottom: 2px solid #d4af37;
+    }
+
+    .game-actions button {
+        margin: 10px;
+        min-width: 250px;
     }
 
     .reset-note {
@@ -400,11 +410,23 @@ else
         StateHasChanged();
     }
 
-    private void ResetGame()
+    private void ResetAllRounds()
     {
         GameSessionService.ResetGame();
-        CharacterService.ResetCharacterAssignments();
         gameSession = GameSessionService.GetGameSession();
+        StateHasChanged();
+    }
+
+    private async Task ResetCharacterAssignments()
+    {
+        CharacterService.ResetCharacterAssignments();
+        
+        // Notify all clients about the reset for each character
+        foreach (var character in CharacterService.GetAllCharacters())
+        {
+            await RoundSignalRService.SendCharacterAssignmentChangedAsync(character.Id, false);
+        }
+        
         allCharacters = CharacterService.GetAllCharacters();
         StateHasChanged();
     }

@@ -13,7 +13,7 @@
     {
         <div class="character-missing">
             <h2>Character Not Found</h2>
-            <a href="characters" class="view-all-btn">?? View All Characters</a>
+            <a href="characters" class="view-all-btn">? View All Characters</a>
         </div>
     }
     else
@@ -173,18 +173,6 @@
         text-align: center;
         padding: 40px;
     }
-
-    .status-success {
-        color: #28a745;
-    }
-
-    .status-error {
-        color: #dc3545;
-    }
-
-    .status-warning {
-        color: #ffc107;
-    }
 </style>
 
 @code {
@@ -211,7 +199,7 @@
     {
         if (character == null)
         {
-            statusMessage = "Character not found.";
+            statusMessage = "? Character not found.";
             return;
         }
 
