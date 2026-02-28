@@ -702,7 +702,22 @@
 
     private async Task ClearAssignment()
     {
-        // Your existing clear logic
+        try
+        {
+            if (currentCharacter != null)
+            {
+                // Reset the character assignment in the service
+                CharacterService.ResetCharacterAssignment(currentCharacter.Id);
+                await RoundSignalRService.SendCharacterAssignmentChangedAsync(currentCharacter.Id, false);
+                // Clear from localStorage
+                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+                currentCharacter = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error clearing assignment: {ex.Message}");
+        }
     }
 
     public void Dispose()

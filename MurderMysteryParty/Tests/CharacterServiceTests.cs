@@ -201,4 +201,33 @@ public class CharacterServiceTests
         Assert.NotNull(character);
         Assert.True(character.IsAssigned);
     }
+
+    [Fact]
+    public void ResetCharacterAssignment_ClearsAssignmentAndNotifies()
+    {
+        // Arrange
+        var service = new CharacterService();
+        service.TryAssignCharacter(1);
+        bool eventFired = false;
+        service.OnAssignmentsChanged += () => eventFired = true;
+
+        // Act
+        service.ResetCharacterAssignment(1);
+
+        // Assert
+        var character = service.GetCharacterById(1);
+        Assert.NotNull(character);
+        Assert.False(character.IsAssigned);
+        Assert.True(eventFired);
+    }
+
+    [Fact]
+    public void ResetCharacterAssignment_NonExistentCharacter_DoesNotThrow()
+    {
+        // Arrange
+        var service = new CharacterService();
+
+        // Act & Assert (should not throw)
+        service.ResetCharacterAssignment(999);
+    }
 }
