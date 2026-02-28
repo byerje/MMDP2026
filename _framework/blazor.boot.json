@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "MurderMysteryParty",
   "resources": {
-    "hash": "sha256-l0f9mvYJJSmGdCy6AYmfwZjqfIfoAVHLNTABahSF7Xc=",
+    "hash": "sha256-bpTGefe6GdLK7HHXRtnIwy6Wo3FD7Qdvh+ne8JHbOcI=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-NljIbpK/1KCj0+knpX8U77Rbl5kTtfFIuFjK7AuczEw="
     },
@@ -18,7 +18,7 @@
     },
     "coreAssembly": {},
     "assembly": {
-      "Microsoft.AspNetCore.Components.wasm": "sha256-/wvpwzvTAfKz5+ERte2OFcB5m7buvuJy1zmMAEmbEXA=",
+      "Microsoft.AspNetCore.Components.wasm": "sha256-NFBxeC3U815voJW6b86sRKiddI4w3GXYkd2nDbf9kjs=",
       "Microsoft.AspNetCore.Components.Web.wasm": "sha256-sxLgKKDbnbKLHz+R5c6n81FmIymCg5vuB/+oWWBKXJ4=",
       "Microsoft.AspNetCore.Components.WebAssembly.wasm": "sha256-8D5e2iUKuqh8CsB5NI7NCDj9yEHfrH40WiI8yqB9g3U=",
       "Microsoft.AspNetCore.Connections.Abstractions.wasm": "sha256-irLaHuSIIfjCxEK4/J92DMURavswduqYZH/umPWUpK4=",
@@ -66,7 +66,7 @@
       "System.Threading.Channels.wasm": "sha256-CfMbl9vf1GDVdf2mmkcz0LmFxGPmGR65Lyzfekr22rA=",
       "System.Threading.wasm": "sha256-3umhf/2cM5Pn/n2CFzJ1l5OdS5LpBUZ2s6B1xTaCQYE=",
       "System.Private.CoreLib.wasm": "sha256-radgINSWJbnpVg5CyHTWt5KtGsKchmmGYZB0pjj922A=",
-      "MurderMysteryParty.wasm": "sha256-L+SVQCYXWsFRDh0tAIcOcE2RK0PTpIQPD2mcoVhlW7M="
+      "MurderMysteryParty.wasm": "sha256-xXIZk8UbQKL/rWSgkyIfkEFLB5fFCI9O4UqgWmmPwNA="
     }
   },
   "cacheBootResources": true,
