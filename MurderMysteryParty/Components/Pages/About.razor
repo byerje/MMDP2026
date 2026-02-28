@@ -1,0 +1,89 @@
+@page "/about"
+
+<PageTitle>About - Murder Mystery Party</PageTitle>
+
+<div class="about-container">
+    <div class="about-header">
+        <h1 class="about-title">About This App</h1>
+        <h2 class="about-subtitle">Murder Mystery Dinner Party - 1920's SpeakEasy Gala 2026</h2>
+    </div>
+
+    <section class="about-section">
+        <h3>Technologies</h3>
+        <ul>
+            <li>Blazor WebAssembly (.NET 8)</li>
+            <li>ASP.NET Core SignalR (Round uplocks)</li>
+            <li>Azure App Service (SignalR hub hosting for push notifications)</li>
+            <li>GitHub Pages (client hosting)</li>
+        </ul>
+    </section>
+
+    <section class="about-section">
+        <h3>Architecture</h3>
+        <p>
+            The client is a Blazor WebAssembly app that runs entirely in the browser. Game state is managed
+            in client-side services. Round unlocks are broadcast to all connected players through a
+            separate SignalR hub server. This keeps the client lightweight while enabling real-time updates.
+        </p>
+    </section>
+
+    <section class="about-section">
+        <h3>Author</h3>
+        <p>Jim Byer, with the aid of GitHub Copilot AI.</p>
+    </section>
+</div>
+
+<style>
+    .about-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .about-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #d4af37;
+        padding-bottom: 20px;
+    }
+
+    .about-title {
+        font-size: 2.5rem;
+        color: #d4af37;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .about-subtitle {
+        font-size: 1.2rem;
+        color: #f5f5dc;
+        margin: 10px 0 0 0;
+        font-style: italic;
+    }
+
+    .about-section {
+        margin: 25px 0;
+        padding: 20px;
+        border: 2px solid #8b4513;
+        border-radius: 10px;
+        background: rgba(139, 69, 19, 0.1);
+    }
+
+    .about-section h3 {
+        color: #d4af37;
+        margin-top: 0;
+    }
+
+    .about-section ul {
+        margin: 10px 0 0 20px;
+    }
+
+    .about-section li {
+        margin: 6px 0;
+    }
+</style>
