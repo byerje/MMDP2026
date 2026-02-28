@@ -1,4 +1,4 @@
-@page "/"
+﻿@page "/"
 @using MurderMysteryParty.Services
 @inject AdminAuthService AdminAuthService
 
@@ -18,19 +18,19 @@
             </p>
             
             <p class="invitation-details">
-                Join us for an evening of mystery, intrigue, and 1920s sophistication as we gather at Silver Serpent Speakeasy 
-                for an unforgettable murder mystery dinner party. Don your finest flapper dress or sharpest suit, 
+                Thank you for joining us for an evening of mystery, intrigue, and 1920s sophistication as we gather at Silver 
+                Serpent Speakeasy for an unforgettable murder mystery dinner party. Don your finest flapper dress or sharpest suit, 
                 and prepare to become part of a thrilling whodunit that will test your detective skills!
             </p>
 
             <div class="party-details">
                 <h4>What Awaits You:</h4>
                 <ul>
-                    <li>?? Prohibition-era mocktails</li>
-                    <li>?? Interactive murder mystery experience</li>
-                    <li>?? Great music and 1920s entertainment</li>
-                    <li>?? Prizes for best costume and detective work</li>
-                    <li>??? Delicious period-appropriate dinner</li>
+                    <li>🍸 Prohibition-era mocktails</li>
+                    <li>🎭 Interactive murder mystery experience</li>
+                    <li>🎷 Great music and 1920s entertainment</li>
+                    <li>🏆 Prizes for best costume and detective work</li>
+                    <li>🍛 Delicious period-appropriate dinner</li>
                 </ul>
             </div>
 
@@ -43,11 +43,12 @@
             </div>
 
             <div class="navigation-section">
-                <a href="characters" class="view-all-btn">?? View All Characters</a>
-                <a href="floorplan" class="floor-plan-btn">??? Floor Plan</a>
+                <a href="characters" class="view-all-btn">👥 View All Characters</a>
+                <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
+                <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
                 @if (AdminAuthService.IsAuthenticated)
                 {
-                    <a href="admin" class="admin-btn">??? Game Admin</a>
+                    <a href="admin" class="admin-btn">🛠️ Game Admin</a>
                 }
             </div>
 

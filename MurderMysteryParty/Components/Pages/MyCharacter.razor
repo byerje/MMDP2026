@@ -19,6 +19,7 @@
                 <a href="" class="nav-btn">🏠 Back to Home</a>
                 <a href="characters" class="nav-btn">👥 View All Characters</a>
                 <a href="floorplan" class="nav-btn floor-plan-btn">🗺️ Floor Plan</a>
+                <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
                 @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
                 {
                     <a href="forensic-report" class="nav-btn forensic-btn">🔬 Forensic Report</a>
@@ -194,6 +195,14 @@
                 <p>@currentCharacter.Secrets</p>
                 <p class="secrets-warning"><strong>⚠️ Keep this information private! Do not share with other players unless instructed to do so in a specific round.</strong></p>
             </div>
+        </div>
+
+        <div class="character-notes">
+            <h3>🗒️ Your Notes</h3>
+            <p style="text-align: center; margin-bottom: 15px;">
+                <a href="notebook" class="notebook-btn">📝 Open Full Notebook</a>
+            </p>
+            <textarea class="notes-input" @bind="notesText" @bind:after="SaveNotesAsync" placeholder="Quick notes (or use the full notebook)..."></textarea>
         </div>
     }
     else
@@ -449,6 +458,33 @@
         margin-bottom: 30px;
         line-height: 1.5;
     }
+
+    .character-notes {
+        margin: 40px 0;
+        padding: 20px;
+        background: rgba(212, 175, 55, 0.05);
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+    }
+
+    .character-notes h3 {
+        color: #d4af37;
+        margin: 0 0 15px 0;
+        text-align: center;
+    }
+
+    .notes-input {
+        width: 100%;
+        min-height: 180px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid #d4af37;
+        color: #f5f5dc;
+        border-radius: 8px;
+        padding: 12px;
+        font-family: 'Times New Roman', serif;
+        font-size: 1rem;
+        resize: vertical;
+    }
 </style>
 
 @code {
@@ -456,6 +492,7 @@
     private GameSession gameSession = new();
     private Timer? refreshTimer;
     private bool isInitialized = false;
+    private string notesText = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -479,6 +516,7 @@
         if (firstRender)
         {
             await RefreshCharacterFromStorage();
+            await LoadNotesAsync();
             isInitialized = true;
             StateHasChanged();
         }
@@ -490,15 +528,6 @@
             gameSession = GameSessionService.GetGameSession();
             StateHasChanged();
         });
-    }
-
-    private async Task RefreshGameState()
-    {
-        gameSession = GameSessionService.GetGameSession();
-        if (isInitialized)
-        {
-            await RefreshCharacterFromStorage();
-        }
     }
 
     private async Task RefreshCharacterFromStorage()
@@ -514,28 +543,31 @@
         }
         catch (Exception ex)
         {
-            // Handle any JS interop exceptions
             Console.WriteLine($"Error retrieving character assignment: {ex.Message}");
         }
     }
 
-    private async Task ClearAssignment()
+    private async Task LoadNotesAsync()
     {
         try
         {
-            if (currentCharacter != null)
-            {
-                // Reset the character assignment in the service
-                CharacterService.ResetCharacterAssignment(currentCharacter.Id);
-                await RoundSignalRService.SendCharacterAssignmentChangedAsync(currentCharacter.Id, false);
-                // Clear from localStorage
-                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
-                currentCharacter = null;
-            }
+            notesText = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "playerNotes") ?? string.Empty;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error clearing assignment: {ex.Message}");
+            Console.WriteLine($"Error loading notes: {ex.Message}");
+        }
+    }
+
+    private async Task SaveNotesAsync()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "playerNotes", notesText ?? string.Empty);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving notes: {ex.Message}");
         }
     }
 
@@ -544,12 +576,10 @@
         if (string.IsNullOrEmpty(content))
             return "";
 
-        // Split content into sections
         var sections = content.Split(new[] { "CONCEALED SECRETS:" }, StringSplitOptions.RemoveEmptyEntries);
         
         var formattedHtml = "";
         
-        // Process first section (Interactions)
         if (sections.Length > 0)
         {
             var interactionsSection = sections[0].Replace("INTERACTIONS & REVEAL CLUES:", "").Trim();
@@ -572,7 +602,6 @@
             }
         }
         
-        // Process second section (Concealed Secrets)
         if (sections.Length > 1)
         {
             var secretsSection = sections[1].Trim();
@@ -605,10 +634,8 @@
 
         var formattedHtml = "";
         
-        // Handle Round 2 content which has PART A/PART B structure
         if (content.Contains("PART A") || content.Contains("PART B"))
         {
-            // Split by lines to process each line
             var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             
             foreach (var line in lines)
@@ -617,12 +644,10 @@
                 
                 if (trimmedLine.StartsWith("PART A") || trimmedLine.StartsWith("PART B"))
                 {
-                    // Format part headers
                     formattedHtml += $"<div class='content-section'><h5 class='section-title'>{trimmedLine}</h5>";
                 }
                 else if (trimmedLine.StartsWith("•"))
                 {
-                    // Start a bullet list if not already in one
                     if (!formattedHtml.EndsWith("<ul class='round-list'>"))
                     {
                         formattedHtml += "<ul class='round-list'>";
@@ -633,7 +658,6 @@
                 }
                 else if (trimmedLine.StartsWith(" ") && trimmedLine.Contains("If asked"))
                 {
-                    // Handle sub-bullets for corroboration
                     if (!formattedHtml.EndsWith("</ul>"))
                     {
                         formattedHtml += "</ul>";
@@ -642,7 +666,6 @@
                 }
                 else if (!string.IsNullOrEmpty(trimmedLine))
                 {
-                    // Close any open list
                     if (formattedHtml.EndsWith("></ul>") == false && formattedHtml.Contains("<ul class='round-list'>"))
                     {
                         formattedHtml += "</ul>";
@@ -651,7 +674,6 @@
                 }
             }
             
-            // Close any remaining open tags
             if (formattedHtml.Contains("<ul class='round-list'>") && !formattedHtml.EndsWith("</ul>"))
             {
                 formattedHtml += "</ul>";
@@ -663,11 +685,24 @@
         }
         else
         {
-            // Fallback for any content that doesn't match expected format
             formattedHtml = $"<p>{content.Replace("\n", "<br>")}</p>";
         }
         
         return formattedHtml;
+    }
+
+    private async Task RefreshGameState()
+    {
+        gameSession = GameSessionService.GetGameSession();
+        if (isInitialized)
+        {
+            await RefreshCharacterFromStorage();
+        }
+    }
+
+    private async Task ClearAssignment()
+    {
+        // Your existing clear logic
     }
 
     public void Dispose()
