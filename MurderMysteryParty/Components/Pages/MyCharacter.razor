@@ -15,6 +15,10 @@
         <div class="character-header">
             <h1 class="character-name">@currentCharacter.Name</h1>
             <h2 class="character-occupation">@currentCharacter.Occupation</h2>
+            @if (showRefreshMessage)
+            {
+                <p class="refresh-message">✓ Character data refreshed!</p>
+            }
             <div class="navigation-links">
                 <a href="" class="nav-btn">🏠 Back to Home</a>
                 <a href="characters" class="nav-btn">👥 View All Characters</a>
@@ -279,6 +283,20 @@
         font-style: italic;
     }
 
+    .refresh-message {
+        color: #28a745;
+        font-size: 1rem;
+        margin: 10px 0;
+        font-weight: bold;
+        animation: fadeOut 2s forwards;
+    }
+
+    @@keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
     .navigation-links {
         margin-top: 20px;
         display: flex;
@@ -522,7 +540,9 @@
     private Character? currentCharacter;
     private GameSession gameSession = new();
     private Timer? refreshTimer;
+    private Timer? refreshMessageTimer;
     private bool isInitialized = false;
+    private bool showRefreshMessage;
     private string notesText = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -729,6 +749,16 @@
         {
             await RefreshCharacterFromStorage();
         }
+        
+        showRefreshMessage = true;
+        StateHasChanged();
+
+        refreshMessageTimer?.Dispose();
+        refreshMessageTimer = new Timer(_ => 
+        {
+            showRefreshMessage = false;
+            InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.FromSeconds(2), Timeout.InfiniteTimeSpan);
     }
 
     private async Task ClearAssignment()
@@ -755,5 +785,8 @@
     {
         GameSessionService.OnGameStateChanged -= OnGameStateChanged;
         refreshTimer?.Dispose();
+        refreshMessageTimer?.Dispose();
     }
 }
+
+

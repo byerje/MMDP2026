@@ -3,6 +3,7 @@
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
 @inject GameSessionService GameSessionService
+@implements IDisposable
 
 <PageTitle>Characters - Murder Mystery Dinner Party</PageTitle>
 
@@ -10,10 +11,15 @@
     <div class="header">
         <h1 class="page-title">Meet the Cast</h1>
         <h2 class="page-subtitle">1920's SpeakEasy Gala Character Profiles</h2>
+        @if (showRefreshMessage)
+        {
+            <p class="refresh-message">✓ Character list updated!</p>
+        }
         <div class="navigation-buttons">
             <a href="" class="back-home-btn">🏠 Back to Homepage</a>
             <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
             <a href="my-character" class="character-btn">🎭 My Character</a>
+            <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
             @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
             {
                 <a href="forensic-report" class="forensic-btn">🔬 Forensic Report</a>
@@ -22,6 +28,7 @@
             {
                 <button class="forensic-btn-locked" disabled title="Available after Round 2B is unlocked">🔒 Forensic Report</button>
             }
+            <button class="refresh-btn" @onclick="RefreshCharacterList">🔄 Refresh</button>
         </div>
     </div>
 
@@ -96,6 +103,20 @@
         color: #f5f5dc;
         margin: 10px 0;
         font-style: italic;
+    }
+
+    .refresh-message {
+        color: #28a745;
+        font-size: 1rem;
+        margin: 10px 0;
+        font-weight: bold;
+        animation: fadeOut 2s forwards;
+    }
+
+    @@keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
     }
 
     .navigation-buttons {
@@ -246,19 +267,63 @@
         font-size: 0.9rem;
         margin-top: 10px;
     }
+
+    .refresh-message {
+        color: #28a745;
+        font-size: 1rem;
+        margin: 10px 0;
+        font-weight: bold;
+        animation: fadeOut 2s forwards;
+    }
+
+    @@keyframes fadeOut {
+        0% { opacity: 1; }
+        70% { opacity: 1; }
+        100% { opacity: 0; }
+    }
 </style>
 
 @code {
     private List<Character> allCharacters = new();
+    private bool showRefreshMessage;
+    private Timer? refreshMessageTimer;
 
     protected override void OnInitialized()
     {
         allCharacters = CharacterService.GetAllCharacters();
+        CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
+    }
+
+    private async void OnAssignmentsChanged()
+    {
+        allCharacters = CharacterService.GetAllCharacters();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void ResetAssignments()
     {
         CharacterService.ResetCharacterAssignments();
-        allCharacters = CharacterService.GetAllCharacters(); // Refresh the list
+        allCharacters = CharacterService.GetAllCharacters();
+    }
+
+    private void RefreshCharacterList()
+    {
+        allCharacters = CharacterService.GetAllCharacters();
+        showRefreshMessage = true;
+        StateHasChanged();
+
+        refreshMessageTimer?.Dispose();
+        refreshMessageTimer = new Timer(_ => 
+        {
+            showRefreshMessage = false;
+            InvokeAsync(StateHasChanged);
+        }, null, TimeSpan.FromSeconds(2), Timeout.InfiniteTimeSpan);
+    }
+
+    public void Dispose()
+    {
+        CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
+        refreshMessageTimer?.Dispose();
     }
 }
+
