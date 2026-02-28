@@ -1,0 +1,233 @@
+@page "/character/{CharacterId:int}"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject CharacterService CharacterService
+@inject RoundSignalRService RoundSignalRService
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
+<PageTitle>Character - Murder Mystery Party</PageTitle>
+
+<div class="character-detail-container">
+    @if (character == null)
+    {
+        <div class="character-missing">
+            <h2>Character Not Found</h2>
+            <a href="characters" class="view-all-btn">?? View All Characters</a>
+        </div>
+    }
+    else
+    {
+        <div class="character-detail-header">
+            <h1 class="character-name">@character.Name</h1>
+            <p class="character-occupation">@character.Occupation</p>
+            <div class="character-navigation">
+                <a href="characters" class="view-all-btn">?? View All Characters</a>
+                <a href="my-character" class="character-btn">?? My Character</a>
+                <a href="" class="back-home-btn">?? Back to Home</a>
+            </div>
+        </div>
+
+        <div class="character-qr-section">
+            <h3>Assign This Character</h3>
+            <p>Scan this QR code or tap it to claim this character.</p>
+            <button class="qr-button" @onclick="AssignCharacter" disabled="@isAssignDisabled">
+                <img src="@qrCodeUrl" alt="QR code for @character.Name" />
+            </button>
+            <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">Assign @character.Name</button>
+
+            @if (!string.IsNullOrWhiteSpace(statusMessage))
+            {
+                <p class="assignment-status">@statusMessage</p>
+            }
+        </div>
+
+        <div class="character-detail-body">
+            <div class="detail-card">
+                <h4>Background</h4>
+                <p>@character.Background</p>
+            </div>
+            <div class="detail-card">
+                <h4>Personality</h4>
+                <p>@character.PersonalityTraits</p>
+            </div>
+            <div class="detail-card">
+                <h4>Goals</h4>
+                <p>@character.Goals</p>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .character-detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Times New Roman', serif;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        color: #f5f5dc;
+        min-height: 100vh;
+    }
+
+    .character-detail-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 3px solid #d4af37;
+        padding-bottom: 20px;
+    }
+
+    .character-name {
+        font-size: 2.4rem;
+        color: #d4af37;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .character-occupation {
+        font-size: 1.2rem;
+        color: #f5f5dc;
+        margin: 8px 0 0 0;
+        font-style: italic;
+    }
+
+    .character-navigation {
+        margin-top: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .character-qr-section {
+        text-align: center;
+        margin: 30px 0;
+        padding: 20px;
+        border: 2px solid #d4af37;
+        border-radius: 10px;
+        background: rgba(212, 175, 55, 0.08);
+    }
+
+    .character-qr-section img {
+        width: 220px;
+        height: 220px;
+        display: block;
+    }
+
+    .assignment-status {
+        margin-top: 15px;
+        color: #f5f5dc;
+    }
+
+    .character-detail-body {
+        display: grid;
+        gap: 20px;
+    }
+
+    .detail-card {
+        border-left: 3px solid #d4af37;
+        padding-left: 12px;
+    }
+
+    .character-missing {
+        text-align: center;
+        padding: 40px;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public int CharacterId { get; set; }
+
+    private Character? character;
+    private string? statusMessage;
+    private string? assignedCharacterId;
+    private string qrCodeUrl = string.Empty;
+    private bool isAssignDisabled;
+    private bool autoAssignHandled;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        character = CharacterService.GetCharacterById(CharacterId);
+        qrCodeUrl = BuildQrCodeUrl();
+        await LoadAssignmentState();
+        await TryAutoAssign();
+    }
+
+    private string BuildQrCodeUrl()
+    {
+        var characterUrl = $"{NavigationManager.BaseUri}character/{CharacterId}?assign=true";
+        return $"https://api.qrserver.com/v1/create-qr-code/?size=220x220&data={Uri.EscapeDataString(characterUrl)}";
+    }
+
+    private async Task LoadAssignmentState()
+    {
+        assignedCharacterId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
+        isAssignDisabled = character == null || IsAssignedToDifferentCharacter() || (character.IsAssigned && assignedCharacterId != CharacterId.ToString());
+    }
+
+    private bool IsAssignedToDifferentCharacter()
+    {
+        return !string.IsNullOrWhiteSpace(assignedCharacterId) && assignedCharacterId != CharacterId.ToString();
+    }
+
+    private async Task TryAutoAssign()
+    {
+        if (autoAssignHandled || character == null)
+        {
+            return;
+        }
+
+        var uri = new Uri(NavigationManager.Uri);
+        var query = uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries);
+        var shouldAssign = query.Any(item => string.Equals(item, "assign=true", StringComparison.OrdinalIgnoreCase));
+        if (!shouldAssign)
+        {
+            return;
+        }
+
+        autoAssignHandled = true;
+        await AssignCharacter();
+    }
+
+    private async Task AssignCharacter()
+    {
+        if (character == null)
+        {
+            return;
+        }
+
+        await LoadAssignmentState();
+
+        if (IsAssignedToDifferentCharacter())
+        {
+            statusMessage = "You already have a character assigned. Clear it before choosing another.";
+            return;
+        }
+
+        if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
+        {
+            statusMessage = "This character is already assigned to another player.";
+            return;
+        }
+
+        if (assignedCharacterId == CharacterId.ToString())
+        {
+            statusMessage = "This character is already assigned to you.";
+            return;
+        }
+
+        if (!CharacterService.TryAssignCharacter(CharacterId))
+        {
+            statusMessage = "This character is no longer available.";
+            await LoadAssignmentState();
+            return;
+        }
+
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", CharacterId.ToString());
+        await RoundSignalRService.SendCharacterAssignmentChangedAsync(CharacterId, true);
+        assignedCharacterId = CharacterId.ToString();
+        statusMessage = $"You are now assigned as {character.Name}.";
+        await LoadAssignmentState();
+    }
+}

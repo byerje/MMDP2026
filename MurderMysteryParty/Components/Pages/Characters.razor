@@ -28,47 +28,39 @@
     <div class="characters-grid">
         @foreach (var character in allCharacters)
         {
-            <div class="character-profile @(character.IsAssigned ? "assigned" : "")">
-                <div class="character-header">
-                    <h3 class="character-name">@character.Name</h3>
-                    @if (character.IsAssigned)
-                    {
-                        <span class="assigned-badge">ASSIGNED</span>
-                    }
+            <a href="character/@character.Id" class="character-profile-link">
+                <div class="character-profile @(character.IsAssigned ? "assigned" : "")">
+                    <div class="character-header">
+                        <h3 class="character-name">@character.Name</h3>
+                        @if (character.IsAssigned)
+                        {
+                            <span class="assigned-badge">ASSIGNED</span>
+                        }
+                    </div>
+                    
+                    <div class="character-details">
+                        <div class="basic-info">
+                            <p><strong>Occupation:</strong> @character.Occupation</p>
+                            <p><strong>Relationship:</strong> @character.Relationship</p>
+                        </div>
+                        
+                        <div class="character-background">
+                            <h4>Background</h4>
+                            <p>@character.Background</p>
+                        </div>
+                        
+                        <div class="character-traits">
+                            <h4>Personality</h4>
+                            <p>@character.PersonalityTraits</p>
+                        </div>
+                        
+                        <div class="character-goals">
+                            <h4>Goals</h4>
+                            <p>@character.Goals</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="character-details">
-                    <div class="basic-info">
-                        <p><strong>Occupation:</strong> @character.Occupation</p>
-                        <p><strong>Relationship:</strong> @character.Relationship</p>
-                    </div>
-                    
-                    <div class="character-background">
-                        <h4>Background</h4>
-                        <p>@character.Background</p>
-                    </div>
-                    
-                    <div class="character-traits">
-                        <h4>Personality</h4>
-                        <p>@character.PersonalityTraits</p>
-                    </div>
-                    
-                    <div class="character-goals">
-                        <h4>Goals</h4>
-                        <p>@character.Goals</p>
-                    </div>
-                    
-                    @* <div class="character-secrets">
-                        <h4>Secrets</h4>
-                        <p class="secret-text">@character.Secrets</p>
-                    </div> *@
-                    
-                    @* <div class="character-costume">
-                        <h4>Suggested Costume</h4>
-                        <p class="costume-text">@character.Costume</p>
-                    </div> *@
-                </div>
-            </div>
+            </a>
         }
     </div>
 </div>
@@ -121,6 +113,12 @@
         grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
         gap: 25px;
         margin-bottom: 40px;
+    }
+
+    .character-profile-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
     }
 
     .character-profile {

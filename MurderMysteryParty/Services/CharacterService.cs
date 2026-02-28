@@ -38,6 +38,19 @@ namespace MurderMysteryParty.Services
             return selectedCharacter;
         }
 
+        public bool TryAssignCharacter(int characterId)
+        {
+            var character = _characters.FirstOrDefault(c => c.Id == characterId);
+            if (character == null || character.IsAssigned)
+            {
+                return false;
+            }
+
+            character.IsAssigned = true;
+            NotifyAssignmentsChanged();
+            return true;
+        }
+
         public void ResetCharacterAssignments()
         {
             foreach (var character in _characters)

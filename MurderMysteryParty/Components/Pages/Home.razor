@@ -1,11 +1,6 @@
 @page "/"
-@using MurderMysteryParty.Models
 @using MurderMysteryParty.Services
-@inject CharacterService CharacterService
-@inject GameSessionService GameSessionService
-@inject IJSRuntime JSRuntime
 @inject AdminAuthService AdminAuthService
-@inject RoundSignalRService RoundSignalRService
 
 <PageTitle>Murder Mystery Dinner Party - 1920's SpeakEasy Gala 2026</PageTitle>
 
@@ -45,37 +40,6 @@
                     <strong>Ladies:</strong> Flapper dresses, headbands with feathers, long pearl necklaces, T-bar shoes<br/>
                     <strong>Gentlemen:</strong> Three-piece suits, bow ties, suspenders, pocket watches, fedora hats
                 </p>
-            </div>
-
-            <div class="character-assignment">
-                <h4>Get Your Character Assignment</h4>
-                <p>Scan the QR code below to be assigned your character for the evening!</p>
-                
-                @if (assignedCharacter != null)
-                {
-                    <div class="character-reveal">
-                        <h5>Your Character:</h5>
-                        <div class="character-card">
-                            <h6>@assignedCharacter.Name</h6>
-                            <p><strong>Occupation:</strong> @assignedCharacter.Occupation</p>
-                            <p><strong>Costume:</strong> @assignedCharacter.Costume</p>
-                            <p><em>More character details will be provided at the party!</em></p>
-                        </div>
-                        <div class="character-actions">
-                            <a href="my-character" class="character-btn">?? View My Character Card</a>
-                            <button class="clear-assignment-btn" @onclick="ClearAssignment">Clear Assignment</button>
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="qr-section">
-                        <button class="qr-button" @onclick="AssignCharacter">
-                            ?? Scan QR Code / Get Character
-                        </button>
-                        <p class="qr-note">Click the button above to simulate QR code scanning and receive your character assignment!</p>
-                    </div>
-                }
             </div>
 
             <div class="navigation-section">
@@ -152,14 +116,14 @@
         text-align: justify;
     }
 
-    .party-details, .character-assignment, .dress-code, .rsvp-info {
+    .party-details, .dress-code, .rsvp-info {
         margin: 25px 0;
         padding: 15px;
         border-left: 3px solid #d4af37;
         background: rgba(0,0,0,0.2);
     }
 
-    .party-details h4, .character-assignment h4, .dress-code h4 {
+    .party-details h4, .dress-code h4 {
         color: #d4af37;
         margin-bottom: 15px;
     }
@@ -174,128 +138,8 @@
         font-size: 1.1rem;
     }
 
-    .qr-note {
-        text-align: center;
-        font-size: 0.9rem;
-        color: #ccc;
-        margin-top: 10px;
-    }
-
-    .character-reveal {
-        text-align: center;
-    }
-
-    .character-card {
-        background: rgba(212, 175, 55, 0.1);
-        border: 1px solid #d4af37;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 15px 0;
-    }
-
-    .character-card h6 {
-        color: #d4af37;
-        font-size: 1.4rem;
-        margin-bottom: 15px;
-    }
-
-    .character-card p {
-        margin: 8px 0;
-        font-size: 1rem;
-    }
-
-    .character-actions {
-        margin-top: 15px;
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
     .navigation-section {
         text-align: center;
         margin: 30px 0;
     }
 </style>
-
-@code {
-    private Character? assignedCharacter = null;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await AdminAuthService.InitializeAsync();
-        // No localStorage calls here - moved to OnAfterRenderAsync
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            try
-            {
-                // Check if user already has an assigned character in localStorage
-                var characterIdString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
-                if (!string.IsNullOrEmpty(characterIdString) && int.TryParse(characterIdString, out int characterId))
-                {
-                    assignedCharacter = CharacterService.GetCharacterById(characterId);
-                    // Verify the character is still assigned in the service
-                    if (assignedCharacter != null && !assignedCharacter.IsAssigned)
-                    {
-                        assignedCharacter = null;
-                        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
-                    }
-                }
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                // Handle any JS interop exceptions
-                Console.WriteLine($"Error loading character assignment: {ex.Message}");
-            }
-        }
-    }
-
-    private async Task AssignCharacter()
-    {
-        assignedCharacter = CharacterService.AssignRandomCharacter();
-        
-        if (assignedCharacter != null)
-        {
-            try
-            {
-                // Store the assigned character ID in localStorage
-                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", assignedCharacter.Id.ToString());
-                await RoundSignalRService.SendCharacterAssignmentChangedAsync(assignedCharacter.Id, true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error storing character assignment: {ex.Message}");
-            }
-        }
-        else
-        {
-            // All characters have been assigned
-            // You might want to show a message or handle this case differently
-        }
-    }
-
-    private async Task ClearAssignment()
-    {
-        try
-        {
-            if (assignedCharacter != null)
-            {
-                // Reset the character assignment in the service
-                CharacterService.ResetCharacterAssignment(assignedCharacter.Id);
-                await RoundSignalRService.SendCharacterAssignmentChangedAsync(assignedCharacter.Id, false);
-                // Clear from localStorage
-                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
-                assignedCharacter = null;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error clearing assignment: {ex.Message}");
-        }
-    }
-}
