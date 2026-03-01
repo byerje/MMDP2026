@@ -685,7 +685,24 @@
             var characterIdString = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
             if (!string.IsNullOrEmpty(characterIdString) && int.TryParse(characterIdString, out int characterId))
             {
-                currentCharacter = CharacterService.GetCharacterById(characterId);
+                var character = CharacterService.GetCharacterById(characterId);
+                
+                // Verify the character is still assigned in the service
+                if (character != null && character.IsAssigned)
+                {
+                    currentCharacter = character;
+                }
+                else
+                {
+                    // Character is no longer assigned (admin reset while we were away)
+                    // Clear localStorage and current character
+                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+                    currentCharacter = null;
+                }
+            }
+            else
+            {
+                currentCharacter = null;
             }
         }
         catch (Exception ex)
