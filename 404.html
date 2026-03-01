@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Murder Mystery Party 2026</title>
+    <script>
+        // GitHub Pages SPA redirect hack
+        // When a page is refreshed (like /MMDP2026/my-character), GitHub Pages serves this 404.html
+        // This script captures the path and redirects to index.html with the path as a query parameter
+        var pathSegmentsToKeep = 1; // Keep '/MMDP2026'
+        
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?p=/' +
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
+    </script>
+</head>
+<body>
+    <!-- GitHub Pages 404 redirect for SPA -->
+</body>
+</html>
