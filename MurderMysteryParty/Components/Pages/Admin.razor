@@ -89,11 +89,17 @@ else
             <button class="reset-btn" @onclick="ResetAllRounds">
                 🔄 Reset All Rounds
             </button>
+            <p class="reset-note">This will lock all rounds back to the beginning</p>
+            
             <button class="clear-assignment-btn" @onclick="ResetCharacterAssignments">
                 🗑️ Reset Character Assignments
             </button>
-            <p class="reset-note">This will lock all rounds back to the beginning</p>
             <p class="reset-note">This will clear all character assignments (does not affect rounds)</p>
+            
+            <button class="refresh-btn" @onclick="BroadcastCurrentAssignments">
+                📡 Update Assignments
+            </button>
+            <p class="reset-note">Broadcast current assignments to all connected players (for late arrivals)</p>
         </div>
 
         <div class="character-status">
@@ -429,5 +435,25 @@ else
         
         allCharacters = CharacterService.GetAllCharacters();
         StateHasChanged();
+    }
+
+    private async Task BroadcastCurrentAssignments()
+    {
+        // Send current assignment state for all assigned characters
+        // This helps late arrivals get up-to-date information
+        var assignedCharacters = CharacterService.GetAllCharacters().Where(c => c.IsAssigned);
+        
+        foreach (var character in assignedCharacters)
+        {
+            await RoundSignalRService.SendCharacterAssignmentChangedAsync(character.Id, true);
+        }
+        
+        // Also broadcast available characters to ensure consistency
+        var availableCharacters = CharacterService.GetAllCharacters().Where(c => !c.IsAssigned);
+        
+        foreach (var character in availableCharacters)
+        {
+            await RoundSignalRService.SendCharacterAssignmentChangedAsync(character.Id, false);
+        }
     }
 }
