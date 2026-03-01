@@ -23,7 +23,7 @@
     
     <!-- GitHub Pages SPA redirect script -->
     <script>
-        // Handle redirect from 404.html
+        // Handle redirect from 404.html (only if 'p' parameter exists)
         (function(){
             var redirect = sessionStorage.redirect;
             delete sessionStorage.redirect;
@@ -36,7 +36,7 @@
 <body>
     <div id="app">Loading... wait for it...</div>
     
-    <!-- Capture path from 404.html redirect -->
+    <!-- Capture path from 404.html redirect (only if 'p' parameter exists) -->
     <script>
         (function(){
             var l = window.location;
