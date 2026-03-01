@@ -149,7 +149,7 @@
                         <div class="round-content">
                             @if (!string.IsNullOrEmpty(currentCharacter.Round3AMotiveReveal))
                             {
-                                <p>@currentCharacter.Round3AMotiveReveal</p>
+                                @((MarkupString)FormatRound3AContent(currentCharacter.Round3AMotiveReveal))
                             }
                             else
                             {
@@ -174,7 +174,7 @@
                         <div class="round-content">
                             @if (!string.IsNullOrEmpty(currentCharacter.Round3BChaoticEnding))
                             {
-                                <p>@currentCharacter.Round3BChaoticEnding</p>
+                                @((MarkupString)FormatRound3BContent(currentCharacter.Round3BChaoticEnding))
                             }
                             else
                             {
@@ -489,6 +489,56 @@
         margin: 0;
     }
 
+    .round3-order {
+        margin: 8px 0;
+        padding: 8px 12px;
+        background: rgba(255, 193, 7, 0.1);
+        border-left: 3px solid #ffc107;
+        border-radius: 4px;
+        color: #ffc107;
+    }
+
+    .round3-motive-title {
+        color: #ffc107 !important;
+        font-size: 1.1rem !important;
+        margin: 15px 0 10px 0 !important;
+    }
+
+    .round3-story {
+        margin: 10px 0;
+        padding: 12px;
+        background: rgba(212, 175, 55, 0.05);
+        border-left: 3px solid #d4af37;
+        border-radius: 4px;
+        line-height: 1.6;
+        font-style: italic;
+    }
+
+    .chaos-trigger-title {
+        color: #e83e8c !important;
+        font-size: 1.1rem !important;
+        margin: 15px 0 10px 0 !important;
+    }
+
+    .chaos-condition {
+        margin: 10px 0;
+        padding: 10px 12px;
+        background: rgba(232, 62, 140, 0.1);
+        border-left: 3px solid #e83e8c;
+        border-radius: 4px;
+        color: #ffc107;
+    }
+
+    .chaos-action {
+        margin: 10px 0;
+        padding: 12px;
+        background: rgba(232, 62, 140, 0.05);
+        border-left: 3px solid #e83e8c;
+        border-radius: 4px;
+        line-height: 1.6;
+        color: #f5f5dc;
+    }
+
     .character-secrets {
         margin: 40px 0;
         padding: 20px;
@@ -780,6 +830,74 @@
         else
         {
             formattedHtml = $"<p>{content.Replace("\n", "<br>")}</p>";
+        }
+        
+        return formattedHtml;
+    }
+
+    private string FormatRound3AContent(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return "";
+
+        var formattedHtml = "";
+        var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var line in lines)
+        {
+            var trimmedLine = line.Trim();
+            
+            if (trimmedLine.StartsWith("FOLLOW AFTER:"))
+            {
+                var followAfter = trimmedLine.Replace("FOLLOW AFTER:", "").Trim();
+                formattedHtml += $"<p class='round3-order'><strong>Follow After:</strong> {followAfter}</p>";
+            }
+            else if (trimmedLine.StartsWith("TRUE STORY REVEAL:"))
+            {
+                formattedHtml += "<h5 class='section-title round3-motive-title'>Your Motive:</h5>";
+            }
+            else if (trimmedLine.StartsWith("FOLLOWED BY:"))
+            {
+                var followedBy = trimmedLine.Replace("FOLLOWED BY:", "").Trim();
+                formattedHtml += $"<p class='round3-order'><strong>Followed By:</strong> {followedBy}</p>";
+            }
+            else if (!string.IsNullOrEmpty(trimmedLine))
+            {
+                formattedHtml += $"<p class='round3-story'>{trimmedLine}</p>";
+            }
+        }
+        
+        return formattedHtml;
+    }
+
+    private string FormatRound3BContent(string content)
+    {
+        if (string.IsNullOrEmpty(content))
+            return "";
+
+        var formattedHtml = "";
+        var lines = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        
+        foreach (var line in lines)
+        {
+            var trimmedLine = line.Trim();
+            
+            if (trimmedLine.StartsWith("CHAOS TRIGGER:"))
+            {
+                formattedHtml += "<h5 class='section-title chaos-trigger-title'>Chaos Trigger:</h5>";
+            }
+            else if (trimmedLine.StartsWith("FINAL IGNITION:"))
+            {
+                formattedHtml += "<h5 class='section-title chaos-trigger-title'>Final Ignition:</h5>";
+            }
+            else if (trimmedLine.StartsWith("If "))
+            {
+                formattedHtml += $"<p class='chaos-condition'><strong>Condition:</strong> {trimmedLine}</p>";
+            }
+            else if (!string.IsNullOrEmpty(trimmedLine))
+            {
+                formattedHtml += $"<p class='chaos-action'>{trimmedLine}</p>";
+            }
         }
         
         return formattedHtml;
