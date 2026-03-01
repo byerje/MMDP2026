@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Murder Mystery Party 2026</title>
-    <base href="/" />
+    <base href="/MMDP2026/" />
     
     <!-- Load emoji fix first to ensure proper rendering -->
     <link rel="stylesheet" href="css/emoji-fix.css" />
@@ -20,9 +20,39 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif !important;
         }
     </style>
+    
+    <!-- GitHub Pages SPA redirect script -->
+    <script>
+        // Handle redirect from 404.html
+        (function(){
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        })();
+    </script>
 </head>
 <body>
     <div id="app">Loading... wait for it...</div>
+    
+    <!-- Capture path from 404.html redirect -->
+    <script>
+        (function(){
+            var l = window.location;
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function(v){
+                    var a = v.split('=');
+                    q[a[0]] = a.slice(1).join('=').replace(/~and~/g, '&');
+                });
+                if (q.p !== undefined) {
+                    sessionStorage.redirect = l.pathname.slice(0, -1) + q.p + (q.q ? ('?' + q.q) : '') + l.hash;
+                }
+            }
+        })();
+    </script>
+    
     <script src="js/navigation.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
