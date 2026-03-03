@@ -7,33 +7,33 @@
     --base-font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, var(--emoji-font-stack);
 }
 
-/* Apply emoji fonts to all elements */
+/* Apply emoji fonts to all elements with maximum priority - EMOJI FONTS FIRST */
 *, *::before, *::after {
-    font-family: var(--base-font-stack) !important;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
 }
 
 html {
-    font-family: var(--base-font-stack) !important;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
 }
 
 body {
-    font-family: var(--base-font-stack) !important;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
 }
 
-/* Ensure buttons and inputs also support emojis */
-button, input, textarea, select, option {
-    font-family: var(--base-font-stack) !important;
+/* Ensure buttons and inputs also support emojis - EMOJI FONTS FIRST */
+button, input, textarea, select, option, a, p, h1, h2, h3, h4, h5, h6, div, span {
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
 }
 
-/* Override any Times New Roman with emoji support */
-.speakeasy-container,
+/* Override any container classes - EMOJI FONTS INCLUDED */
 .character-detail-container,
-.character-list-container,
 .notebook-container,
+.speakeasy-container,
+.character-list-container,
 .forensic-container,
 .floor-plan-container,
 .admin-container {
-    font-family: 'Times New Roman', serif, var(--emoji-font-stack) !important;
+    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', serif !important;
 }
 
 /* Force emoji rendering for common emoji characters */
