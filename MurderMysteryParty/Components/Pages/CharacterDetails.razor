@@ -271,26 +271,26 @@
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "❌ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
         {
-            statusMessage = $"⚠️ {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} is already assigned to another player. Please choose a different character.";
             await LoadAssignmentState();
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"✅ You are already assigned as {character.Name}.";
+            statusMessage = $"⚠️ You are already assigned as {character.Name}.";
             return;
         }
 
         if (!CharacterService.TryAssignCharacter(CharacterId))
         {
-            statusMessage = $"⚠️ {character.Name} was just claimed by another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} was just claimed by another player. Please choose a different character.";
             await LoadAssignmentState();
             UpdateStatusMessage();
             StateHasChanged();
