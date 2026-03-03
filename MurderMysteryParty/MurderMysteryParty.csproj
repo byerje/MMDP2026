@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include=".github\workflows\gh-pages.yml" />
     <None Include=".github\workflows\signalr-azure.yml" />
     <None Include="SignalRServer\SignalRServer.csproj" />
   </ItemGroup>
