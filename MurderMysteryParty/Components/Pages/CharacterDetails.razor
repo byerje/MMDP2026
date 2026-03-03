@@ -199,7 +199,7 @@
     {
         if (character == null)
         {
-            statusMessage = "❌ Character not found.";
+            statusMessage = "❌ Character not found. Please choose a different character.";
             return;
         }
 
@@ -211,13 +211,13 @@
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "❌ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned)
         {
-            statusMessage = $"⚠️ {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} is already assigned to another player. Please choose a different character.";
             return;
         }
 
@@ -309,15 +309,15 @@
         if (statusMessage == null) return "";
         
         // Check for success (green) - contains ✅ or 🎉
-        if (statusMessage.Contains("✅") || statusMessage.Contains("🎉"))
+        if (statusMessage.Contains("You are currently assigned as") || statusMessage.Contains("Success!"))
             return "status-success";
         
         // Check for warning (yellow) - contains ⚠️
-        if (statusMessage.Contains("⚠️"))
+        if (statusMessage.Contains("You are already assigned as"))
             return "status-warning";
         
         // Check for error (red) - contains ❌
-        if (statusMessage.Contains("❌"))
+        if (statusMessage.Contains("Please") || statusMessage.Contains("Clear"))
             return "status-error";
         
         // Default - no specific styling for neutral messages
