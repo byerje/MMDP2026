@@ -217,7 +217,7 @@
 
         if (character.IsAssigned)
         {
-            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"?? {character.Name} is already assigned to another player. Please choose a different character.";
             return;
         }
 
@@ -277,7 +277,7 @@
 
         if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
         {
-            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"?? {character.Name} is already assigned to another player. Please choose a different character.";
             await LoadAssignmentState();
             return;
         }
@@ -290,7 +290,7 @@
 
         if (!CharacterService.TryAssignCharacter(CharacterId))
         {
-            statusMessage = $"? {character.Name} was just claimed by another player. Please choose a different character.";
+            statusMessage = $"?? {character.Name} was just claimed by another player. Please choose a different character.";
             await LoadAssignmentState();
             UpdateStatusMessage();
             StateHasChanged();
@@ -308,16 +308,16 @@
     {
         if (statusMessage == null) return "";
         
-        // Check for success (green) - starts with ?
-        if (statusMessage.StartsWith("?"))
+        // Check for success (green) - starts with ? or ??
+        if (statusMessage.StartsWith("?") || statusMessage.StartsWith("??"))
             return "status-success";
         
         // Check for warning (yellow) - starts with ??
-        if (statusMessage.StartsWith("??") || statusMessage.StartsWith("?"))
+        if (statusMessage.StartsWith("??"))
             return "status-warning";
         
-        // Check for error (red) - starts with ?
-        if (statusMessage.StartsWith("?"))
+        // Check for error (red) - starts with ? or ??
+        if (statusMessage.StartsWith("?") || statusMessage.StartsWith("??"))
             return "status-error";
         
         // Default - no specific styling for neutral messages
