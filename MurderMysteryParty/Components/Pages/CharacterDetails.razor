@@ -308,16 +308,16 @@
     {
         if (statusMessage == null) return "";
         
-        // Check for success (green) - starts with ? or ??
-        if (statusMessage.StartsWith("?") || statusMessage.StartsWith("??"))
+        // Check for success (green) - contains ? or ??
+        if (statusMessage.Contains("?") || statusMessage.Contains("??"))
             return "status-success";
         
-        // Check for warning (yellow) - starts with ??
-        if (statusMessage.StartsWith("??"))
+        // Check for warning (yellow) - contains ??
+        if (statusMessage.Contains("??"))
             return "status-warning";
         
-        // Check for error (red) - starts with ? or ??
-        if (statusMessage.StartsWith("?") || statusMessage.StartsWith("??"))
+        // Check for error (red) - contains ? or ??
+        if (statusMessage.Contains("?") || statusMessage.Contains("??"))
             return "status-error";
         
         // Default - no specific styling for neutral messages
