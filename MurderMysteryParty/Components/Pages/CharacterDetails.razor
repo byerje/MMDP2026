@@ -1,4 +1,4 @@
-@page "/character/{CharacterId:int}"
+﻿@page "/character/{CharacterId:int}"
 @using MurderMysteryParty.Models
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
@@ -13,7 +13,7 @@
     {
         <div class="character-missing">
             <h2>Character Not Found</h2>
-            <a href="characters" class="view-all-btn">?? View All Characters</a>
+            <a href="characters" class="view-all-btn">👥 View All Characters</a>
         </div>
     }
     else
@@ -23,14 +23,14 @@
             <p class="character-occupation">@character.Occupation</p>
             <p class="character-description">@character.Description</p>
             <div class="character-navigation">
-                <a href="characters" class="view-all-btn">?? View All Characters</a>
-                <a href="my-character" class="character-btn">?? My Character</a>
-                <a href="" class="back-home-btn">?? Back to Home</a>
+                <a href="characters" class="view-all-btn">👥 View All Characters</a>
+                <a href="my-character" class="character-btn">🎭 My Character</a>
+                <a href="" class="back-home-btn">🏠 Back to Home</a>
             </div>
         </div>
 
         <div class="character-qr-section">
-            <h3>?? Assign This Character</h3>
+            <h3>📱 Assign This Character</h3>
             @if (!string.IsNullOrWhiteSpace(statusMessage))
             {
                 <p class="assignment-status @GetStatusClass()">@statusMessage</p>
@@ -199,25 +199,25 @@
     {
         if (character == null)
         {
-            statusMessage = "? Character not found.";
+            statusMessage = "❌ Character not found.";
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"? You are currently assigned as {character.Name}.";
+            statusMessage = $"✅ You are currently assigned as {character.Name}.";
             return;
         }
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "?? You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned)
         {
-            statusMessage = $"?? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"⚠️ {character.Name} is already assigned to another player. Please choose a different character.";
             return;
         }
 
@@ -271,26 +271,26 @@
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "?? You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
         {
-            statusMessage = $"?? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"⚠️ {character.Name} is already assigned to another player. Please choose a different character.";
             await LoadAssignmentState();
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"? You are already assigned as {character.Name}.";
+            statusMessage = $"✅ You are already assigned as {character.Name}.";
             return;
         }
 
         if (!CharacterService.TryAssignCharacter(CharacterId))
         {
-            statusMessage = $"?? {character.Name} was just claimed by another player. Please choose a different character.";
+            statusMessage = $"⚠️ {character.Name} was just claimed by another player. Please choose a different character.";
             await LoadAssignmentState();
             UpdateStatusMessage();
             StateHasChanged();
@@ -300,7 +300,7 @@
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", CharacterId.ToString());
         await RoundSignalRService.SendCharacterAssignmentChangedAsync(CharacterId, true);
         assignedCharacterId = CharacterId.ToString();
-        statusMessage = $"?? Success! You are now assigned as {character.Name}.";
+        statusMessage = $"🎉 Success! You are now assigned as {character.Name}.";
         await LoadAssignmentState();
     }
 
@@ -308,16 +308,16 @@
     {
         if (statusMessage == null) return "";
         
-        // Check for success (green) - contains ? or ??
-        if (statusMessage.Contains("?") || statusMessage.Contains("??"))
+        // Check for success (green) - contains ✅ or 🎉
+        if (statusMessage.Contains("✅") || statusMessage.Contains("🎉"))
             return "status-success";
         
-        // Check for warning (yellow) - contains ??
-        if (statusMessage.Contains("??"))
+        // Check for warning (yellow) - contains ⚠️
+        if (statusMessage.Contains("⚠️"))
             return "status-warning";
         
-        // Check for error (red) - contains ? or ??
-        if (statusMessage.Contains("?") || statusMessage.Contains("??"))
+        // Check for error (red) - contains ❌
+        if (statusMessage.Contains("❌"))
             return "status-error";
         
         // Default - no specific styling for neutral messages
