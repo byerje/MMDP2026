@@ -308,16 +308,20 @@
     {
         if (statusMessage == null) return "";
         
-        // Check for success (green) - only for successful assignment
-        if (statusMessage.Contains("Success!") || statusMessage.Contains("You are currently assigned as"))
+        // Check for success (green) - starts with ?
+        if (statusMessage.StartsWith("?"))
             return "status-success";
         
-        // Check for warning (yellow) - when player already has different character
-        if (statusMessage.Contains("You already have a different character assigned"))
+        // Check for warning (yellow) - starts with ??
+        if (statusMessage.StartsWith("??") || statusMessage.StartsWith("?"))
             return "status-warning";
         
-        // All other messages are errors (red)
-        return "status-error";
+        // Check for error (red) - starts with ?
+        if (statusMessage.StartsWith("?"))
+            return "status-error";
+        
+        // Default - no specific styling for neutral messages
+        return "";
     }
 }
 
