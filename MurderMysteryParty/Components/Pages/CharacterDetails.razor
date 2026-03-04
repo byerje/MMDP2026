@@ -233,6 +233,18 @@
     private async Task LoadAssignmentState()
     {
         assignedCharacterId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
+
+        // Restore in-memory assignment if localStorage says this player owns a character
+        // but the service lost state (e.g. page reload)
+        if (!string.IsNullOrWhiteSpace(assignedCharacterId) && int.TryParse(assignedCharacterId, out int storedId))
+        {
+            var storedCharacter = CharacterService.GetCharacterById(storedId);
+            if (storedCharacter != null && !storedCharacter.IsAssigned)
+            {
+                CharacterService.TryAssignCharacter(storedId);
+            }
+        }
+
         isAssignDisabled = character == null || IsAssignedToDifferentCharacter() || (character.IsAssigned && assignedCharacterId != CharacterId.ToString());
     }
 

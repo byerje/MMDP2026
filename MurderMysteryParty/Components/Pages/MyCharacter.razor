@@ -687,15 +687,18 @@
             {
                 var character = CharacterService.GetCharacterById(characterId);
                 
-                // Verify the character is still assigned in the service
-                if (character != null && character.IsAssigned)
+                if (character != null)
                 {
+                    // Re-mark as assigned in case in-memory state was lost (e.g. page reload)
+                    if (!character.IsAssigned)
+                    {
+                        CharacterService.TryAssignCharacter(characterId);
+                    }
                     currentCharacter = character;
                 }
                 else
                 {
-                    // Character is no longer assigned (admin reset while we were away)
-                    // Clear localStorage and current character
+                    // Character ID doesn't exist at all — clear invalid localStorage entry
                     await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
                     currentCharacter = null;
                 }
