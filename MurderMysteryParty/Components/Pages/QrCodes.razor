@@ -3,32 +3,47 @@
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
 @inject NavigationManager NavigationManager
+@inject AdminAuthService AdminAuthService
 @inject IJSRuntime JSRuntime
 
 <PageTitle>QR Codes - Murder Mystery Party</PageTitle>
 
-<div class="qr-page-container">
-    <div class="screen-only">
-        <h1 class="page-title">QR Codes for Name Tags</h1>
-        <p class="page-instructions">Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
-        <div class="navigation-buttons">
-            <a href="" class="back-home-btn">?? Back to Home</a>
-            <button class="print-btn" @onclick="PrintPage">??? Print</button>
+@if (!AdminAuthService.IsAuthenticated)
+{
+    <div class="qr-page-container">
+        <div class="access-denied">
+            <h1 class="page-title">Access Denied</h1>
+            <p>This page is only available to the game administrator.</p>
+            <a href="admin" class="back-home-btn">?? Go to Admin Login</a>
         </div>
     </div>
-
-    <div class="qr-grid">
-        @foreach (var character in allCharacters)
-        {
-            <div class="qr-card">
-                <div class="qr-image">
-                    <img src="@BuildQrCodeUrl(character.Id)" alt="QR code for @character.Name" />
-                </div>
-                <div class="qr-label">@character.Name</div>
+}
+else
+{
+    <div class="qr-page-container">
+        <div class="screen-only">
+            <h1 class="page-title">QR Codes for Name Tags</h1>
+            <p class="page-instructions">Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
+            <div class="navigation-buttons">
+                <a href="admin" class="admin-btn">?? Admin</a>
+                <a href="" class="back-home-btn">?? Back to Home</a>
+                <button class="print-btn" @onclick="PrintPage">??? Print</button>
             </div>
-        }
+        </div>
+
+        <div class="qr-grid">
+            @foreach (var character in allCharacters)
+            {
+                <div class="qr-card">
+                    <div class="qr-image">
+                        <img src="@BuildQrCodeUrl(character.Id)" alt="QR code for @character.Name" />
+                    </div>
+                    <div class="qr-label">@character.Name</div>
+                </div>
+            }
+        </div>
     </div>
-</div>
+}
 
 <style>
     .qr-page-container {
@@ -110,6 +125,17 @@
         color: #d4af37;
     }
 
+    .access-denied {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .access-denied p {
+        font-size: 1.1rem;
+        color: #ccc;
+        margin: 20px 0;
+    }
+
     @@media print {
         .screen-only {
             display: none;
@@ -153,8 +179,9 @@
 @code {
     private List<Character> allCharacters = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await AdminAuthService.InitializeAsync();
         allCharacters = CharacterService.GetAllCharacters()
             .OrderBy(c => c.Name)
             .ToList();

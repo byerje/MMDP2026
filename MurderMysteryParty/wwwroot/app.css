@@ -213,6 +213,16 @@ h1:focus {
   color: #fff;
 }
 
+/* QR codes uses cyan */
+.qr-codes-btn {
+  border-color: #17a2b8;
+  color: #17a2b8;
+}
+.qr-codes-btn:hover {
+  background: #17a2b8;
+  color: #fff;
+}
+
 /* Notebook uses teal */
 .notebook-btn {
   border-color: #20c997;
