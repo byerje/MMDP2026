@@ -1,4 +1,4 @@
-@page "/qr-codes"
+﻿@page "/qr-codes"
 @using MurderMysteryParty.Models
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
@@ -12,9 +12,9 @@
 {
     <div class="qr-page-container">
         <div class="access-denied">
-            <h1 class="page-title">?? Access Denied</h1>
+            <h1 class="page-title">🚫 Access Denied</h1>
             <p>This page is only available to the game administrator.</p>
-            <a href="admin" class="back-home-btn">?? Go to Admin Login</a>
+            <a href="admin" class="back-home-btn">🔑 Go to Admin Login</a>
         </div>
     </div>
 }
@@ -23,11 +23,11 @@ else
     <div class="qr-page-container">
         <div class="screen-only">
             <h1 class="page-title">QR Codes for Name Tags</h1>
-            <p class="page-instructions">?? Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
+            <p class="page-instructions">✂️ Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
             <div class="navigation-buttons">
-                <a href="admin" class="admin-btn">?? Back to Admin</a>
-                <a href="" class="back-home-btn">?? Back to Home</a>
-                <button class="qr-codes-btn" @onclick="PrintPage">??? Print</button>
+                <a href="admin" class="admin-btn">🔧 Back to Admin</a>
+                <a href="" class="back-home-btn">🏠 Back to Home</a>
+                <button class="qr-codes-btn" @onclick="PrintPage">🖨️ Print</button>
             </div>
         </div>
 
