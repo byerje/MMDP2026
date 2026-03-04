@@ -25,9 +25,8 @@ else
             <h1 class="page-title">QR Codes for Name Tags</h1>
             <p class="page-instructions">Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
             <div class="navigation-buttons">
-                <a href="admin" class="admin-btn">?? Admin</a>
+                <a href="admin" class="admin-btn">?? Back to Admin</a>
                 <a href="" class="back-home-btn">?? Back to Home</a>
-                <button class="print-btn" @onclick="PrintPage">??? Print</button>
             </div>
         </div>
 
@@ -76,23 +75,6 @@ else
         gap: 15px;
         flex-wrap: wrap;
         margin-bottom: 25px;
-    }
-
-    .print-btn {
-        background: linear-gradient(45deg, #d4af37, #b8941f);
-        color: #1a1a1a;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: all 0.25s ease;
-    }
-
-    .print-btn:hover {
-        background: linear-gradient(45deg, #b8941f, #d4af37);
-        transform: translateY(-2px);
     }
 
     .qr-grid {

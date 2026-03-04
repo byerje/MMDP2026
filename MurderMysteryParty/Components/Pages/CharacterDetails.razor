@@ -36,11 +36,11 @@
                 <p class="assignment-status @GetStatusClass()">@statusMessage</p>
             }
             <p>Scan this QR code or tap the button to claim this character.</p>
-            <button class="qr-button" @onclick="AssignCharacter" disabled="@isAssignDisabled">
-                <img src="@qrCodeUrl" alt="QR code for @character.Name" />
-            </button>
             <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">
                 @(isAssignDisabled ? "Unavailable" : $"Assign {character.Name}")
+            </button>
+            <button class="qr-button" @onclick="AssignCharacter" disabled="@isAssignDisabled">
+                <img src="@qrCodeUrl" alt="QR code for @character.Name" />
             </button>
         </div>
     }
@@ -139,6 +139,7 @@
         width: 220px;
         height: 220px;
         display: block;
+        margin: 15px auto 0;
     }
 
     .assignment-status {
