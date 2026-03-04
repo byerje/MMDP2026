@@ -32,7 +32,8 @@ button, input, textarea, select, option, a, p, h1, h2, h3, h4, h5, h6, div, span
 .character-list-container,
 .forensic-container,
 .floor-plan-container,
-.admin-container {
+.admin-container,
+.qr-page-container {
     font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', serif !important;
 }
 
