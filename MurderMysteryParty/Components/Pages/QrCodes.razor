@@ -24,6 +24,7 @@ else
         <div class="screen-only">
             <h1 class="page-title">QR Codes for Name Tags</h1>
             <p class="page-instructions">Print this page and cut out each QR code to attach to the back of each player's name tag.</p>
+            <p class="page-instructions click-hint">Click any QR code to view it individually.</p>
             <div class="navigation-buttons">
                 <a href="admin" class="admin-btn">🔧 Back to Admin</a>
                 <a href="" class="back-home-btn">🏠 Back to Home</a>
@@ -31,10 +32,23 @@ else
             </div>
         </div>
 
+        @if (selectedCharacter != null)
+        {
+            <div class="qr-overlay" @onclick="CloseOverlay">
+                <div class="qr-overlay-content" @onclick:stopPropagation>
+                    <button class="qr-overlay-close" @onclick="CloseOverlay">✕</button>
+                    <div class="qr-overlay-image">
+                        <img src="@BuildQrCodeUrl(selectedCharacter.Id, 300)" alt="QR code for @selectedCharacter.Name" />
+                    </div>
+                    <div class="qr-overlay-label">@selectedCharacter.Name</div>
+                </div>
+            </div>
+        }
+
         <div class="qr-grid">
             @foreach (var character in allCharacters)
             {
-                <div class="qr-card">
+                <div class="qr-card" @onclick="() => SelectCharacter(character)" role="button" tabindex="0">
                     <div class="qr-image">
                         <img src="@BuildQrCodeUrl(character.Id)" alt="QR code for @character.Name" />
                     </div>
@@ -70,6 +84,13 @@ else
         margin: 0 0 20px 0;
     }
 
+    .click-hint {
+        font-size: 0.9rem;
+        color: #999;
+        font-style: italic;
+        margin-top: -10px;
+    }
+
     .navigation-buttons {
         display: flex;
         justify-content: center;
@@ -92,6 +113,13 @@ else
         text-align: center;
         background: rgba(255, 255, 255, 0.03);
         width: 200px;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .qr-card:hover {
+        transform: scale(1.04);
+        border-color: #d4af37;
     }
 
     .qr-image img {
@@ -104,6 +132,64 @@ else
     .qr-label {
         margin-top: 8px;
         font-size: 1rem;
+        font-weight: bold;
+        color: #d4af37;
+    }
+
+    /* Overlay styles */
+    .qr-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+
+    .qr-overlay-content {
+        position: relative;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+        border: 2px solid #d4af37;
+        border-radius: 12px;
+        padding: 40px 40px 30px 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+    }
+
+    .qr-overlay-close {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: transparent;
+        border: none;
+        color: #d4af37;
+        font-size: 1.6rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: background 0.15s ease;
+    }
+
+    .qr-overlay-close:hover {
+        background: rgba(212, 175, 55, 0.15);
+    }
+
+    .qr-overlay-image img {
+        width: 300px;
+        height: 300px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .qr-overlay-label {
+        margin-top: 16px;
+        font-size: 1.4rem;
         font-weight: bold;
         color: #d4af37;
     }
@@ -121,6 +207,10 @@ else
 
     @@media print {
         .screen-only {
+            display: none;
+        }
+
+        .qr-overlay {
             display: none;
         }
 
@@ -145,6 +235,12 @@ else
             background: #fff;
             page-break-inside: avoid;
             width: 180px;
+            cursor: default;
+        }
+
+        .qr-card:hover {
+            transform: none;
+            border-color: #aaa;
         }
 
         .qr-image img {
@@ -161,6 +257,7 @@ else
 
 @code {
     private List<Character> allCharacters = new();
+    private Character? selectedCharacter;
 
     protected override async Task OnInitializedAsync()
     {
@@ -170,10 +267,20 @@ else
             .ToList();
     }
 
-    private string BuildQrCodeUrl(int characterId)
+    private string BuildQrCodeUrl(int characterId, int size = 150)
     {
         var characterUrl = $"{NavigationManager.BaseUri}character/{characterId}?assign=true";
-        return $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={Uri.EscapeDataString(characterUrl)}";
+        return $"https://api.qrserver.com/v1/create-qr-code/?size={size}x{size}&data={Uri.EscapeDataString(characterUrl)}";
+    }
+
+    private void SelectCharacter(Character character)
+    {
+        selectedCharacter = character;
+    }
+
+    private void CloseOverlay()
+    {
+        selectedCharacter = null;
     }
 
     private async Task PrintPage()
