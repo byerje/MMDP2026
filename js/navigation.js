@@ -45,19 +45,23 @@ window.getCurrentPath = function() {
                     }
                 }, 500);
             }
-
-            // Show a toast notification forwarded from another tab.
-            // Delay slightly so the tab has time to come to the foreground
-            // (Android Chrome throttles background tab JS).
-            if (event.data && event.data.type === 'toast') {
-                setTimeout(function() {
-                    if (_onAssignmentsUpdated) {
-                        _onAssignmentsUpdated.invokeMethodAsync('ShowToast', event.data.message, event.data.style);
-                    }
-                }, 600);
-            }
         });
     }
+
+    // When this tab becomes visible again, check localStorage for a pending toast.
+    // This is more reliable than BroadcastChannel for background tabs on Android.
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && _onAssignmentsUpdated) {
+            var raw = localStorage.getItem('pendingToast');
+            if (raw) {
+                localStorage.removeItem('pendingToast');
+                try {
+                    var data = JSON.parse(raw);
+                    _onAssignmentsUpdated.invokeMethodAsync('ShowToast', data.message, data.style);
+                } catch(e) { /* ignore corrupt data */ }
+            }
+        }
+    });
 
     // Called by App.razor to register a callback for assignment refreshes.
     // Always defined so it never throws, even without BroadcastChannel.
@@ -65,11 +69,9 @@ window.getCurrentPath = function() {
         _onAssignmentsUpdated = dotNetRef;
     };
 
-    // Send a toast message to all other tabs (no-op without BroadcastChannel)
+    // Write a toast to localStorage so the other tab picks it up when it becomes visible.
     window.sendToastToOtherTabs = function(message, style) {
-        if (channel) {
-            channel.postMessage({ type: 'toast', message: message, style: style });
-        }
+        localStorage.setItem('pendingToast', JSON.stringify({ message: message, style: style }));
     };
 
     // Returns true if another tab is open (always false without BroadcastChannel)
