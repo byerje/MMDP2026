@@ -10,6 +10,11 @@ dotnet publish MurderMysteryParty/MurderMysteryParty.csproj -c Release -o publis
 $publishDir = Join-Path (Get-Location) "publish\wwwroot"
 if (-not (Test-Path $publishDir)) { Write-Error "Publish output not found at $publishDir"; exit 1 }
 
+# Fix base href for GitHub Pages (mirrors the CI gh-pages.yml step)
+$indexPath = Join-Path $publishDir "index.html"
+Write-Host "Fixing base href in $indexPath ..."
+(Get-Content $indexPath -Raw) -replace '<base href="/" />', '<base href="/MMDP2026/" />' | Set-Content $indexPath -NoNewline
+
 # Create temp folder
 $timestamp = Get-Date -Format "yyyyMMddHHmmss"
 $tempDir = Join-Path $env:TEMP ("ghdeploy_$timestamp")
