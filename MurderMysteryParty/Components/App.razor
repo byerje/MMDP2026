@@ -12,7 +12,6 @@
 <Routes />
 
 @code {
-    private DotNetObjectReference<App>? _selfRef;
     private const string AssignmentsStorageKey = "assignedCharacterIds";
     private bool _initialized;
 
@@ -28,8 +27,6 @@
     {
         if (firstRender)
         {
-            _selfRef = DotNetObjectReference.Create(this);
-            await JSRuntime.InvokeVoidAsync("registerBlazorNavigator", _selfRef);
             await RestoreAssignmentsFromStorage();
             _initialized = true;
         }
@@ -74,30 +71,6 @@
         }
     }
 
-    [JSInvokable]
-    public void NavigateToUrl(string url)
-    {
-        // Convert absolute URL to a relative path that Blazor can route internally
-        if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
-        {
-            var basePath = new Uri(NavigationManager.BaseUri).AbsolutePath.TrimEnd('/');
-            var relative = uri.PathAndQuery;
-            if (relative.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
-            {
-                relative = relative.Substring(basePath.Length);
-            }
-            if (string.IsNullOrEmpty(relative))
-            {
-                relative = "/";
-            }
-            NavigationManager.NavigateTo(relative, forceLoad: false);
-        }
-        else
-        {
-            NavigationManager.NavigateTo(url, forceLoad: false);
-        }
-    }
-
     private Task OnRoundUnlocked(int round)
     {
         GameSessionService.ApplyRoundUnlock(round);
@@ -116,7 +89,6 @@
         RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
         await RoundSignalRService.DisposeAsync();
-        _selfRef?.Dispose();
     }
 }
 
