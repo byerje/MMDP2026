@@ -301,6 +301,27 @@
 
         if (hasOtherTab)
         {
+            // Send the assignment result to the existing tab as a toast
+            // so the user can read it there even after this tab closes.
+            if (!string.IsNullOrWhiteSpace(statusMessage))
+            {
+                var style = GetStatusClass() switch
+                {
+                    "status-success" => "success",
+                    "status-error" => "error",
+                    "status-warning" => "warning",
+                    _ => "info"
+                };
+                try
+                {
+                    await JSRuntime.InvokeVoidAsync("sendToastToOtherTabs", statusMessage, style);
+                }
+                catch
+                {
+                    // ignore if BroadcastChannel unavailable
+                }
+            }
+
             await Task.Delay(1500);
             try
             {

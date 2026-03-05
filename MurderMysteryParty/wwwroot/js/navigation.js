@@ -26,13 +26,37 @@ window.getCurrentPath = function() {
     if (typeof BroadcastChannel === 'undefined') return;
 
     var channel = new BroadcastChannel('mmdp-tab-ping');
+    var _onAssignmentsUpdated = null;
 
-    // Every tab listens for pings and responds
+    // Every tab listens for pings and responds.
+    // After responding, notify Blazor to refresh assignments from localStorage
+    // since the pinging tab just completed a QR-scan assignment.
     channel.addEventListener('message', function(event) {
         if (event.data === 'ping') {
             channel.postMessage('pong');
+            // Give the other tab a moment to finish writing localStorage
+            setTimeout(function() {
+                if (_onAssignmentsUpdated) {
+                    _onAssignmentsUpdated.invokeMethodAsync('RefreshAssignments');
+                }
+            }, 500);
+        }
+
+        // Show a toast notification forwarded from another tab
+        if (event.data && event.data.type === 'toast' && _onAssignmentsUpdated) {
+            _onAssignmentsUpdated.invokeMethodAsync('ShowToast', event.data.message, event.data.style);
         }
     });
+
+    // Called by App.razor to register a callback for assignment refreshes
+    window.registerAssignmentRefresh = function(dotNetRef) {
+        _onAssignmentsUpdated = dotNetRef;
+    };
+
+    // Send a toast message to all other tabs
+    window.sendToastToOtherTabs = function(message, style) {
+        channel.postMessage({ type: 'toast', message: message, style: style });
+    };
 
     // Exposed for Blazor interop — returns true if another tab is open
     window.hasOtherTabOpen = function() {
