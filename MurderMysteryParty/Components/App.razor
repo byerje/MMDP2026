@@ -79,6 +79,8 @@
     {
         RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged += OnCharacterAssignmentChanged;
+        RoundSignalRService.RoundsReset += OnRoundsReset;
+        RoundSignalRService.AllAssignmentsReset += OnAllAssignmentsReset;
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
         await RoundSignalRService.StartAsync();
     }
@@ -182,10 +184,33 @@
         return Task.CompletedTask;
     }
 
+    private async Task OnRoundsReset()
+    {
+        GameSessionService.ResetGame();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task OnAllAssignmentsReset()
+    {
+        CharacterService.ResetCharacterAssignments();
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", AssignmentsStorageKey);
+        }
+        catch
+        {
+            // localStorage may not be available
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+
     public async ValueTask DisposeAsync()
     {
         RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
+        RoundSignalRService.RoundsReset -= OnRoundsReset;
+        RoundSignalRService.AllAssignmentsReset -= OnAllAssignmentsReset;
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
         await RoundSignalRService.DisposeAsync();
         toastTimer?.Dispose();

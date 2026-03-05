@@ -13,4 +13,14 @@ public class RoundHub : Microsoft.AspNetCore.SignalR.Hub
     {
         await Clients.All.SendAsync("CharacterAssignmentChanged", characterId, isAssigned);
     }
+
+    public async Task SendRoundsReset()
+    {
+        await Clients.All.SendAsync("RoundsReset");
+    }
+
+    public async Task SendAllAssignmentsReset()
+    {
+        await Clients.All.SendAsync("AllAssignmentsReset");
+    }
 }

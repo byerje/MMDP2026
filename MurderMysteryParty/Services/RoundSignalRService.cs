@@ -17,6 +17,8 @@ public class RoundSignalRService : IAsyncDisposable
 
     public event Func<int, Task>? RoundUnlocked;
     public event Func<int, bool, Task>? CharacterAssignmentChanged;
+    public event Func<Task>? RoundsReset;
+    public event Func<Task>? AllAssignmentsReset;
 
     public async Task StartAsync()
     {
@@ -50,6 +52,22 @@ public class RoundSignalRService : IAsyncDisposable
             if (CharacterAssignmentChanged != null)
             {
                 await CharacterAssignmentChanged.Invoke(characterId, isAssigned);
+            }
+        });
+
+        _connection.On("RoundsReset", async () =>
+        {
+            if (RoundsReset != null)
+            {
+                await RoundsReset.Invoke();
+            }
+        });
+
+        _connection.On("AllAssignmentsReset", async () =>
+        {
+            if (AllAssignmentsReset != null)
+            {
+                await AllAssignmentsReset.Invoke();
             }
         });
 
@@ -92,6 +110,36 @@ public class RoundSignalRService : IAsyncDisposable
         }
 
         await _connection.SendAsync("SendCharacterAssignmentChanged", characterId, isAssigned);
+    }
+
+    public async Task SendRoundsResetAsync()
+    {
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            await StartAsync();
+        }
+
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            return;
+        }
+
+        await _connection.SendAsync("SendRoundsReset");
+    }
+
+    public async Task SendAllAssignmentsResetAsync()
+    {
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            await StartAsync();
+        }
+
+        if (_connection == null || _connection.State != HubConnectionState.Connected)
+        {
+            return;
+        }
+
+        await _connection.SendAsync("SendAllAssignmentsReset");
     }
 
     public async ValueTask DisposeAsync()

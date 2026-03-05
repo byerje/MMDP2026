@@ -419,10 +419,11 @@ else
         StateHasChanged();
     }
 
-    private void ResetAllRounds()
+    private async Task ResetAllRounds()
     {
         GameSessionService.ResetGame();
         gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendRoundsResetAsync();
         StateHasChanged();
     }
 
@@ -430,11 +431,7 @@ else
     {
         CharacterService.ResetCharacterAssignments();
         
-        // Notify all clients about the reset for each character
-        foreach (var character in CharacterService.GetAllCharacters())
-        {
-            await RoundSignalRService.SendCharacterAssignmentChangedAsync(character.Id, false);
-        }
+        await RoundSignalRService.SendAllAssignmentsResetAsync();
         
         allCharacters = CharacterService.GetAllCharacters();
         StateHasChanged();
