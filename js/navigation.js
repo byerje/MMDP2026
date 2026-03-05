@@ -48,57 +48,12 @@ window.getCurrentPath = function() {
         });
     }
 
-    // When this tab becomes visible again, check localStorage for a pending toast.
-    // This is more reliable than BroadcastChannel for background tabs on Android.
+    // When this tab becomes visible again:
+    // 1. Check localStorage for a pending toast from another tab
+    // 2. Notify Blazor to reconnect SignalR and re-sync state
+    //    (iOS Safari kills WebSocket connections in background tabs)
     document.addEventListener('visibilitychange', function() {
         if (document.visibilityState === 'visible' && _onAssignmentsUpdated) {
+            // Check for pending toast
             var raw = localStorage.getItem('pendingToast');
-            if (raw) {
-                localStorage.removeItem('pendingToast');
-                try {
-                    var data = JSON.parse(raw);
-                    _onAssignmentsUpdated.invokeMethodAsync('ShowToast', data.message, data.style);
-                } catch(e) { /* ignore corrupt data */ }
-            }
-        }
-    });
-
-    // Called by App.razor to register a callback for assignment refreshes.
-    // Always defined so it never throws, even without BroadcastChannel.
-    window.registerAssignmentRefresh = function(dotNetRef) {
-        _onAssignmentsUpdated = dotNetRef;
-    };
-
-    // Write a toast to localStorage so the other tab picks it up when it becomes visible.
-    window.sendToastToOtherTabs = function(message, style) {
-        localStorage.setItem('pendingToast', JSON.stringify({ message: message, style: style }));
-    };
-
-    // Returns true if another tab is open (always false without BroadcastChannel)
-    window.hasOtherTabOpen = function() {
-        if (!channel) {
-            return Promise.resolve(false);
-        }
-        return new Promise(function(resolve) {
-            var found = false;
-
-            function onPong(event) {
-                if (event.data === 'pong') {
-                    found = true;
-                    channel.removeEventListener('message', onPong);
-                    resolve(true);
-                }
-            }
-
-            channel.addEventListener('message', onPong);
-            channel.postMessage('ping');
-
-            setTimeout(function() {
-                if (!found) {
-                    channel.removeEventListener('message', onPong);
-                    resolve(false);
-                }
-            }, 300);
-        });
-    };
-})();
+            if
