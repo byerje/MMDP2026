@@ -3,6 +3,7 @@
 @using MurderMysteryParty.Services
 @inject CharacterService CharacterService
 @inject GameSessionService GameSessionService
+@inject RoundSignalRService RoundSignalRService
 @implements IDisposable
 
 <PageTitle>Characters - Murder Mystery Dinner Party</PageTitle>
@@ -291,8 +292,11 @@
         allCharacters = CharacterService.GetAllCharacters();
     }
 
-    private void RefreshCharacterList()
+    private async Task RefreshCharacterList()
     {
+        // Request the admin to broadcast current assignments via SignalR
+        await RoundSignalRService.SendAssignmentSyncRequestAsync();
+
         allCharacters = CharacterService.GetAllCharacters();
         showRefreshMessage = true;
         StateHasChanged();

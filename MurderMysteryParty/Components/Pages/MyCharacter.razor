@@ -946,6 +946,9 @@
 
     private async Task RefreshGameState()
     {
+        // Request the admin to broadcast current assignments via SignalR
+        await RoundSignalRService.SendAssignmentSyncRequestAsync();
+
         gameSession = GameSessionService.GetGameSession();
         if (isInitialized)
         {

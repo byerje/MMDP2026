@@ -340,6 +340,7 @@ else
         gameSession = GameSessionService.GetGameSession();
         allCharacters = CharacterService.GetAllCharacters();
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
+        RoundSignalRService.AssignmentSyncRequested += OnAssignmentSyncRequested;
         await RoundSignalRService.StartAsync();
     }
 
@@ -348,9 +349,18 @@ else
         await InvokeAsync(StateHasChanged);
     }
 
+    private async Task OnAssignmentSyncRequested()
+    {
+        if (AdminAuthService.IsAuthenticated)
+        {
+            await BroadcastCurrentAssignments();
+        }
+    }
+
     public void Dispose()
     {
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
+        RoundSignalRService.AssignmentSyncRequested -= OnAssignmentSyncRequested;
     }
 
     private async Task AuthenticateAdmin()

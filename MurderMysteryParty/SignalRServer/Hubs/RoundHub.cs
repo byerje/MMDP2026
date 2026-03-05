@@ -23,4 +23,9 @@ public class RoundHub : Microsoft.AspNetCore.SignalR.Hub
     {
         await Clients.All.SendAsync("AllAssignmentsReset");
     }
+
+    public async Task SendAssignmentSyncRequest()
+    {
+        await Clients.All.SendAsync("AssignmentSyncRequested");
+    }
 }

@@ -20,6 +20,7 @@ public class RoundSignalRService : IAsyncDisposable
     public event Func<Task>? RoundsReset;
     public event Func<Task>? AllAssignmentsReset;
     public event Func<Task>? Reconnected;
+    public event Func<Task>? AssignmentSyncRequested;
 
     public async Task StartAsync()
     {
@@ -77,6 +78,14 @@ public class RoundSignalRService : IAsyncDisposable
                 if (AllAssignmentsReset != null)
                 {
                     await AllAssignmentsReset.Invoke();
+                }
+            });
+
+            _connection.On("AssignmentSyncRequested", async () =>
+            {
+                if (AssignmentSyncRequested != null)
+                {
+                    await AssignmentSyncRequested.Invoke();
                 }
             });
 
@@ -151,6 +160,12 @@ public class RoundSignalRService : IAsyncDisposable
     {
         if (!await EnsureConnectedAsync()) return;
         await _connection!.SendAsync("SendAllAssignmentsReset");
+    }
+
+    public async Task SendAssignmentSyncRequestAsync()
+    {
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendAssignmentSyncRequest");
     }
 
     public async ValueTask DisposeAsync()
