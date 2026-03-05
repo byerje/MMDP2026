@@ -19,6 +19,13 @@ window.getCurrentPath = function() {
     return window.location.pathname;
 };
 
+// Blazor navigation bridge - set by App.razor via registerBlazorNavigator
+window._blazorNavigator = null;
+
+window.registerBlazorNavigator = function(dotNetRef) {
+    window._blazorNavigator = dotNetRef;
+};
+
 // BroadcastChannel for coordinating QR code scans across tabs.
 // When a QR code is scanned on a phone that already has the app open,
 // the existing tab handles the navigation instead of opening a duplicate.
@@ -32,7 +39,16 @@ window.getCurrentPath = function() {
         if (event.data && event.data.type === 'qr-navigate') {
             // Another tab is asking us to navigate - focus this tab and go to the URL
             window.focus();
-            window.location.href = event.data.url;
+            // Use Blazor's client-side navigation to preserve in-memory state
+            if (window._blazorNavigator) {
+                try {
+                    window._blazorNavigator.invokeMethodAsync('NavigateToUrl', event.data.url);
+                } catch (e) {
+                    window.location.href = event.data.url;
+                }
+            } else {
+                window.location.href = event.data.url;
+            }
             // Tell the new tab we handled it
             channel.postMessage({ type: 'qr-handled' });
         }

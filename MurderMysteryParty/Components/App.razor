@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Services
 @using MurderMysteryParty.Services
+@using Microsoft.JSInterop
 @implements IAsyncDisposable
 @inject RoundSignalRService RoundSignalRService
 @inject GameSessionService GameSessionService
@@ -10,6 +11,8 @@
 <Routes />
 
 @code {
+    private DotNetObjectReference<App>? _selfRef;
+
     protected override async Task OnInitializedAsync()
     {
         RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
@@ -17,12 +20,36 @@
         await RoundSignalRService.StartAsync();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            // Removed refresh redirect logic - GitHub Pages 404.html now handles page refresh
-            // Pages should stay on current page when refreshed
+            _selfRef = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("registerBlazorNavigator", _selfRef);
+        }
+    }
+
+    [JSInvokable]
+    public void NavigateToUrl(string url)
+    {
+        // Convert absolute URL to a relative path that Blazor can route internally
+        if (Uri.TryCreate(url, UriKind.Absolute, out var uri))
+        {
+            var basePath = new Uri(NavigationManager.BaseUri).AbsolutePath.TrimEnd('/');
+            var relative = uri.PathAndQuery;
+            if (relative.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+            {
+                relative = relative.Substring(basePath.Length);
+            }
+            if (string.IsNullOrEmpty(relative))
+            {
+                relative = "/";
+            }
+            NavigationManager.NavigateTo(relative, forceLoad: false);
+        }
+        else
+        {
+            NavigationManager.NavigateTo(url, forceLoad: false);
         }
     }
 
@@ -43,6 +70,7 @@
         RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
         await RoundSignalRService.DisposeAsync();
+        _selfRef?.Dispose();
     }
 }
 
