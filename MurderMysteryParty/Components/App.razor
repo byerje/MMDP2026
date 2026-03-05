@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Components.WebAssembly.Services
 @using MurderMysteryParty.Services
 @using Microsoft.JSInterop
+@using System.Text.Json
 @implements IAsyncDisposable
 @inject RoundSignalRService RoundSignalRService
 @inject GameSessionService GameSessionService
@@ -12,11 +13,14 @@
 
 @code {
     private DotNetObjectReference<App>? _selfRef;
+    private const string AssignmentsStorageKey = "assignedCharacterIds";
+    private bool _initialized;
 
     protected override async Task OnInitializedAsync()
     {
         RoundSignalRService.RoundUnlocked += OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged += OnCharacterAssignmentChanged;
+        CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
         await RoundSignalRService.StartAsync();
     }
 
@@ -26,6 +30,47 @@
         {
             _selfRef = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("registerBlazorNavigator", _selfRef);
+            await RestoreAssignmentsFromStorage();
+            _initialized = true;
+        }
+    }
+
+    private async Task RestoreAssignmentsFromStorage()
+    {
+        try
+        {
+            var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", AssignmentsStorageKey);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var ids = JsonSerializer.Deserialize<List<int>>(json);
+                if (ids != null && ids.Count > 0)
+                {
+                    CharacterService.RestoreAssignments(ids);
+                }
+            }
+        }
+        catch
+        {
+            // Storage unavailable or corrupted — start fresh
+        }
+    }
+
+    private async void OnAssignmentsChanged()
+    {
+        if (!_initialized)
+        {
+            return;
+        }
+
+        try
+        {
+            var ids = CharacterService.GetAssignedCharacterIds();
+            var json = JsonSerializer.Serialize(ids);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", AssignmentsStorageKey, json);
+        }
+        catch
+        {
+            // localStorage may not be available
         }
     }
 
@@ -69,6 +114,7 @@
     {
         RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
+        CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
         await RoundSignalRService.DisposeAsync();
         _selfRef?.Dispose();
     }

@@ -24,6 +24,30 @@ namespace MurderMysteryParty.Services
             return _characters.FirstOrDefault(c => c.Id == id);
         }
 
+        public List<int> GetAssignedCharacterIds()
+        {
+            return _characters.Where(c => c.IsAssigned).Select(c => c.Id).ToList();
+        }
+
+        public void RestoreAssignments(List<int> characterIds)
+        {
+            bool changed = false;
+            foreach (var id in characterIds)
+            {
+                var character = _characters.FirstOrDefault(c => c.Id == id);
+                if (character != null && !character.IsAssigned)
+                {
+                    character.IsAssigned = true;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                NotifyAssignmentsChanged();
+            }
+        }
+
         public Character? AssignRandomCharacter()
         {
             var availableCharacters = _characters.Where(c => !c.IsAssigned).ToList();
