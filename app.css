@@ -14,7 +14,7 @@ body, button, input, textarea, select, a, p, h1, h2, h3, h4, h5, h6, span, div, 
 
 /* Ensure Times New Roman pages also support emojis */
 [style*="Times New Roman"] {
-    font-family: 'Times New Roman', serif, 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji' !important;
+    font-family: 'Times New Roman', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif !important;
 }
 
 a, .btn-link {
