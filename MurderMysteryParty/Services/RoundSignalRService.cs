@@ -19,10 +19,11 @@ public class RoundSignalRService : IAsyncDisposable
     public event Func<int, bool, Task>? CharacterAssignmentChanged;
     public event Func<Task>? RoundsReset;
     public event Func<Task>? AllAssignmentsReset;
+    public event Func<Task>? Reconnected;
 
     public async Task StartAsync()
     {
-        if (_started)
+        if (_connection?.State == HubConnectionState.Connected)
         {
             return;
         }
@@ -34,42 +35,72 @@ public class RoundSignalRService : IAsyncDisposable
             return;
         }
 
-        _connection = new HubConnectionBuilder()
-            .WithUrl(hubUrl)
-            .WithAutomaticReconnect()
-            .Build();
-
-        _connection.On<int>("RoundUnlocked", async round =>
+        if (_connection == null)
         {
-            if (RoundUnlocked != null)
-            {
-                await RoundUnlocked.Invoke(round);
-            }
-        });
+            _connection = new HubConnectionBuilder()
+                .WithUrl(hubUrl, options =>
+                {
+                    // Use LongPolling as fallback — iOS Safari aggressively kills WebSocket
+                    // connections in background tabs, but LongPolling HTTP requests survive better.
+                    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets
+                                      | Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
+                })
+                .WithAutomaticReconnect(new[] { TimeSpan.Zero, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) })
+                .Build();
 
-        _connection.On<int, bool>("CharacterAssignmentChanged", async (characterId, isAssigned) =>
-        {
-            if (CharacterAssignmentChanged != null)
+            _connection.On<int>("RoundUnlocked", async round =>
             {
-                await CharacterAssignmentChanged.Invoke(characterId, isAssigned);
-            }
-        });
+                if (RoundUnlocked != null)
+                {
+                    await RoundUnlocked.Invoke(round);
+                }
+            });
 
-        _connection.On("RoundsReset", async () =>
-        {
-            if (RoundsReset != null)
+            _connection.On<int, bool>("CharacterAssignmentChanged", async (characterId, isAssigned) =>
             {
-                await RoundsReset.Invoke();
-            }
-        });
+                if (CharacterAssignmentChanged != null)
+                {
+                    await CharacterAssignmentChanged.Invoke(characterId, isAssigned);
+                }
+            });
 
-        _connection.On("AllAssignmentsReset", async () =>
-        {
-            if (AllAssignmentsReset != null)
+            _connection.On("RoundsReset", async () =>
             {
-                await AllAssignmentsReset.Invoke();
-            }
-        });
+                if (RoundsReset != null)
+                {
+                    await RoundsReset.Invoke();
+                }
+            });
+
+            _connection.On("AllAssignmentsReset", async () =>
+            {
+                if (AllAssignmentsReset != null)
+                {
+                    await AllAssignmentsReset.Invoke();
+                }
+            });
+
+            // When automatic reconnect succeeds, notify listeners so they can re-sync state
+            _connection.Reconnected += async _ =>
+            {
+                if (Reconnected != null)
+                {
+                    await Reconnected.Invoke();
+                }
+            };
+
+            // When the connection is permanently lost, allow StartAsync to rebuild it
+            _connection.Closed += _ =>
+            {
+                _started = false;
+                return Task.CompletedTask;
+            };
+        }
+
+        if (_started)
+        {
+            return;
+        }
 
         try
         {
@@ -82,64 +113,44 @@ public class RoundSignalRService : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Ensures the connection is alive. If disconnected, attempts to reconnect.
+    /// Returns true if connected.
+    /// </summary>
+    public async Task<bool> EnsureConnectedAsync()
+    {
+        if (_connection?.State == HubConnectionState.Connected)
+        {
+            return true;
+        }
+
+        _started = false;
+        await StartAsync();
+        return _connection?.State == HubConnectionState.Connected;
+    }
+
     public async Task SendRoundUnlockedAsync(int round)
     {
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            await StartAsync();
-        }
-
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            return;
-        }
-
-        await _connection.SendAsync("SendRoundUnlocked", round);
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendRoundUnlocked", round);
     }
 
     public async Task SendCharacterAssignmentChangedAsync(int characterId, bool isAssigned)
     {
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            await StartAsync();
-        }
-
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            return;
-        }
-
-        await _connection.SendAsync("SendCharacterAssignmentChanged", characterId, isAssigned);
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendCharacterAssignmentChanged", characterId, isAssigned);
     }
 
     public async Task SendRoundsResetAsync()
     {
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            await StartAsync();
-        }
-
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            return;
-        }
-
-        await _connection.SendAsync("SendRoundsReset");
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendRoundsReset");
     }
 
     public async Task SendAllAssignmentsResetAsync()
     {
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            await StartAsync();
-        }
-
-        if (_connection == null || _connection.State != HubConnectionState.Connected)
-        {
-            return;
-        }
-
-        await _connection.SendAsync("SendAllAssignmentsReset");
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendAllAssignmentsReset");
     }
 
     public async ValueTask DisposeAsync()

@@ -81,6 +81,7 @@
         RoundSignalRService.CharacterAssignmentChanged += OnCharacterAssignmentChanged;
         RoundSignalRService.RoundsReset += OnRoundsReset;
         RoundSignalRService.AllAssignmentsReset += OnAllAssignmentsReset;
+        RoundSignalRService.Reconnected += OnReconnected;
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
         await RoundSignalRService.StartAsync();
     }
@@ -94,6 +95,18 @@
             await RestoreAssignmentsFromStorage();
             _initialized = true;
         }
+    }
+
+    /// <summary>
+    /// Called from navigation.js when the tab becomes visible again (visibilitychange).
+    /// Ensures SignalR is connected and re-syncs assignment state from localStorage.
+    /// This handles iOS Safari which aggressively kills WebSocket connections in background tabs.
+    /// </summary>
+    [JSInvokable]
+    public async Task OnTabVisible()
+    {
+        await RoundSignalRService.EnsureConnectedAsync();
+        await RestoreAssignmentsFromStorage();
     }
 
     [JSInvokable]
@@ -205,12 +218,24 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    private async Task OnReconnected()
+    {
+        // After SignalR reconnects, re-sync assignments from localStorage
+        // in case we missed any updates while disconnected
+        await InvokeAsync(async () =>
+        {
+            await RestoreAssignmentsFromStorage();
+            StateHasChanged();
+        });
+    }
+
     public async ValueTask DisposeAsync()
     {
         RoundSignalRService.RoundUnlocked -= OnRoundUnlocked;
         RoundSignalRService.CharacterAssignmentChanged -= OnCharacterAssignmentChanged;
         RoundSignalRService.RoundsReset -= OnRoundsReset;
         RoundSignalRService.AllAssignmentsReset -= OnAllAssignmentsReset;
+        RoundSignalRService.Reconnected -= OnReconnected;
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
         await RoundSignalRService.DisposeAsync();
         toastTimer?.Dispose();
