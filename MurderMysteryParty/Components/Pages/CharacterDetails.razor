@@ -35,6 +35,10 @@
             {
                 <p class="assignment-status @GetStatusClass()">@statusMessage</p>
             }
+            @if (showCloseHint)
+            {
+                <p class="close-tab-hint">You can close this tab now.</p>
+            }
             <p>Scan this QR code or tap the button to claim this character.</p>
             <button class="control-btn" @onclick="AssignCharacter" disabled="@isAssignDisabled">
                 @(isAssignDisabled ? "Unavailable" : $"Assign {character.Name}")
@@ -177,6 +181,13 @@
         text-align: center;
         padding: 40px;
     }
+
+    .close-tab-hint {
+        color: #999;
+        font-size: 0.9rem;
+        font-style: italic;
+        margin: 0 0 10px 0;
+    }
 </style>
 
 @code {
@@ -189,6 +200,7 @@
     private string qrCodeUrl = string.Empty;
     private bool isAssignDisabled;
     private bool autoAssignHandled;
+    private bool showCloseHint;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -274,6 +286,23 @@
 
         autoAssignHandled = true;
         await AssignCharacter();
+
+        // QR scan opened this tab — try to close it after a short delay
+        // so the user can see the result briefly before the tab disappears.
+        await Task.Delay(1500);
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("window.close");
+        }
+        catch
+        {
+            // ignore — some browsers throw on window.close()
+        }
+
+        // If we're still here, the browser didn't close the tab
+        await Task.Delay(500);
+        showCloseHint = true;
+        StateHasChanged();
     }
 
     private async Task AssignCharacter()
