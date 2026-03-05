@@ -287,22 +287,35 @@
         autoAssignHandled = true;
         await AssignCharacter();
 
-        // QR scan opened this tab — try to close it after a short delay
-        // so the user can see the result briefly before the tab disappears.
-        await Task.Delay(1500);
+        // Only try to close this tab if another tab with the app is already open.
+        // This prevents closing the user's only tab after a QR scan.
+        bool hasOtherTab = false;
         try
         {
-            await JSRuntime.InvokeVoidAsync("window.close");
+            hasOtherTab = await JSRuntime.InvokeAsync<bool>("hasOtherTabOpen");
         }
         catch
         {
-            // ignore — some browsers throw on window.close()
+            // BroadcastChannel not available — assume no other tab
         }
 
-        // If we're still here, the browser didn't close the tab
-        await Task.Delay(500);
-        showCloseHint = true;
-        StateHasChanged();
+        if (hasOtherTab)
+        {
+            await Task.Delay(1500);
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("window.close");
+            }
+            catch
+            {
+                // ignore — some browsers throw on window.close()
+            }
+
+            // If we're still here, the browser didn't close the tab
+            await Task.Delay(500);
+            showCloseHint = true;
+            StateHasChanged();
+        }
     }
 
     private async Task AssignCharacter()
