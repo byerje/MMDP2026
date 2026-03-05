@@ -1,43 +1,8 @@
 /* Critical Emoji Font Configuration */
-/* This file ensures emoji characters render correctly across all browsers */
+/* Emoji fonts are listed AFTER text fonts so regular text renders with proper metrics. */
+/* Browsers automatically fall back to emoji fonts for emoji codepoints. */
 
 :root {
-    /* Define emoji font stack as a CSS variable for reuse */
-    --emoji-font-stack: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', 'EmojiOne Color', 'Twemoji Mozilla', 'Segoe UI Symbol', 'Noto Color Emoji Compat', sans-serif;
-    --base-font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, var(--emoji-font-stack);
-}
-
-/* Apply emoji fonts to all elements with maximum priority - EMOJI FONTS FIRST */
-*, *::before, *::after {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
-}
-
-html {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
-}
-
-body {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
-}
-
-/* Ensure buttons and inputs also support emojis - EMOJI FONTS FIRST */
-button, input, textarea, select, option, a, p, h1, h2, h3, h4, h5, h6, div, span {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, serif !important;
-}
-
-/* Override any container classes - EMOJI FONTS INCLUDED */
-.character-detail-container,
-.notebook-container,
-.speakeasy-container,
-.character-list-container,
-.forensic-container,
-.floor-plan-container,
-.admin-container,
-.qr-page-container {
-    font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Times New Roman', serif !important;
-}
-
-/* Force emoji rendering for common emoji characters */
-.emoji-text {
-    font-family: var(--emoji-font-stack) !important;
+    --emoji-font-stack: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Android Emoji', 'EmojiSymbols', 'Segoe UI Symbol';
+    --base-font-stack: 'Times New Roman', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, var(--emoji-font-stack), serif;
 }
