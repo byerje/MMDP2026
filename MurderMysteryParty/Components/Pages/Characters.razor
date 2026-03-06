@@ -12,7 +12,11 @@
     <div class="header">
         <h1 class="page-title">Meet the Cast</h1>
         <h2 class="page-subtitle">1920's SpeakEasy Gala Character Profiles</h2>
-        @if (showRefreshMessage)
+        @if (isSyncing)
+        {
+            <p class="refresh-message syncing-message">⏳ Syncing with host...</p>
+        }
+        else if (showRefreshMessage)
         {
             <p class="refresh-message">✓ Character list updated!</p>
         }
@@ -97,6 +101,11 @@
         margin: 10px 0;
         font-weight: bold;
         animation: fadeOut 2s forwards;
+    }
+
+    .syncing-message {
+        color: #ffa500;
+        animation: none;
     }
 
     @@keyframes fadeOut {
@@ -253,25 +262,12 @@
         font-size: 0.9rem;
         margin-top: 10px;
     }
-
-    .refresh-message {
-        color: #28a745;
-        font-size: 1rem;
-        margin: 10px 0;
-        font-weight: bold;
-        animation: fadeOut 2s forwards;
-    }
-
-    @@keyframes fadeOut {
-        0% { opacity: 1; }
-        70% { opacity: 1; }
-        100% { opacity: 0; }
-    }
 </style>
 
 @code {
     private List<Character> allCharacters = new();
     private bool showRefreshMessage;
+    private bool isSyncing;
     private Timer? refreshMessageTimer;
 
     protected override void OnInitialized()
@@ -294,10 +290,18 @@
 
     private async Task RefreshCharacterList()
     {
+        isSyncing = true;
+        showRefreshMessage = false;
+        StateHasChanged();
+
         // Request the admin to broadcast current assignments via SignalR
         await RoundSignalRService.SendAssignmentSyncRequestAsync();
 
+        // Wait for the SignalR round-trip: request → admin → broadcast → this client
+        await Task.Delay(2000);
+
         allCharacters = CharacterService.GetAllCharacters();
+        isSyncing = false;
         showRefreshMessage = true;
         StateHasChanged();
 

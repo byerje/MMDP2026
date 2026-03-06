@@ -15,7 +15,11 @@
         <div class="character-header">
             <h1 class="character-name">@currentCharacter.Name</h1>
             <h2 class="character-occupation">@currentCharacter.Occupation</h2>
-            @if (showRefreshMessage)
+            @if (isSyncing)
+            {
+                <p class="refresh-message syncing-message">⏳ Syncing with host...</p>
+            }
+            else if (showRefreshMessage)
             {
                 <p class="refresh-message">✓ Character data refreshed!</p>
             }
@@ -289,6 +293,11 @@
         margin: 10px 0;
         font-weight: bold;
         animation: fadeOut 2s forwards;
+    }
+
+    .syncing-message {
+        color: #ffa500;
+        animation: none;
     }
 
     @@keyframes fadeOut {
@@ -618,6 +627,7 @@
     private Timer? refreshMessageTimer;
     private bool isInitialized = false;
     private bool showRefreshMessage;
+    private bool isSyncing;
     private string notesText = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -946,8 +956,15 @@
 
     private async Task RefreshGameState()
     {
+        isSyncing = true;
+        showRefreshMessage = false;
+        StateHasChanged();
+
         // Request the admin to broadcast current assignments via SignalR
         await RoundSignalRService.SendAssignmentSyncRequestAsync();
+
+        // Wait for the SignalR round-trip: request → admin → broadcast → this client
+        await Task.Delay(2000);
 
         gameSession = GameSessionService.GetGameSession();
         if (isInitialized)
@@ -955,6 +972,7 @@
             await RefreshCharacterFromStorage();
         }
         
+        isSyncing = false;
         showRefreshMessage = true;
         StateHasChanged();
 
