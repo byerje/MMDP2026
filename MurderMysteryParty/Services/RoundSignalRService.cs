@@ -21,6 +21,7 @@ public class RoundSignalRService : IAsyncDisposable
     public event Func<Task>? AllAssignmentsReset;
     public event Func<Task>? Reconnected;
     public event Func<Task>? AssignmentSyncRequested;
+    public event Func<bool, Task>? DirectAssignmentAllowedChanged;
 
     public async Task StartAsync()
     {
@@ -86,6 +87,14 @@ public class RoundSignalRService : IAsyncDisposable
                 if (AssignmentSyncRequested != null)
                 {
                     await AssignmentSyncRequested.Invoke();
+                }
+            });
+
+            _connection.On<bool>("DirectAssignmentAllowedChanged", async isAllowed =>
+            {
+                if (DirectAssignmentAllowedChanged != null)
+                {
+                    await DirectAssignmentAllowedChanged.Invoke(isAllowed);
                 }
             });
 
@@ -166,6 +175,12 @@ public class RoundSignalRService : IAsyncDisposable
     {
         if (!await EnsureConnectedAsync()) return;
         await _connection!.SendAsync("SendAssignmentSyncRequest");
+    }
+
+    public async Task SendDirectAssignmentAllowedAsync(bool allowed)
+    {
+        if (!await EnsureConnectedAsync()) return;
+        await _connection!.SendAsync("SendDirectAssignmentAllowed", allowed);
     }
 
     public async ValueTask DisposeAsync()

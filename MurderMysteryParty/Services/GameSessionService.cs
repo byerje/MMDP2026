@@ -67,6 +67,12 @@ namespace MurderMysteryParty.Services
             NotifyStateChanged();
         }
 
+        public void SetDirectAssignmentAllowed(bool allowed)
+        {
+            _gameSession.IsDirectAssignmentAllowed = allowed;
+            NotifyStateChanged();
+        }
+
         public void ApplyRoundUnlock(int round)
         {
             switch (round)

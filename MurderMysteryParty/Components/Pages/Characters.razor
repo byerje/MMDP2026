@@ -40,16 +40,40 @@
     <div class="characters-grid">
         @foreach (var character in allCharacters)
         {
-            <a href="character/@character.Id" class="character-profile-link">
-                <div class="character-profile @(character.IsAssigned ? "assigned" : "")">
+            @if (GameSessionService.GetGameSession().IsDirectAssignmentAllowed)
+            {
+                <a href="character/@character.Id" class="character-profile-link">
+                    <div class="character-profile @(character.IsAssigned ? "assigned" : "")">
+                        <div class="character-header">
+                            <h3 class="character-name">@character.Name</h3>
+                            @if (character.IsAssigned)
+                            {
+                                <span class="assigned-badge">ASSIGNED</span>
+                            }
+                        </div>
+                        <div class="character-details">
+                            <div class="basic-info">
+                                <p><strong>Occupation:</strong> @character.Occupation</p>
+                                <p><strong>Description:</strong> @character.Description</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="character-profile @(character.IsAssigned ? "assigned" : "") qr-only">
                     <div class="character-header">
                         <h3 class="character-name">@character.Name</h3>
                         @if (character.IsAssigned)
                         {
                             <span class="assigned-badge">ASSIGNED</span>
                         }
+                        else
+                        {
+                            <span class="qr-only-badge">📷 QR Scan Only</span>
+                        }
                     </div>
-                    
                     <div class="character-details">
                         <div class="basic-info">
                             <p><strong>Occupation:</strong> @character.Occupation</p>
@@ -57,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            }
         }
     </div>
 </div>
@@ -262,6 +286,20 @@
         font-size: 0.9rem;
         margin-top: 10px;
     }
+
+    .qr-only {
+        opacity: 0.7;
+    }
+
+    .qr-only-badge {
+        background: #dc3545;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin-left: 10px;
+    }
 </style>
 
 @code {
@@ -274,6 +312,12 @@
     {
         allCharacters = CharacterService.GetAllCharacters();
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
+        GameSessionService.OnGameStateChanged += OnGameStateChanged;
+    }
+
+    private async void OnGameStateChanged()
+    {
+        await InvokeAsync(StateHasChanged);
     }
 
     private async void OnAssignmentsChanged()
@@ -316,6 +360,7 @@
     public void Dispose()
     {
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
+        GameSessionService.OnGameStateChanged -= OnGameStateChanged;
         refreshMessageTimer?.Dispose();
     }
 }

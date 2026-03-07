@@ -103,6 +103,16 @@ else
                 📡 Update Assignments
             </button>
             <p class="reset-note">Broadcast current assignments to all connected players (for late arrivals)</p>
+
+            <button class="@(gameSession.IsDirectAssignmentAllowed ? "reset-btn" : "control-btn")"
+                    @onclick="ToggleDirectAssignment">
+                @(gameSession.IsDirectAssignmentAllowed ? "🔒 Lock to QR Scan Only" : "🔓 Allow Direct Assignment")
+            </button>
+            <p class="reset-note">
+                @(gameSession.IsDirectAssignmentAllowed
+                    ? "Players can currently tap a character card to claim it — click to require QR scan again"
+                    : "Players must scan a QR code to claim a character — click to allow tapping as fallback")
+            </p>
         </div>
 
         <div class="character-status">
@@ -465,5 +475,14 @@ else
         {
             await RoundSignalRService.SendCharacterAssignmentChangedAsync(character.Id, false);
         }
+    }
+
+    private async Task ToggleDirectAssignment()
+    {
+        var newValue = !gameSession.IsDirectAssignmentAllowed;
+        GameSessionService.SetDirectAssignmentAllowed(newValue);
+        gameSession = GameSessionService.GetGameSession();
+        await RoundSignalRService.SendDirectAssignmentAllowedAsync(newValue);
+        StateHasChanged();
     }
 }

@@ -8,5 +8,6 @@ namespace MurderMysteryParty.Models
         public bool IsRound2BUnlocked { get; set; } = false;
         public bool IsRound3AUnlocked { get; set; } = false;
         public bool IsRound3BUnlocked { get; set; } = false;
+        public bool IsDirectAssignmentAllowed { get; set; } = false;
     }
 }
