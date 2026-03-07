@@ -87,7 +87,7 @@ h1:focus {
 /* Base outlined button used by nav and action links/buttons */
 .nav-btn, .back-home-btn, .view-all-btn, .admin-btn, .floor-plan-btn, .character-btn, .characters-btn,
 .forensic-btn, .forensic-btn-locked, .refresh-btn, .clear-btn, .clear-assignment-btn, .qr-button,
-.reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn {
+.reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn {
   display: inline-block;
   background: transparent;
   color: #d4af37;
@@ -106,7 +106,7 @@ h1:focus {
 @media (max-width: 768px) {
   .nav-btn, .back-home-btn, .view-all-btn, .admin-btn, .floor-plan-btn, .character-btn, .characters-btn,
   .forensic-btn, .forensic-btn-locked, .refresh-btn, .clear-btn, .clear-assignment-btn,
-  .reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn {
+  .reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn {
     padding: 10px 12px;
     font-size: 0.9rem;
     white-space: normal;
@@ -117,7 +117,7 @@ h1:focus {
 .nav-btn:hover, .back-home-btn:hover, .view-all-btn:hover, .admin-btn:hover, .floor-plan-btn:hover,
 .character-btn:hover, .characters-btn:hover, .forensic-btn:hover, .refresh-btn:hover, .clear-btn:hover,
 .clear-assignment-btn:hover, .reset-btn:hover, .control-btn:hover, .auth-btn:hover, .notebook-btn:hover,
-.qr-codes-btn:hover, .print-btn:hover {
+.qr-codes-btn:hover, .print-btn:hover, .direct-assignment-btn:hover {
   background: #d4af37;
   color: #1a1a1a;
 }
@@ -155,12 +155,22 @@ h1:focus {
 }
 
 /* Clear actions use red */
-.clear-btn, .clear-assignment-btn {
+.clear-btn {
   border-color: #dc3545;
   color: #dc3545;
 }
-.clear-btn:hover, .clear-assignment-btn:hover {
+.clear-btn:hover {
   background: #dc3545;
+  color: #fff;
+}
+
+/* Reset character assignments uses orange */
+.clear-assignment-btn {
+  border-color: #fd7e14;
+  color: #fd7e14;
+}
+.clear-assignment-btn:hover {
+  background: #fd7e14;
   color: #fff;
 }
 
@@ -172,6 +182,16 @@ h1:focus {
 .view-all-btn:hover, .characters-btn:hover {
   background: #fd7e14;
   color: #fff;
+}
+
+/* Direct assignment toggle uses white (My Character association) */
+.direct-assignment-btn {
+  border-color: #f8f9fa;
+  color: #f8f9fa;
+}
+.direct-assignment-btn:hover {
+  background: #f8f9fa;
+  color: #1a1a1a;
 }
 
 /* Forensic report uses purple */
