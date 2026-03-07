@@ -34,6 +34,16 @@
                 </ul>
             </div>
 
+            <div class="navigation-section">
+                <a href="characters" class="view-all-btn">👥 View All Characters</a>
+                <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
+                <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
+                @if (AdminAuthService.IsAuthenticated)
+                {
+                    <a href="admin" class="admin-btn">🛠️ Game Admin</a>
+                }
+            </div>
+
             <div class="how-to-play">
                 <h4>📜 How to Play</h4>
                 <p class="how-to-intro">
@@ -86,20 +96,9 @@
                     <ul>
                         <li><strong>Stay in character.</strong> First names, accents, mannerisms — commit to the bit.</li>
                         <li><strong>Lie, deflect, and scheme</strong> — but only about what your character would know.</li>
-                        <li><strong>Never reveal your secret</strong> unless you're trading for something better.</li>
                         <li><strong>Trust no one.</strong> Especially the charming ones.</li>
                     </ul>
                 </div>
-            </div>
-
-            <div class="navigation-section">
-                <a href="characters" class="view-all-btn">👥 View All Characters</a>
-                <a href="floorplan" class="floor-plan-btn">🗺️ Floor Plan</a>
-                <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
-                @if (AdminAuthService.IsAuthenticated)
-                {
-                    <a href="admin" class="admin-btn">🛠️ Game Admin</a>
-                }
             </div>
 
         </div>
@@ -227,6 +226,11 @@
         font-size: 1.1rem;
     }
 
+    .navigation-section {
+        text-align: center;
+        margin: 30px 0;
+    }
+
     .how-to-play {
         margin: 25px 0;
         padding: 20px;
@@ -273,11 +277,6 @@
 
     .round-guide-item p:last-child {
         margin-bottom: 0;
-    }
-
-    .navigation-section {
-        text-align: center;
-        margin: 30px 0;
     }
 
     .round-tip {
