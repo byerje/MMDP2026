@@ -25,7 +25,7 @@
             }
             <div class="navigation-links">
                 <a href="" class="nav-btn">🏠 Back to Home</a>
-                <a href="characters" class="characters-btn">👥 View All Characters</a>
+                <a href="characters" class="characters-btn">👥 All Characters</a>
                 <a href="floorplan" class="nav-btn floor-plan-btn">🗺️ Floor Plan</a>
                 <a href="notebook" class="notebook-btn">🗒️ Notebook</a>
                 @if (GameSessionService.GetGameSession().IsRound2BUnlocked)
@@ -718,7 +718,8 @@
     {
         try
         {
-            notesText = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "playerNotes") ?? string.Empty;
+            var key = currentCharacter != null ? $"playerNotes_{currentCharacter.Id}" : "playerNotes";
+            notesText = await JSRuntime.InvokeAsync<string>("localStorage.getItem", key) ?? string.Empty;
         }
         catch (Exception ex)
         {
@@ -730,7 +731,8 @@
     {
         try
         {
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "playerNotes", notesText ?? string.Empty);
+            var key = currentCharacter != null ? $"playerNotes_{currentCharacter.Id}" : "playerNotes";
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", key, notesText ?? string.Empty);
         }
         catch (Exception ex)
         {

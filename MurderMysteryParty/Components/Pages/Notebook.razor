@@ -22,10 +22,26 @@
         <div class="notebook-editor">
             <textarea class="notes-input" @bind="notesText" @bind:after="SaveNotesAsync" placeholder="Write your investigation notes here..."></textarea>
         </div>
+
+        <div class="notebook-footer">
+            @if (showClearConfirm)
+            {
+                <div class="clear-confirm">
+                    <p class="clear-confirm-text">⚠️ Are you sure? This will permanently delete all your notes.</p>
+                    <button class="clear-btn" @onclick="ConfirmClearNotes">🗑️ Yes, Delete All Notes</button>
+                    <button class="back-home-btn" @onclick="CancelClear">Cancel</button>
+                </div>
+            }
+            else
+            {
+                <button class="clear-btn" @onclick="RequestClearNotes">🗑️ Clear All Notes</button>
+            }
+        </div>
     </div>
 </div>
 
 <style>
+
     .notebook-container {
         max-width: 1000px;
         margin: 0 auto;
@@ -148,10 +164,38 @@
         border-color: #d4af37;
         box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
     }
+
+    .notebook-footer {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .clear-confirm {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        border: 1px solid #dc3545;
+        border-radius: 8px;
+        background: rgba(220, 53, 69, 0.08);
+    }
+
+    .clear-confirm-text {
+        color: #f5c6cb;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .clear-confirm button {
+        min-width: 200px;
+    }
 </style>
 
 @code {
     private string notesText = string.Empty;
+    private string notesKey = "playerNotes";
+    private bool showClearConfirm = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -162,11 +206,24 @@
         }
     }
 
+    private async Task<string> GetNotesKeyAsync()
+    {
+        try
+        {
+            var characterId = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "assignedCharacterId");
+            if (!string.IsNullOrWhiteSpace(characterId))
+                return $"playerNotes_{characterId}";
+        }
+        catch { }
+        return "playerNotes";
+    }
+
     private async Task LoadNotesAsync()
     {
         try
         {
-            notesText = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "playerNotes") ?? string.Empty;
+            notesKey = await GetNotesKeyAsync();
+            notesText = await JSRuntime.InvokeAsync<string>("localStorage.getItem", notesKey) ?? string.Empty;
         }
         catch (Exception ex)
         {
@@ -183,11 +240,35 @@
     {
         try
         {
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", "playerNotes", notesText ?? string.Empty);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", notesKey, notesText ?? string.Empty);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error saving notes: {ex.Message}");
+        }
+    }
+
+    private void RequestClearNotes()
+    {
+        showClearConfirm = true;
+    }
+
+    private void CancelClear()
+    {
+        showClearConfirm = false;
+    }
+
+    private async Task ConfirmClearNotes()
+    {
+        try
+        {
+            notesText = string.Empty;
+            showClearConfirm = false;
+            await SaveNotesAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error clearing notes: {ex.Message}");
         }
     }
 }
