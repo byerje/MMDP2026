@@ -122,6 +122,11 @@ public class RoundSignalRService : IAsyncDisposable
 
         try
         {
+            if (_connection.State != HubConnectionState.Disconnected)
+            {
+                return;
+            }
+
             await _connection.StartAsync();
             _started = true;
         }

@@ -350,7 +350,6 @@ else
         allCharacters = CharacterService.GetAllCharacters();
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
         RoundSignalRService.AssignmentSyncRequested += OnAssignmentSyncRequested;
-        await RoundSignalRService.StartAsync();
     }
 
     private async void OnAssignmentsChanged()
