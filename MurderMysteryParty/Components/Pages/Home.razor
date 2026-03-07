@@ -34,13 +34,47 @@
                 </ul>
             </div>
 
-@*             <div class="dress-code">
-                <h4>Suggested Costumes: 1920s Speakeasy Chic</h4>
-                <p>
-                    <strong>Ladies:</strong> Flapper dresses, headbands with feathers, long pearl necklaces, T-bar shoes<br/>
-                    <strong>Gentlemen:</strong> Three-piece suits, bow ties, suspenders, pocket watches, fedora hats
+            <div class="how-to-play">
+                <h4>📜 How to Play</h4>
+                <p class="how-to-intro">
+                    The game master will unlock each round as the evening progresses. Stay in character, mingle with the other guests,
+                    and use your <strong>🎭 My Character</strong> page to follow along. New instructions will appear automatically
+                    as each round is unlocked.
                 </p>
-            </div> *@
+
+                <div class="round-guide">
+                    <div class="round-guide-item">
+                        <h5>🎭 Round 1 — Introductions</h5>
+                        <p>
+                            Read your character profile, get into costume, and introduce yourself to the other guests. Share your
+                            background and goals openly, but keep your <em>secrets</em> hidden. Use the clues in your Round 1
+                            instructions to guide your conversations and begin gathering information.
+                        </p>
+                    </div>
+
+                    <div class="round-guide-item">
+                        <h5>🕵️ Round 2 — Investigation</h5>
+                        <p>
+                            <strong>Part A (Pre-Murder):</strong> Follow your new instructions to interact with specific characters,
+                            reveal certain clues, and dig deeper into everyone's stories. Pay attention — alibis and motives matter.
+                        </p>
+                        <p>
+                            <strong>Part B (Post-Murder):</strong> A murder has been committed! The <strong>🔬 Forensic Report</strong>
+                            becomes available. Study the evidence, question suspects, and use the <strong>🗺️ Floor Plan</strong> to
+                            piece together what happened. Take notes in your <strong>🗒️ Notebook</strong>.
+                        </p>
+                    </div>
+
+                    <div class="round-guide-item">
+                        <h5>⚡ Round 3 — The Reveal</h5>
+                        <p>
+                            Each character reveals their true motive in turn. Listen carefully — then make your accusation.
+                            Who do you think committed the murder? The game master will reveal the truth and crown the
+                            best detective of the evening!
+                        </p>
+                    </div>
+                </div>
+            </div>
 
             <div class="navigation-section">
                 <a href="characters" class="view-all-btn">👥 View All Characters</a>
@@ -166,6 +200,54 @@
     .party-details ul li {
         margin: 8px 0;
         font-size: 1.1rem;
+    }
+
+    .how-to-play {
+        margin: 25px 0;
+        padding: 20px;
+        border: 2px solid #8b4513;
+        border-radius: 10px;
+        background: rgba(139, 69, 19, 0.1);
+    }
+
+    .how-to-play h4 {
+        color: #d4af37;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+    }
+
+    .how-to-intro {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .round-guide-item {
+        margin-bottom: 15px;
+        padding: 12px;
+        border-left: 3px solid #d4af37;
+        background: rgba(0,0,0,0.2);
+        border-radius: 0 6px 6px 0;
+    }
+
+    .round-guide-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .round-guide-item h5 {
+        color: #d4af37;
+        margin: 0 0 8px 0;
+        font-size: 1.05rem;
+    }
+
+    .round-guide-item p {
+        margin: 0 0 8px 0;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+
+    .round-guide-item p:last-child {
+        margin-bottom: 0;
     }
 
     .navigation-section {
