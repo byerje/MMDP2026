@@ -147,6 +147,22 @@ public class RoundSignalRService : IAsyncDisposable
             return true;
         }
 
+        // If the connection is mid-handshake (Connecting/Reconnecting), wait for it
+        // rather than bailing out — this handles the QR scan tab race condition where
+        // App.razor's StartAsync hasn't finished before AssignCharacter fires.
+        if (_connection?.State == HubConnectionState.Connecting ||
+            _connection?.State == HubConnectionState.Reconnecting)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                await Task.Delay(250);
+                if (_connection.State == HubConnectionState.Connected)
+                {
+                    return true;
+                }
+            }
+        }
+
         _started = false;
         await StartAsync();
         return _connection?.State == HubConnectionState.Connected;
