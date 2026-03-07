@@ -100,12 +100,11 @@ else
             <p class="reset-note">This will clear all character assignments (does not affect rounds)</p>
             
             <button class="refresh-btn" @onclick="BroadcastCurrentAssignments">
-                📡 Update Assignments
+                📡 Broadcast Assignments
             </button>
             <p class="reset-note">Broadcast current assignments to all connected players (for late arrivals)</p>
 
-            <button class="@(gameSession.IsDirectAssignmentAllowed ? "reset-btn" : "control-btn")"
-                    @onclick="ToggleDirectAssignment">
+            <button class="direct-assignment-btn" @onclick="ToggleDirectAssignment">
                 @(gameSession.IsDirectAssignmentAllowed ? "🔒 Lock to QR Scan Only" : "🔓 Allow Direct Assignment")
             </button>
             <p class="reset-note">
