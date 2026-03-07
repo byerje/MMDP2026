@@ -1,4 +1,4 @@
-namespace MurderMysteryParty.Components.Pages;
+namespace MurderMysteryParty.Components.Pages.MyCharacter;
 
 public static class RoundContentFormatter
 {

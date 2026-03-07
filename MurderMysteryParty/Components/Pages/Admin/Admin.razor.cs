@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using MurderMysteryParty.Models;
 using MurderMysteryParty.Services;
 
-namespace MurderMysteryParty.Components.Pages;
+namespace MurderMysteryParty.Components.Pages.Admin;
 
 public partial class Admin : IDisposable
 {

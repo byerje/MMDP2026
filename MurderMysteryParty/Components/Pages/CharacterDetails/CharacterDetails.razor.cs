@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using MurderMysteryParty.Models;
 using MurderMysteryParty.Services;
 
-namespace MurderMysteryParty.Components.Pages;
+namespace MurderMysteryParty.Components.Pages.CharacterDetails;
 
 public partial class CharacterDetails
 {
