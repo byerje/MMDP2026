@@ -1,0 +1,141 @@
+.floor-plan-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Times New Roman', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: #f5f5dc;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.floor-plan-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    border-bottom: 2px solid #d4af37;
+}
+
+.floor-plan-title {
+    color: #d4af37;
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+.floor-plan-subtitle {
+    color: #f5f5dc;
+    font-size: 1.4rem;
+    margin: 0 0 20px 0;
+    font-style: italic;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+/* Button styles centralized in wwwroot/app.css */
+
+.floor-plan-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.floor-plan-description {
+    background: rgba(139, 69, 19, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #d4af37;
+    text-align: center;
+}
+
+.description-text {
+    font-size: 1.2rem;
+    color: #f5f5dc;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.floor-plan-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.floor-plan-image {
+    max-width: 100%;
+    height: auto;
+    border: 3px solid #d4af37;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.floor-plan-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.3);
+}
+
+.image-note {
+    color: #d4af37;
+    font-style: italic;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.fullscreen img {
+    max-width: 95vw;
+    max-height: 95vh;
+    border: none;
+    border-radius: 0;
+}
+
+@media (max-width: 768px) {
+    .floor-plan-container {
+        padding: 10px;
+    }
+
+    .floor-plan-title {
+        font-size: 2rem;
+    }
+
+    .floor-plan-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .navigation-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-btn {
+        width: 200px;
+    }
+
+    .description-text {
+        font-size: 1rem;
+    }
+}

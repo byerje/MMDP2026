@@ -1,0 +1,195 @@
+.character-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Times New Roman', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: #f5f5dc;
+    min-height: 100vh;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 3px solid #d4af37;
+    padding-bottom: 20px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: #d4af37;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin: 0;
+    font-weight: bold;
+}
+
+.page-subtitle {
+    font-size: 1.4rem;
+    color: #f5f5dc;
+    margin: 10px 0;
+    font-style: italic;
+}
+
+.refresh-message {
+    color: #28a745;
+    font-size: 1rem;
+    margin: 10px 0;
+    font-weight: bold;
+    animation: fadeOut 2s forwards;
+}
+
+.syncing-message {
+    color: #ffa500;
+    animation: none;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+/* Button styles in wwwroot/app.css for site-wide consistency */
+
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+    .characters-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.character-profile-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.character-profile {
+    background: rgba(212, 175, 55, 0.05);
+    border: 2px solid #d4af37;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.character-profile:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+}
+
+.character-profile.assigned {
+    border-color: #8b4513;
+    background: rgba(139, 69, 19, 0.1);
+}
+
+.character-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d4af37;
+}
+
+.character-name {
+    color: #d4af37;
+    font-size: 1.4rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.assigned-badge {
+    background: #8b4513;
+    color: #f5f5dc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.character-details {
+    display: grid;
+    gap: 15px;
+}
+
+.basic-info {
+    background: rgba(0,0,0,0.2);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.basic-info p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+.character-background, .character-traits, .character-goals,
+.character-secrets, .character-costume {
+    border-left: 3px solid #d4af37;
+    padding-left: 10px;
+}
+
+.character-background h4, .character-traits h4, .character-goals h4,
+.character-secrets h4, .character-costume h4 {
+    color: #d4af37;
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+}
+
+.character-background p, .character-traits p, .character-goals p,
+.character-secrets p, .character-costume p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.secret-text {
+    color: #ff6b6b !important;
+    font-style: italic;
+}
+
+.costume-text {
+    color: #87ceeb !important;
+    font-weight: 500;
+}
+
+.reset-section {
+    text-align: center;
+    padding: 30px;
+    border-top: 2px solid #d4af37;
+}
+
+.reset-note {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.qr-only {
+    opacity: 0.7;
+}
+
+.qr-only-badge {
+    background: #f8f9fa;
+    color: #1a1a1a;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 1rem;
+    line-height: 1;
+    margin-left: 10px;
+}

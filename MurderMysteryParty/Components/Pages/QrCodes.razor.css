@@ -1,0 +1,192 @@
+.qr-page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Times New Roman', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: #f5f5dc;
+    min-height: 100vh;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #d4af37;
+    margin: 0 0 10px 0;
+}
+
+.page-instructions {
+    text-align: center;
+    font-size: 1rem;
+    color: #ccc;
+    margin: 0 0 20px 0;
+}
+
+.click-hint {
+    font-size: 0.9rem;
+    color: #999;
+    font-style: italic;
+    margin-top: -10px;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.qr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-items: center;
+}
+
+.qr-card {
+    border: 2px dashed #888;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.qr-card:hover {
+    transform: scale(1.04);
+    border-color: #d4af37;
+}
+
+.qr-image img {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+}
+
+.qr-label {
+    margin-top: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #d4af37;
+}
+
+.qr-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.qr-overlay-content {
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    padding: 40px 40px 30px 40px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.qr-overlay-close {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    color: #d4af37;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+}
+
+.qr-overlay-close:hover {
+    background: rgba(212, 175, 55, 0.15);
+}
+
+.qr-overlay-image img {
+    width: 300px;
+    height: 300px;
+    display: block;
+    margin: 0 auto;
+}
+
+.qr-overlay-label {
+    margin-top: 16px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #d4af37;
+}
+
+.access-denied {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.access-denied p {
+    font-size: 1.1rem;
+    color: #ccc;
+    margin: 20px 0;
+}
+
+@media print {
+    .screen-only {
+        display: none;
+    }
+
+    .qr-overlay {
+        display: none;
+    }
+
+    .qr-page-container {
+        background: #fff;
+        color: #000;
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+    }
+
+    .qr-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        page-break-inside: auto;
+    }
+
+    .qr-card {
+        border: 1px dashed #aaa;
+        padding: 8px;
+        background: #fff;
+        page-break-inside: avoid;
+        width: 180px;
+        cursor: default;
+    }
+
+    .qr-card:hover {
+        transform: none;
+        border-color: #aaa;
+    }
+
+    .qr-image img {
+        width: 140px;
+        height: 140px;
+    }
+
+    .qr-label {
+        color: #000;
+        font-size: 0.9rem;
+    }
+}

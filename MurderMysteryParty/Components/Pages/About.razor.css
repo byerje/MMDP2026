@@ -1,0 +1,57 @@
+.about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Times New Roman', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+    color: #f5f5dc;
+    min-height: 100vh;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 3px solid #d4af37;
+    padding-bottom: 20px;
+}
+
+.about-title {
+    font-size: 2.5rem;
+    color: #d4af37;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin: 0;
+    font-weight: bold;
+}
+
+.about-subtitle {
+    font-size: 1.2rem;
+    color: #f5f5dc;
+    margin: 10px 0 0 0;
+    font-style: italic;
+}
+
+.about-section {
+    margin: 25px 0;
+    padding: 20px;
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    background: rgba(139, 69, 19, 0.1);
+}
+
+.about-section h3 {
+    color: #d4af37;
+    margin-top: 0;
+}
+
+.about-section ul {
+    margin: 10px 0 0 20px;
+}
+
+.about-section li {
+    margin: 6px 0;
+}
+
+.about-actions {
+    text-align: center;
+    margin-top: 30px;
+}
