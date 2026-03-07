@@ -67,4 +67,39 @@ public class CharacterModelTests
         // Assert
         Assert.True(character.IsAssigned);
     }
+
+    [Fact]
+    public void Character_RoundContentProperties_DefaultToEmpty()
+    {
+        // Arrange & Act
+        var character = new Character { Id = 1, Name = "Test" };
+
+        // Assert
+        Assert.Equal(string.Empty, character.Round1Content);
+        Assert.Equal(string.Empty, character.Round2AContent);
+        Assert.Equal(string.Empty, character.Round2BContent);
+        Assert.Equal(string.Empty, character.Round3AMotiveReveal);
+        Assert.Equal(string.Empty, character.Round3BChaoticEnding);
+    }
+
+    [Fact]
+    public void Character_RoundContentProperties_CanBeSet()
+    {
+        // Arrange
+        var character = new Character { Id = 1, Name = "Test" };
+
+        // Act
+        character.Round1Content = "Round 1 instructions";
+        character.Round2AContent = "Round 2A instructions";
+        character.Round2BContent = "Round 2B instructions";
+        character.Round3AMotiveReveal = "Motive reveal";
+        character.Round3BChaoticEnding = "Chaotic ending";
+
+        // Assert
+        Assert.Equal("Round 1 instructions", character.Round1Content);
+        Assert.Equal("Round 2A instructions", character.Round2AContent);
+        Assert.Equal("Round 2B instructions", character.Round2BContent);
+        Assert.Equal("Motive reveal", character.Round3AMotiveReveal);
+        Assert.Equal("Chaotic ending", character.Round3BChaoticEnding);
+    }
 }

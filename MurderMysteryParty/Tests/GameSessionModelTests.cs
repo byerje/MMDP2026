@@ -17,6 +17,7 @@ public class GameSessionModelTests
         Assert.False(session.IsRound2BUnlocked);
         Assert.False(session.IsRound3AUnlocked);
         Assert.False(session.IsRound3BUnlocked);
+        Assert.False(session.IsDirectAssignmentAllowed);
     }
 
     [Fact]
@@ -54,5 +55,28 @@ public class GameSessionModelTests
         Assert.True(session.IsRound2BUnlocked);
         Assert.True(session.IsRound3AUnlocked);
         Assert.True(session.IsRound3BUnlocked);
+    }
+
+    [Fact]
+    public void GameSession_DefaultState_CurrentRoundIsZero()
+    {
+        // Arrange & Act
+        var session = new GameSession();
+
+        // Assert
+        Assert.Equal(0, session.CurrentRound);
+    }
+
+    [Fact]
+    public void GameSession_IsDirectAssignmentAllowed_CanBeSetToTrue()
+    {
+        // Arrange
+        var session = new GameSession();
+
+        // Act
+        session.IsDirectAssignmentAllowed = true;
+
+        // Assert
+        Assert.True(session.IsDirectAssignmentAllowed);
     }
 }
