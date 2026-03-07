@@ -623,9 +623,7 @@
 @code {
     private Character? currentCharacter;
     private GameSession gameSession = new();
-    private Timer? refreshTimer;
     private Timer? refreshMessageTimer;
-    private bool isInitialized = false;
     private bool showRefreshMessage;
     private bool isSyncing;
     private string notesText = string.Empty;
@@ -639,15 +637,6 @@
         
         // Subscribe to character assignment changes
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
-        
-        // Set up a timer to refresh the game state every 5 seconds as backup
-        refreshTimer = new Timer(async _ => await InvokeAsync(async () => {
-            if (isInitialized)
-            {
-                await RefreshCharacterFromStorage();
-                StateHasChanged();
-            }
-        }), null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -656,7 +645,6 @@
         {
             await RefreshCharacterFromStorage();
             await LoadNotesAsync();
-            isInitialized = true;
             StateHasChanged();
         }
     }
@@ -967,10 +955,7 @@
         await Task.Delay(2000);
 
         gameSession = GameSessionService.GetGameSession();
-        if (isInitialized)
-        {
-            await RefreshCharacterFromStorage();
-        }
+        await RefreshCharacterFromStorage();
         
         isSyncing = false;
         showRefreshMessage = true;
@@ -1008,7 +993,6 @@
     {
         GameSessionService.OnGameStateChanged -= OnGameStateChanged;
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
-        refreshTimer?.Dispose();
         refreshMessageTimer?.Dispose();
     }
 }
