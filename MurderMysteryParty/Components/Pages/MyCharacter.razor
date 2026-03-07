@@ -628,7 +628,7 @@
     private bool isSyncing;
     private string notesText = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         gameSession = GameSessionService.GetGameSession();
         
@@ -637,6 +637,8 @@
         
         // Subscribe to character assignment changes
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
+
+        return Task.CompletedTask;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -651,7 +653,7 @@
 
     private async void OnGameStateChanged()
     {
-        await InvokeAsync(async () => {
+        await InvokeAsync(() => {
             gameSession = GameSessionService.GetGameSession();
             StateHasChanged();
         });
@@ -996,5 +998,6 @@
         refreshMessageTimer?.Dispose();
     }
 }
+
 
 
