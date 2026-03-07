@@ -28,4 +28,9 @@ public class RoundHub : Microsoft.AspNetCore.SignalR.Hub
     {
         await Clients.All.SendAsync("AssignmentSyncRequested");
     }
+
+    public async Task SendDirectAssignmentAllowed(bool allowed)
+    {
+        await Clients.All.SendAsync("DirectAssignmentAllowedChanged", allowed);
+    }
 }
