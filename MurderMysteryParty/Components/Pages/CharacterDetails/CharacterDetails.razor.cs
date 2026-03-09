@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MurderMysteryParty.Models;
 using MurderMysteryParty.Services;
@@ -35,25 +35,25 @@ public partial class CharacterDetails
     {
         if (character == null)
         {
-            statusMessage = "? Character not found. Please choose a different character.";
+            statusMessage = "❌ Character not found. Please choose a different character.";
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"? You are currently assigned as {character.Name}.";
+            statusMessage = $"✅ You are currently assigned as {character.Name}.";
             return;
         }
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "? You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned)
         {
-            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} is already assigned to another player. Please choose a different character.";
             return;
         }
 
@@ -106,7 +106,7 @@ public partial class CharacterDetails
         }
         catch
         {
-            // BroadcastChannel not available � assume no other tab
+            // BroadcastChannel not available � assume no other tab
         }
 
         if (hasOtherTab)
@@ -137,7 +137,7 @@ public partial class CharacterDetails
             }
             catch
             {
-                // ignore � some browsers throw on window.close()
+                // ignore � some browsers throw on window.close()
             }
 
             await Task.Delay(500);
@@ -155,26 +155,26 @@ public partial class CharacterDetails
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "? You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
             return;
         }
 
         if (character.IsAssigned && assignedCharacterId != CharacterId.ToString())
         {
-            statusMessage = $"? {character.Name} is already assigned to another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} is already assigned to another player. Please choose a different character.";
             await LoadAssignmentState();
             return;
         }
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"?? You are already assigned as {character.Name}.";
+            statusMessage = $"⚠️ You are already assigned as {character.Name}.";
             return;
         }
 
         if (!CharacterService.TryAssignCharacter(CharacterId))
         {
-            statusMessage = $"? {character.Name} was just claimed by another player. Please choose a different character.";
+            statusMessage = $"❌ {character.Name} was just claimed by another player. Please choose a different character.";
             await LoadAssignmentState();
             UpdateStatusMessage();
             StateHasChanged();
@@ -184,7 +184,7 @@ public partial class CharacterDetails
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "assignedCharacterId", CharacterId.ToString());
         await RoundSignalRService.SendCharacterAssignmentChangedAsync(CharacterId, true);
         assignedCharacterId = CharacterId.ToString();
-        statusMessage = $"?? Success! You are now assigned as {character.Name}.";
+        statusMessage = $"🎉 Success! You are now assigned as {character.Name}.";
         await LoadAssignmentState();
     }
 

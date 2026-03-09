@@ -161,6 +161,10 @@ public static class RoundContentFormatter
             {
                 formattedHtml += "<h5 class='section-title chaos-trigger-title'>Chaos Trigger:</h5>";
             }
+            else if (trimmedLine.StartsWith("CHAOS ACTION:"))
+            {
+                formattedHtml += "<h5 class='section-title chaos-trigger-title'>Chaos Action:</h5>";
+            }
             else if (trimmedLine.StartsWith("FINAL IGNITION:"))
             {
                 formattedHtml += "<h5 class='section-title chaos-trigger-title'>Final Ignition:</h5>";

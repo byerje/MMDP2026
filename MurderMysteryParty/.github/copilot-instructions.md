@@ -88,3 +88,31 @@ Set-Content $file $result
 | Encoding | Unicode (UTF-8 with signature) |
 | Codepage | 65001 |
 | Visual Studio | File → Advanced Save Options → UTF-8 with signature |
+
+## ⚠️ Emoji Corruption in C# String Literals
+
+When `edit_file` writes a `.cs` or `.razor.cs` file it may not preserve the BOM, causing any emoji characters pasted directly into string literals to be silently replaced with `?` or `??`.
+
+### Affected file
+
+`Components/Pages/CharacterDetails/CharacterDetails.razor.cs` — status message strings.
+
+### Rule
+
+> **Never write emoji characters directly into C# string literals using `edit_file`.** Use Unicode escape sequences instead, or run `fix_emojis.ps1` to restore them after an edit.
+
+### Correct Unicode escapes for this project
+
+| Emoji | Escape | Usage |
+|---|---|---|
+| ✅ | `\u2705` | "You are currently assigned as…" |
+| 🎉 | `\U0001F389` | "Success! You are now assigned as…" |
+| ❌ | `\u274C` | All error messages |
+| ⚠️ | `\u26A0\uFE0F` | Warning messages |
+
+### Fix script
+
+`MurderMysteryParty/fix_emojis.ps1` restores all status message emojis in `CharacterDetails.razor.cs` using regex replacement with `[char]` codepoints — immune to encoding corruption. Run it any time emojis appear as `?` in that file:
+
+```powershell
+& "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -ExecutionPolicy Bypass -File "fix_emojis.ps1"

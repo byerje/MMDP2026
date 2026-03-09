@@ -97,4 +97,70 @@ public class RoundContentFormatterTests
         Assert.DoesNotContain("\n", result);
         Assert.DoesNotContain("\r", result);
     }
+
+    // ?? FormatRound3BContent ??????????????????????????????????????????????
+
+    [Fact]
+    public void FormatRound3BContent_EmptyString_ReturnsEmpty()
+    {
+        Assert.Equal("", RoundContentFormatter.FormatRound3BContent(""));
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ChaosTrigger_RendersAsHeading()
+    {
+        var content = "CHAOS TRIGGER:\nSomeone screams.";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<h5 class='section-title chaos-trigger-title'>Chaos Trigger:</h5>", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ChaosAction_RendersAsHeading()
+    {
+        var content = "CHAOS ACTION:\nYell and point.";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<h5 class='section-title chaos-trigger-title'>Chaos Action:</h5>", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ChaosAction_DoesNotRenderAsPlainParagraph()
+    {
+        var content = "CHAOS ACTION:\nYell and point.";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.DoesNotContain("<p class='chaos-action'>CHAOS ACTION:", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ChaosTriggerAndAction_BothRenderAsHeadings()
+    {
+        var content = "CHAOS TRIGGER:\nIf Ruby shouts...\nCHAOS ACTION:\nYell 'IT'S AN INSIDE JOB!'";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<h5 class='section-title chaos-trigger-title'>Chaos Trigger:</h5>", result);
+        Assert.Contains("<h5 class='section-title chaos-trigger-title'>Chaos Action:</h5>", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_FinalIgnition_RendersAsHeading()
+    {
+        var content = "FINAL IGNITION:\nEveryone points.";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<h5 class='section-title chaos-trigger-title'>Final Ignition:</h5>", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ConditionLine_RendersWithConditionLabel()
+    {
+        var content = "If someone falls...";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<strong>Condition:</strong>", result);
+        Assert.Contains("chaos-condition", result);
+    }
+
+    [Fact]
+    public void FormatRound3BContent_ActionText_RendersAsChaosActionParagraph()
+    {
+        var content = "CHAOS TRIGGER:\nYell at everyone.";
+        var result = RoundContentFormatter.FormatRound3BContent(content);
+        Assert.Contains("<p class='chaos-action'>Yell at everyone.</p>", result);
+    }
 }
