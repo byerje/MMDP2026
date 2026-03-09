@@ -41,13 +41,13 @@ public partial class CharacterDetails
 
         if (assignedCharacterId == CharacterId.ToString())
         {
-            statusMessage = $"✅ You are currently assigned as {character.Name}.";
+            statusMessage = $"✅ You are already assigned as {character.Name}.";
             return;
         }
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You are already assigned as a different character. Clear your current assignment first.";
             return;
         }
 
@@ -155,7 +155,7 @@ public partial class CharacterDetails
 
         if (IsAssignedToDifferentCharacter())
         {
-            statusMessage = "⚠️ You already have a different character assigned. Clear your current assignment first.";
+            statusMessage = "⚠️ You are already assigned as a different character. Clear your current assignment first.";
             return;
         }
 
