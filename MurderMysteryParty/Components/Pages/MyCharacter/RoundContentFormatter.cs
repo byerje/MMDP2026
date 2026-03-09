@@ -23,7 +23,8 @@ public static class RoundContentFormatter
                 var interactions = interactionsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
                 foreach (var interaction in interactions)
                 {
-                    var cleanInteraction = interaction.Trim();
+                    var cleanInteraction = interaction.Replace("\n", " ").Replace("\r", "").Trim();
+                    cleanInteraction = System.Text.RegularExpressions.Regex.Replace(cleanInteraction, @"\s{2,}", " ");
                     if (!string.IsNullOrEmpty(cleanInteraction))
                         formattedHtml += $"<li>{cleanInteraction}</li>";
                 }
@@ -43,7 +44,8 @@ public static class RoundContentFormatter
                 var secrets = secretsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
                 foreach (var secret in secrets)
                 {
-                    var cleanSecret = secret.Trim();
+                    var cleanSecret = secret.Replace("\n", " ").Replace("\r", "").Trim();
+                    cleanSecret = System.Text.RegularExpressions.Regex.Replace(cleanSecret, @"\s{2,}", " ");
                     if (!string.IsNullOrEmpty(cleanSecret))
                         formattedHtml += $"<li>{cleanSecret}</li>";
                 }
