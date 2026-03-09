@@ -148,15 +148,42 @@ public partial class MyCharacter : IDisposable
         {
             if (currentCharacter != null)
             {
-                CharacterService.ResetCharacterAssignment(currentCharacter.Id);
-                await RoundSignalRService.SendCharacterAssignmentChangedAsync(currentCharacter.Id, false);
+                var characterId = currentCharacter.Id;
+                CharacterService.ResetCharacterAssignment(characterId);
                 await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "assignedCharacterId");
                 currentCharacter = null;
+
+                // Store pending unassignment so it can be retried on reconnect if the send fails
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "pendingUnassignedId", characterId.ToString());
+
+                var sent = await TrySendUnassignmentAsync(characterId);
+                if (sent)
+                {
+                    await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "pendingUnassignedId");
+                }
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error clearing assignment: {ex.Message}");
+        }
+    }
+
+    private async Task<bool> TrySendUnassignmentAsync(int characterId)
+    {
+        try
+        {
+            var connected = await RoundSignalRService.EnsureConnectedAsync();
+            if (!connected)
+                return false;
+
+            await RoundSignalRService.SendCharacterAssignmentChangedAsync(characterId, false);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"SignalR send failed during clear assignment, will retry on reconnect: {ex.Message}");
+            return false;
         }
     }
 

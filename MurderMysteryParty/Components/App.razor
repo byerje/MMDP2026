@@ -108,6 +108,7 @@
     {
         await RoundSignalRService.EnsureConnectedAsync();
         await RestoreAssignmentsFromStorage();
+        await FlushPendingUnassignmentAsync();
     }
 
     [JSInvokable]
@@ -226,8 +227,26 @@
         await InvokeAsync(async () =>
         {
             await RestoreAssignmentsFromStorage();
+            await FlushPendingUnassignmentAsync();
             StateHasChanged();
         });
+    }
+
+    private async Task FlushPendingUnassignmentAsync()
+    {
+        try
+        {
+            var pending = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "pendingUnassignedId");
+            if (!string.IsNullOrWhiteSpace(pending) && int.TryParse(pending, out int characterId))
+            {
+                await RoundSignalRService.SendCharacterAssignmentChangedAsync(characterId, false);
+                await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "pendingUnassignedId");
+            }
+        }
+        catch
+        {
+            // Will retry on next reconnect
+        }
     }
 
     private Task OnDirectAssignmentAllowedChanged(bool allowed)
