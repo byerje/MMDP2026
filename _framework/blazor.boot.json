@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "MurderMysteryParty",
   "resources": {
-    "hash": "sha256-mDN8CFEDOJkM2QQ+k5+5Kh5cmYoKHIngEOxSTG+zjro=",
+    "hash": "sha256-YSQfSosyeStkkuLHKQ/VrDMV1w+CUXOIuIxZhlXvEJw=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-NljIbpK/1KCj0+knpX8U77Rbl5kTtfFIuFjK7AuczEw="
     },
@@ -41,7 +41,7 @@
       "Microsoft.JSInterop.wasm": "sha256-5YCTBeqPLBCgnNIAwn6sgKyBKS13Ooms1CiP1kN6el8=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-Px6z5DU/gBGylV4ob9sdcAVH4KKxpByP7WNTn+lZUro=",
       "System.IO.Pipelines.wasm": "sha256-sP0Ouu08KfWVgmNUItyK0kc2e6ex1PG0BhexeJ5Wu7I=",
-      "System.Collections.Concurrent.wasm": "sha256-pvXgOlgav+oXb9D5sfTtm04QlP+uk0DBpe7M/TE6FRo=",
+      "System.Collections.Concurrent.wasm": "sha256-6F7EGdtwq888gcmEAIiB2Bv7gwKv3MUYryu1EqBqJoQ=",
       "System.Collections.NonGeneric.wasm": "sha256-2UHXEUj/Uf2AiTI/6b1OdKWf4k+9h/eaTGvPv/XL/I0=",
       "System.Collections.wasm": "sha256-ZSj9vmXrr0ekfhvKe+zJlycu/iRQfKhFlMvO/MtXd4U=",
       "System.ComponentModel.wasm": "sha256-eASv6/hAr1v6bTy5jSaaiSY0JytxSFaCOpEL+lcGP7A=",
@@ -62,11 +62,11 @@
       "System.Text.Encoding.Extensions.wasm": "sha256-au0ZvmnkBJAxTDg2H7xvBI3JyLzgffZxdh2ITjL+o2A=",
       "System.Text.Encodings.Web.wasm": "sha256-gvA8zAtDqhJQHlEf5kblydfRuzg++GGogvI6mUxjA4M=",
       "System.Text.Json.wasm": "sha256-poblcGfkcIbYPsUnip+8FKGUDUzUl4rbSIpkXBfB+oc=",
-      "System.Text.RegularExpressions.wasm": "sha256-nE7XCiyeCswUnRGdXOQvcHP+XMWXcToACrazpZlocBI=",
+      "System.Text.RegularExpressions.wasm": "sha256-93lEuM6z1mkYQ83kbZTL1fsPozGa2ff8zAGZHX2c/wo=",
       "System.Threading.Channels.wasm": "sha256-CfMbl9vf1GDVdf2mmkcz0LmFxGPmGR65Lyzfekr22rA=",
       "System.Threading.wasm": "sha256-3umhf/2cM5Pn/n2CFzJ1l5OdS5LpBUZ2s6B1xTaCQYE=",
-      "System.Private.CoreLib.wasm": "sha256-bwnL7yDt1fHce7+fVxZvvzu2cZ/CC2yFMyxXcb5CxqE=",
-      "MurderMysteryParty.wasm": "sha256-0UsZa9cJI4RrBU1BsW1sb03whyRhb4qhS7+a0q0qOoU="
+      "System.Private.CoreLib.wasm": "sha256-xAXIdeBs4tasSf8CGS9h1TGTlHlI8Tpt0QXrcDyeHHk=",
+      "MurderMysteryParty.wasm": "sha256-Bev0I9rNWqEancwN4hk69Gvxgt0wCftTGOUFpx1V5Yw="
     }
   },
   "cacheBootResources": true,
