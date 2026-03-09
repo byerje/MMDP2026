@@ -7,6 +7,8 @@ public class RoundContentFormatterTests
 {
     // ?? FormatRound1Content ????????????????????????????????????????????????
 
+    private const char B = '\u2022';
+
     [Fact]
     public void FormatRound1Content_EmptyString_ReturnsEmpty()
     {
@@ -22,7 +24,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_SingleBullet_ProducesOneLiItem()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Do this thing";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Do this thing";
         var result = RoundContentFormatter.FormatRound1Content(content);
         Assert.Single(result.Split("<li>", StringSplitOptions.RemoveEmptyEntries).Skip(1).ToList());
         Assert.Contains("<li>Do this thing</li>", result);
@@ -31,8 +33,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_BulletWithEmbeddedNewline_ProducesOneLiItem()
     {
-        // \n inside a bullet item used to cause a visual double-bullet
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Go to Sam and say: 'Hello.'\n  Extra note on same bullet.";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Go to Sam and say: 'Hello.'\n  Extra note on same bullet.";
         var result = RoundContentFormatter.FormatRound1Content(content);
         var liCount = result.Split("<li>", StringSplitOptions.RemoveEmptyEntries).Length - 1;
         Assert.Equal(1, liCount);
@@ -42,7 +43,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_MultipleBullets_ProducesCorrectLiCount()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• First item\n• Second item\n• Third item";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} First item\n{B} Second item\n{B} Third item";
         var result = RoundContentFormatter.FormatRound1Content(content);
         var liCount = result.Split("<li>", StringSplitOptions.RemoveEmptyEntries).Length - 1;
         Assert.Equal(3, liCount);
@@ -62,7 +63,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_WithConcealedSecrets_ProducesTwoSections()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Reveal clue here\nCONCEALED SECRETS:\n• Secret one";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Reveal clue here\nCONCEALED SECRETS:\n{B} Secret one";
         var result = RoundContentFormatter.FormatRound1Content(content);
         Assert.Contains("section-title secrets-title", result);
         Assert.Contains("secrets-list", result);
@@ -72,7 +73,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_SecretBulletWithEmbeddedNewline_ProducesOneLiItem()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Clue one\nCONCEALED SECRETS:\n• Secret with\nnewline inside";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Clue one\nCONCEALED SECRETS:\n{B} Secret with\nnewline inside";
         var result = RoundContentFormatter.FormatRound1Content(content);
         var secretsSection = result.Substring(result.IndexOf("secrets-list"));
         var liCount = secretsSection.Split("<li>", StringSplitOptions.RemoveEmptyEntries).Length - 1;
@@ -83,7 +84,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_MultipleSpacesCollapsed()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Item   with   extra   spaces";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Item   with   extra   spaces";
         var result = RoundContentFormatter.FormatRound1Content(content);
         Assert.DoesNotContain("  ", result);
     }
@@ -91,7 +92,7 @@ public class RoundContentFormatterTests
     [Fact]
     public void FormatRound1Content_NewlinesRemovedFromOutput()
     {
-        var content = "INTERACTIONS & REVEAL CLUES:\n• Item one\n• Item two\nCONCEALED SECRETS:\n• Secret one";
+        var content = $"INTERACTIONS & REVEAL CLUES:\n{B} Item one\n{B} Item two\nCONCEALED SECRETS:\n{B} Secret one";
         var result = RoundContentFormatter.FormatRound1Content(content);
         Assert.DoesNotContain("\n", result);
         Assert.DoesNotContain("\r", result);

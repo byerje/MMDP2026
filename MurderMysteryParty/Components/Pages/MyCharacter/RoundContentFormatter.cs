@@ -2,6 +2,8 @@ namespace MurderMysteryParty.Components.Pages.MyCharacter;
 
 public static class RoundContentFormatter
 {
+    private const char Bullet = '\u2022';
+
     public static string FormatRound1Content(string content)
     {
         if (string.IsNullOrEmpty(content))
@@ -20,7 +22,7 @@ public static class RoundContentFormatter
                 formattedHtml += "<h5 class='section-title'>INTERACTIONS & REVEAL CLUES:</h5>";
                 formattedHtml += "<ul class='round-list'>";
 
-                var interactions = interactionsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
+                var interactions = interactionsSection.Split(Bullet, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var interaction in interactions)
                 {
                     var cleanInteraction = interaction.Replace("\n", " ").Replace("\r", "").Trim();
@@ -41,7 +43,7 @@ public static class RoundContentFormatter
                 formattedHtml += "<h5 class='section-title secrets-title'>CONCEALED SECRETS:</h5>";
                 formattedHtml += "<ul class='round-list secrets-list'>";
 
-                var secrets = secretsSection.Split('•', StringSplitOptions.RemoveEmptyEntries);
+                var secrets = secretsSection.Split(Bullet, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var secret in secrets)
                 {
                     var cleanSecret = secret.Replace("\n", " ").Replace("\r", "").Trim();
@@ -80,7 +82,7 @@ public static class RoundContentFormatter
                     formattedHtml += $"<div class='content-section'><h5 class='section-title'>{trimmedLine}</h5>";
                     inSection = true;
                 }
-                else if (trimmedLine.StartsWith("•"))
+                else if (trimmedLine.StartsWith(Bullet))
                 {
                     if (!inList) { formattedHtml += "<ul class='round-list'>"; inList = true; }
                     formattedHtml += $"<li>{trimmedLine.Substring(1).Trim()}</li>";
