@@ -70,6 +70,7 @@
 @code {
     private DotNetObjectReference<App>? _selfRef;
     private const string AssignmentsStorageKey = "assignedCharacterIds";
+    private const string RoundStateStorageKey = "unlockedRounds";
     private bool _initialized;
     private string? toastMessage;
     private string toastStyle = "toast-info";
@@ -84,6 +85,7 @@
         RoundSignalRService.Reconnected += OnReconnected;
         RoundSignalRService.DirectAssignmentAllowedChanged += OnDirectAssignmentAllowedChanged;
         CharacterService.OnAssignmentsChanged += OnAssignmentsChanged;
+        GameSessionService.OnGameStateChanged += OnGameStateChanged;
         await RoundSignalRService.StartAsync();
     }
 
@@ -94,6 +96,7 @@
             _selfRef = DotNetObjectReference.Create(this);
             await JSRuntime.InvokeVoidAsync("registerAssignmentRefresh", _selfRef);
             await RestoreAssignmentsFromStorage();
+            await RestoreRoundStateFromStorage();
             _initialized = true;
         }
     }
@@ -108,6 +111,7 @@
     {
         await RoundSignalRService.EnsureConnectedAsync();
         await RestoreAssignmentsFromStorage();
+        await RestoreRoundStateFromStorage();
         await FlushPendingUnassignmentAsync();
     }
 
@@ -168,6 +172,27 @@
         }
     }
 
+    private async Task RestoreRoundStateFromStorage()
+    {
+        try
+        {
+            var json = await JSRuntime.InvokeAsync<string>("localStorage.getItem", RoundStateStorageKey);
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var rounds = JsonSerializer.Deserialize<List<int>>(json);
+                if (rounds != null)
+                {
+                    foreach (var round in rounds)
+                        GameSessionService.ApplyRoundUnlock(round);
+                }
+            }
+        }
+        catch
+        {
+            // Storage unavailable or corrupted — start fresh
+        }
+    }
+
     private async void OnAssignmentsChanged()
     {
         if (!_initialized)
@@ -180,6 +205,30 @@
             var ids = CharacterService.GetAssignedCharacterIds();
             var json = JsonSerializer.Serialize(ids);
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", AssignmentsStorageKey, json);
+        }
+        catch
+        {
+            // localStorage may not be available
+        }
+    }
+
+    private async void OnGameStateChanged()
+    {
+        if (!_initialized)
+            return;
+
+        try
+        {
+            var session = GameSessionService.GetGameSession();
+            var unlockedRounds = new List<int>();
+            if (session.IsRound1Unlocked) unlockedRounds.Add(1);
+            if (session.IsRound2AUnlocked) unlockedRounds.Add(2);
+            if (session.IsRound2BUnlocked) unlockedRounds.Add(3);
+            if (session.IsRound3AUnlocked) unlockedRounds.Add(4);
+            if (session.IsRound3BUnlocked) unlockedRounds.Add(4);
+
+            var json = JsonSerializer.Serialize(unlockedRounds.Distinct().ToList());
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", RoundStateStorageKey, json);
         }
         catch
         {
@@ -202,6 +251,14 @@
     private async Task OnRoundsReset()
     {
         GameSessionService.ResetGame();
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", RoundStateStorageKey);
+        }
+        catch
+        {
+            // localStorage may not be available
+        }
         await InvokeAsync(StateHasChanged);
     }
 
@@ -222,11 +279,12 @@
 
     private async Task OnReconnected()
     {
-        // After SignalR reconnects, re-sync assignments from localStorage
+        // After SignalR reconnects, re-sync assignments and round state from localStorage
         // in case we missed any updates while disconnected
         await InvokeAsync(async () =>
         {
             await RestoreAssignmentsFromStorage();
+            await RestoreRoundStateFromStorage();
             await FlushPendingUnassignmentAsync();
             StateHasChanged();
         });
@@ -264,6 +322,7 @@
         RoundSignalRService.Reconnected -= OnReconnected;
         RoundSignalRService.DirectAssignmentAllowedChanged -= OnDirectAssignmentAllowedChanged;
         CharacterService.OnAssignmentsChanged -= OnAssignmentsChanged;
+        GameSessionService.OnGameStateChanged -= OnGameStateChanged;
         await RoundSignalRService.DisposeAsync();
         toastTimer?.Dispose();
         _selfRef?.Dispose();
