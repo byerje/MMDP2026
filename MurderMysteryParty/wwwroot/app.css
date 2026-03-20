@@ -70,7 +70,7 @@ h1:focus {
 /* Base outlined button used by nav and action links/buttons */
 .nav-btn, .back-home-btn, .view-all-btn, .admin-btn, .floor-plan-btn, .character-btn, .characters-btn,
 .forensic-btn, .forensic-btn-locked, .refresh-btn, .clear-btn, .clear-assignment-btn, .qr-button,
-.reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn {
+.reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn, .photos-btn {
   display: inline-block;
   background: transparent;
   color: #d4af37;
@@ -89,7 +89,7 @@ h1:focus {
 @media (max-width: 768px) {
   .nav-btn, .back-home-btn, .view-all-btn, .admin-btn, .floor-plan-btn, .character-btn, .characters-btn,
   .forensic-btn, .forensic-btn-locked, .refresh-btn, .clear-btn, .clear-assignment-btn,
-  .reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn {
+  .reset-btn, .control-btn, .auth-btn, .notebook-btn, .qr-codes-btn, .print-btn, .direct-assignment-btn, .photos-btn {
     padding: 10px 12px;
     font-size: 0.9rem;
     white-space: normal;
@@ -100,7 +100,7 @@ h1:focus {
 .nav-btn:hover, .back-home-btn:hover, .view-all-btn:hover, .admin-btn:hover, .floor-plan-btn:hover,
 .character-btn:hover, .characters-btn:hover, .forensic-btn:hover, .refresh-btn:hover, .clear-btn:hover,
 .clear-assignment-btn:hover, .reset-btn:hover, .control-btn:hover, .auth-btn:hover, .notebook-btn:hover,
-.qr-codes-btn:hover, .print-btn:hover, .direct-assignment-btn:hover {
+.qr-codes-btn:hover, .print-btn:hover, .direct-assignment-btn:hover, .photos-btn:hover {
   background: #d4af37;
   color: #1a1a1a;
 }
@@ -245,6 +245,16 @@ h1:focus {
 }
 .notebook-btn:hover {
   background: #20c997;
+  color: #fff;
+}
+
+/* Photos uses pink/rose */
+.photos-btn {
+  border-color: #e83e8c;
+  color: #e83e8c;
+}
+.photos-btn:hover {
+  background: #e83e8c;
   color: #fff;
 }
 

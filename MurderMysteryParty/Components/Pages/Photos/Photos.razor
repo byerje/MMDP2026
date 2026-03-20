@@ -1,0 +1,50 @@
+@page "/photos"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject PhotoService PhotoService
+
+<PageTitle>Event Photos - Silver Serpent Speakeasy</PageTitle>
+
+<div class="photos-container">
+    <div class="photos-header">
+        <h1 class="photos-title">Event Photos</h1>
+        <h2 class="photos-subtitle">Silver Serpent Speakeasy</h2>
+        <div class="navigation-buttons">
+            <a href="" class="nav-btn home-btn">?? Back to Home</a>
+        </div>
+    </div>
+
+    <div class="albums-list">
+        @if (albums == null)
+        {
+            <p class="loading-text">Loading albums...</p>
+        }
+        else if (albums.Count == 0)
+        {
+            <p class="empty-text">No photo albums yet. Check back after the next event!</p>
+        }
+        else
+        {
+            @foreach (var album in albums)
+            {
+                <a href="photos/@album.Folder" class="album-card">
+                    <div class="album-date">?? @album.Date</div>
+                    @if (!string.IsNullOrWhiteSpace(album.Title))
+                    {
+                        <div class="album-title-text">@album.Title</div>
+                    }
+                    <div class="album-count">?? @album.Photos.Count photo@(album.Photos.Count == 1 ? "" : "s")</div>
+                </a>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private List<PhotoAlbum>? albums;
+
+    protected override async Task OnInitializedAsync()
+    {
+        albums = await PhotoService.GetAlbumsAsync();
+    }
+}

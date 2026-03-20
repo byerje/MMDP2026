@@ -13,5 +13,6 @@ builder.Services.AddSingleton<CharacterService>();
 builder.Services.AddSingleton<GameSessionService>();
 builder.Services.AddSingleton<RoundSignalRService>();
 builder.Services.AddScoped<AdminAuthService>();
+builder.Services.AddScoped<PhotoService>();
 
 await builder.Build().RunAsync();

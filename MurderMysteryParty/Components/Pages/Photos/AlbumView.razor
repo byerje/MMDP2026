@@ -1,0 +1,79 @@
+@page "/photos/{Folder}"
+@using MurderMysteryParty.Models
+@using MurderMysteryParty.Services
+@inject PhotoService PhotoService
+
+<PageTitle>@(album != null ? album.Date : "Album") - Event Photos</PageTitle>
+
+<div class="album-container">
+    <div class="album-header">
+        @if (album != null)
+        {
+            <h1 class="album-title">?? @album.Date</h1>
+            @if (!string.IsNullOrWhiteSpace(album.Title))
+            {
+                <h2 class="album-subtitle">@album.Title</h2>
+            }
+        }
+        else if (loaded)
+        {
+            <h1 class="album-title">Album Not Found</h1>
+        }
+        <div class="navigation-buttons">
+            <a href="photos" class="nav-btn photos-btn">?? All Albums</a>
+            <a href="" class="nav-btn home-btn">?? Home</a>
+        </div>
+    </div>
+
+    @if (album != null)
+    {
+        <div class="photo-grid">
+            @if (album.Photos.Count == 0)
+            {
+                <p class="empty-text">No photos in this album yet.</p>
+            }
+            else
+            {
+                @foreach (var photo in album.Photos)
+                {
+                    var url = PhotoService.GetPhotoUrl(album.Folder, photo);
+                    <div class="photo-card" @onclick="() => OpenFullscreen(url)">
+                        <img src="@url" alt="@photo" class="photo-thumb" loading="lazy" />
+                    </div>
+                }
+            }
+        </div>
+    }
+</div>
+
+@if (fullscreenUrl != null)
+{
+    <div class="photo-fullscreen" @onclick="CloseFullscreen">
+        <img src="@fullscreenUrl" alt="Full size" class="fullscreen-img" />
+        <span class="fullscreen-close">?</span>
+    </div>
+}
+
+@code {
+    [Parameter] public string Folder { get; set; } = string.Empty;
+
+    private PhotoAlbum? album;
+    private bool loaded;
+    private string? fullscreenUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        album = await PhotoService.GetAlbumByFolderAsync(Folder);
+        loaded = true;
+    }
+
+    private void OpenFullscreen(string url)
+    {
+        fullscreenUrl = url;
+    }
+
+    private void CloseFullscreen()
+    {
+        fullscreenUrl = null;
+    }
+}
