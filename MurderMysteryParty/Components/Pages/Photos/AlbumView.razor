@@ -9,7 +9,7 @@
     <div class="album-header">
         @if (album != null)
         {
-            <h1 class="album-title">?? @album.Date</h1>
+            <h1 class="album-title">📅 @album.Date</h1>
             @if (!string.IsNullOrWhiteSpace(album.Title))
             {
                 <h2 class="album-subtitle">@album.Title</h2>
@@ -20,8 +20,8 @@
             <h1 class="album-title">Album Not Found</h1>
         }
         <div class="navigation-buttons">
-            <a href="photos" class="nav-btn photos-btn">?? All Albums</a>
-            <a href="" class="nav-btn home-btn">?? Home</a>
+            <a href="photos" class="nav-btn photos-btn">📸 All Albums</a>
+            <a href="" class="nav-btn home-btn">🏠 Home</a>
         </div>
     </div>
 
@@ -50,7 +50,7 @@
 {
     <div class="photo-fullscreen" @onclick="CloseFullscreen">
         <img src="@fullscreenUrl" alt="Full size" class="fullscreen-img" />
-        <span class="fullscreen-close">?</span>
+        <span class="fullscreen-close">✕</span>
     </div>
 }
 

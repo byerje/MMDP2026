@@ -10,7 +10,7 @@
         <h1 class="photos-title">Event Photos</h1>
         <h2 class="photos-subtitle">Silver Serpent Speakeasy</h2>
         <div class="navigation-buttons">
-            <a href="" class="nav-btn home-btn">?? Back to Home</a>
+            <a href="" class="nav-btn home-btn">🏠 Back to Home</a>
         </div>
     </div>
 
@@ -28,12 +28,12 @@
             @foreach (var album in albums)
             {
                 <a href="photos/@album.Folder" class="album-card">
-                    <div class="album-date">?? @album.Date</div>
+                    <div class="album-date">📅 @album.Date</div>
                     @if (!string.IsNullOrWhiteSpace(album.Title))
                     {
                         <div class="album-title-text">@album.Title</div>
                     }
-                    <div class="album-count">?? @album.Photos.Count photo@(album.Photos.Count == 1 ? "" : "s")</div>
+                    <div class="album-count">📷 @album.Photos.Count photo@(album.Photos.Count == 1 ? "" : "s")</div>
                 </a>
             }
         }
